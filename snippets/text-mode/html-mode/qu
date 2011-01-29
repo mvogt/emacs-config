@@ -1,0 +1,7 @@
+#contributor : Jimmy Wu <frozenthrone88@gmail.com>
+#name : <blockquote>...</blockquote>
+#expand-env : ((yas/indent-line 'fixed))
+# --
+<blockquote>
+<p>$0
+</blockquote>

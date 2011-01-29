@@ -1,0 +1,8 @@
+#contributor : Jimmy Wu <frozenthrone88@gmail.com>
+#name : <ul class="...">...</ul>
+#group : list
+#expand-env : ((yas/indent-line 'fixed))
+# --
+<ul class="${1:lvl1}">
+$0
+</ul>
