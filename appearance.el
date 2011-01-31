@@ -27,13 +27,18 @@
     (global-set-key [?\C-x ?W] (lambda () (interactive)
                                  (setq line-move-visual
                                        (if line-move-visual nil t))))
-  (autoload 'visible-lines-mode "visible-lines")
-  (global-set-key [?\C-x ?W] 'visible-lines-mode)
+  (if (file-accessible-directory-p my-3rd-party-elisp-path)
+      (progn
+        (autoload 'visible-lines-mode "visible-lines")
+        (global-set-key [?\C-x ?W] 'visible-lines-mode)
+      )
+  )
 )
 (global-set-key [?\C-x ?w]    'toggle-truncate-lines)
-(global-set-key [?\C-x ?\M-w] (lambda () (interactive) ; for vert split (C-x 3)
-                                (setq truncate-partial-width-windows
-                                      (if truncate-partial-width-windows nil t))))
+(global-set-key [?\C-x ?\M-w]
+                (lambda () (interactive) ; for vert split (C-x 3)
+                  (setq truncate-partial-width-windows
+                        (if truncate-partial-width-windows nil t))))
 
 
 ;;----------------------------------------------------------------------------

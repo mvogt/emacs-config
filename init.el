@@ -7,8 +7,12 @@
                   (if (and ostype (string-match "Windows" ostype)) nil t)))
 
 ;; For appending subdirs to my startup dir path.
-(setq my-startup-file-path (and load-file-name
-                                (file-name-directory load-file-name)))
+(setq my-elisp-path (and load-file-name (file-name-directory load-file-name)))
+
+;; This is where I store ELisp code that I didn't write or modify.
+(setq my-3rd-party-elisp-path "~/src/emacs/")
+(and (file-accessible-directory-p my-3rd-party-elisp-path)
+     (add-to-list 'load-path my-3rd-party-elisp-path t))
 
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.
 ;; Under Linux, the variable gnuserv-frame is ignored.  I'm pretty sure this
@@ -80,11 +84,15 @@
 (load "my-misc")
 (load "my-html")
 
-;; Separate package by the author of YASnippet, but they go well together.
+;; Separate package by the author of YASnippet.  They go well together.
 ;; http://code.google.com/p/autopair/
 ;; http://www.emacswiki.org/emacs/AutoPairs
-(require 'autopair)
-(autopair-global-mode 1)
+(if (file-accessible-directory-p my-3rd-party-elisp-path)
+    (progn
+      (require 'autopair)
+      (autopair-global-mode 1)
+    )
+)
 
 ;; This is at the end because it's very disruptive visually, and
 ;; color-theme.el is huge and slow.  Also, if there are any errors, I want

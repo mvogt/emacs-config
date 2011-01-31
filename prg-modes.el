@@ -128,8 +128,8 @@ Causes an intuitive indent level matching the specific argument."
 ;; YASnippet
 ;; http://code.google.com/p/yasnippet/
 ;;
-(let ((my-yas-path "~/src/emacs/yasnippet-0.6.1c")
-      (my-snippets-path (concat my-startup-file-path "snippets")))
+(let ((my-yas-path (concat my-3rd-party-elisp-path "yasnippet-0.6.1c"))
+      (my-snippets-path (concat my-elisp-path "snippets")))
   (if (and (file-accessible-directory-p my-yas-path)
            (file-accessible-directory-p my-snippets-path))
       (progn
