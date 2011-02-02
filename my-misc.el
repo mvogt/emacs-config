@@ -61,6 +61,18 @@ With a double C-u prefix, open a Jira issue, prompting with the same method."
   )
 )
 
+;; (format "%c" val) is adequate but not as fancy as (single-key-description).
+(defun my-describe-key ()
+  "Interactive wrapper for single-key-description that defaults
+to the decimal value at the point or region."
+  (interactive)
+  (let ((val (read-number "Decimal value of character: "
+                          (string-to-number (my-cur-word-or-region)))))
+    (message (format "Value %d (decimal) = character %s"
+                     val (single-key-description val)))
+  )
+)
+
 (add-hook 'diff-mode-hook
   (function (lambda ()
               (whitespace-mode 1))
