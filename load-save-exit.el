@@ -13,14 +13,9 @@
 
 ;; ffap is much better than plain old find-file.
 (global-set-key [?\C-x ?\C-f]     'find-file-at-point)
-(global-set-key (kbd "M-<f2>")    'find-file-at-point)
-(global-set-key (kbd "<ESC><f2>") 'find-file-at-point) ; for text console
-(global-set-key (kbd "M-<f1>")    'ffap-other-window)
-(global-set-key (kbd "<ESC><f1>") 'ffap-other-window)  ; for text console
-
-;; The interactive prompt of save-some-buffers is annoying, and I sometimes
-;; accidentally hit this, its default key sequence.
-(global-unset-key [?\C-x ?s])
+(global-set-key [f4]              'find-file-at-point)
+(global-set-key (kbd "M-<f4>")    'ffap-other-window)
+(global-set-key (kbd "<ESC><f4>") 'ffap-other-window)  ; for text console
 
 (global-set-key [f2]          'save-buffer)
 (global-set-key [?\C-x ?z]    (lambda () (interactive)
@@ -29,6 +24,7 @@
                                 (save-some-buffers t)
                                 (save-buffers-kill-emacs)))
 
-;; The Emacs 23 daemon feature changes this to save-buffers-kill-terminal.
-;; Put it back so I can kill the daemon with the usual exit sequence.
+;; The Emacs 23 daemon feature changes this to save-buffers-kill-terminal.  I
+;; put it back to the original function here so I can kill the daemon with my
+;; usual key sequence for exiting.
 (global-set-key [?\C-x ?\C-c] 'save-buffers-kill-emacs)

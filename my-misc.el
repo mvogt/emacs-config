@@ -90,7 +90,7 @@ to the decimal value at the point or region."
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
-(global-set-key [?\M-u]       'my-browse-url)
+(global-set-key [?\C-x ?\M-u] 'my-browse-url)
 (global-set-key [?\C-x ?\C-a] 'my-git-gui)
 (global-set-key [f8]          'gdb)
 
@@ -104,3 +104,7 @@ to the decimal value at the point or region."
 (global-set-key [?\C-h ?A]    'apropos-variable)
 
 (global-set-key [?\C-h ?M]    'manual-entry)
+
+;; I never use the default binding (search-map).  Using this as an alias for
+;; C-x enables faster typing of C-x sequences that don't involve the Ctrl key.
+(global-set-key [?\M-s]       'Control-X-prefix)

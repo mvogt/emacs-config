@@ -35,3 +35,6 @@
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)
+
+;; I find this to be almost useless, but it only works when mapped to a key.
+(global-set-key [?\M-?] 'repeat)
