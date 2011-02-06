@@ -45,6 +45,7 @@
   (or (null num-spaces)
       (set-variable (make-local-variable 'tab-width) num-spaces))
 )
+(provide 'set-tab-width)
 
 (defun basic-indent (tab-stop increment-p)
   "Indent or unindent the current line to a uniform tab stop.

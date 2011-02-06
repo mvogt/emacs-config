@@ -65,6 +65,7 @@ for the keymap in the minibuffer."
 	   args)
   )
 )
+(provide 'my-read-shell-command)
 
 (defun my-shell-command (command)
   "Look for special trailing chars in the minibuffer text (if any), interpret
@@ -94,7 +95,9 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
     )
    )
 )
+(provide 'my-shell-command)
 
+(require 'my-cur-word-or-region "grep-compile")
 (defun my-interactive-shell-command (append-p)
   "Wrapper for shell-command that saves the command without running it if
 the minibuffer is exited with Meta-Enter instead of Enter.
@@ -154,6 +157,7 @@ If buffer is omitted, select the shell command output buffer."
 ;; Shell mode
 ;; I assign C-c C-i globally to this function, but this mode happens to have a
 ;; pre-defined local assignment that overrides it.  So, we have to do this...
+(require 'set-tab-width "my-indent")
 (add-hook 'sh-mode-hook
   (function (lambda ()
               (local-set-key [?\C-c ?\C-i] 'set-tab-width))

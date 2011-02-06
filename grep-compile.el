@@ -36,6 +36,7 @@
     )
   )
 )
+(provide 'my-cur-word-or-region)
 
 (autoload 'compile-internal "compile")
 (defun my-recursive-grep (variant)

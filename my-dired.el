@@ -8,6 +8,7 @@
 
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-read-shell-command.
+(require 'my-read-shell-command "my-shell")
 (defun dired-read-shell-command (prompt arg files)
   "Read a dired shell command prompting with PROMPT (using
 my-read-shell-command).
@@ -27,6 +28,7 @@ FILES are affected."
 
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-shell-command.
+(require 'my-shell-command "my-shell")
 (defun dired-run-shell-command (command)
   (let ((handler
 	 (find-file-name-handler (directory-file-name default-directory)
@@ -83,6 +85,8 @@ file names in the current dired buffer."
   )
 )
 
+(require 'my-shell-command "my-shell")
+(require 'my-read-shell-command "my-shell")
 (defun dired-run-file (abs-path-p)
   "Execute the current line's file name, and give the user a chance to edit
 the command line.  With optional prefix arg, use the current line's absolute

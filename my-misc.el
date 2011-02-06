@@ -42,6 +42,7 @@ No buffer is associated with the output."
 (defvar my-jira-base-url "https://sandbox.onjira.com/browse/")
 
 (autoload 'browse-url "browse-url")
+(require 'my-cur-word-or-region "grep-compile")
 (defun my-browse-url (variant)
   "Wrapper for browse-url.  With a single C-u prefix, prompt for search terms,
 using the word around the point or the active region as the default.
@@ -62,6 +63,7 @@ With a double C-u prefix, open a Jira issue, prompting with the same method."
 )
 
 ;; (format "%c" val) is adequate but not as fancy as (single-key-description).
+(require 'my-cur-word-or-region "grep-compile")
 (defun my-describe-key ()
   "Interactive wrapper for single-key-description that defaults
 to the decimal value at the point or region."

@@ -32,6 +32,7 @@
       (set-variable (make-local-variable 'c-basic-offset) num-spaces))
 )
 
+(require 'set-tab-width "my-indent")
 (add-hook 'c-mode-common-hook
   (function (lambda ()
               (hide-ifdef-mode 1)
