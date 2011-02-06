@@ -47,7 +47,7 @@
 )
 (provide 'set-tab-width)
 
-(defun basic-indent (tab-stop increment-p)
+(defun my-basic-indent (tab-stop increment-p)
   "Indent or unindent the current line to a uniform tab stop.
 The uniform distance between tabs is specified by tab-stop.
 The current line is indented if increment-p is non-nil;
@@ -71,6 +71,6 @@ otherwise, it's unindented."
 (global-set-key [?\C-c ?i]    'my-set-indent-basic-offset)
 (global-set-key [?\C-c ?\C-i] 'set-tab-width)
 (global-set-key [?\C-\\]      (lambda () (interactive)
-                                (basic-indent indent-basic-offset nil)))
+                                (my-basic-indent indent-basic-offset nil)))
 (global-set-key [?\M-i]       (lambda () (interactive)
-                                (basic-indent indent-basic-offset t)))
+                                (my-basic-indent indent-basic-offset t)))
