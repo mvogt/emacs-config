@@ -131,6 +131,8 @@ to the decimal value at the point or region."
 
 (global-set-key [?\C-h ?M]    'manual-entry)
 
-;; I never use the default binding (search-map).  Using this as an alias for
-;; C-x enables faster typing of C-x sequences that don't involve the Ctrl key.
-(global-set-key [?\M-s]       'Control-X-prefix)
+;; Using M-x as an alias for C-x enables faster typing of C-x sequences that
+;; don't involve the Ctrl key.  Moving the traditional M-x to double M-x is an
+;; acceptable inconvenience to me.
+(global-set-key [?\M-x]       'Control-X-prefix)
+(global-set-key [?\C-x ?\M-x] 'execute-extended-command)
