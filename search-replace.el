@@ -147,3 +147,6 @@ call the wrapped function with minimal coding pain."
 (global-set-key [?\C-x ?\M-r] 'query-replace-multibuf)
 (global-set-key [?\M-&]       'delete-trailing-whitespace)
 (global-set-key [?\M-#]       'replace-special-chars)
+
+(define-key isearch-mode-map [?\M-s] 'isearch-repeat-forward)
+(define-key isearch-mode-map [?\M-r] 'isearch-repeat-backward)
