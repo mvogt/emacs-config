@@ -87,8 +87,8 @@ to the decimal value at the point or region."
   (interactive)
   (let ((val (read-number "Decimal value of character: "
                           (string-to-number (my-cur-word-or-region)))))
-    (message (format "Value %d (decimal) = character %s"
-                     val (single-key-description val)))
+    (message "Value %d (decimal) = character %s"
+             val (single-key-description val))
   )
 )
 
