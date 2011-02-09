@@ -98,6 +98,13 @@ to the decimal value at the point or region."
   )
 )
 
+;; I never use the default upcase-word binding of M-u.  It's much more useful
+;; to me as the universal prefix because it allows me to hold down Alt for the
+;; entirety of many key sequences.
+(global-set-key [?\M-u] 'universal-argument)
+;; Ensure multiple M-u are interpreted the same as multiple C-u.
+(define-key universal-argument-map [?\M-u] 'universal-argument-more)
+
 ;; At some point these apparently became disabled by default.
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
