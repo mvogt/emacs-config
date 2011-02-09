@@ -49,6 +49,8 @@
 (global-set-key [S-right] (lambda () (interactive) (scroll-left 1)))
 (global-set-key [S-left]  (lambda () (interactive) (scroll-right 1)))
 
+(global-set-key [?\C-x ?\M-o] 'delete-blank-lines)
+
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)

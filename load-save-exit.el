@@ -28,6 +28,13 @@
 ;; Activate special behavior with prefix instead of by default.
 (setq ffap-require-prefix t)
 
+(defun my-save-all-kill-emacs ()
+  "Unconditionally save all buffers and exit Emacs."
+  (interactive)
+  (save-some-buffers t)
+  (save-buffers-kill-emacs)
+)
+
 ;; ffap is much better than plain old find-file.
 (global-set-key [?\C-x ?\C-f]     'find-file-at-point)
 (global-set-key [f4]              'find-file-at-point)
@@ -39,11 +46,11 @@
 (global-set-key (kbd "<ESC><f2>") 'write-file)         ; for text console
 (global-set-key [?\C-x ?z]        (lambda () (interactive)
                                     (save-some-buffers t)))
-(global-set-key [?\C-x ?\C-z]     (lambda () (interactive)
-                                    (save-some-buffers t)
-                                    (save-buffers-kill-emacs)))
+(global-set-key [?\C-x ?\C-z]     'my-save-all-kill-emacs)
+(global-set-key [?\C-x ?\M-z]     'my-save-all-kill-emacs)
 
 ;; The Emacs 23 daemon feature changes this to save-buffers-kill-terminal.  I
 ;; put it back to the original function here so I can kill the daemon with my
 ;; usual key sequence for exiting.
 (global-set-key [?\C-x ?\C-c] 'save-buffers-kill-emacs)
+(global-set-key [?\C-x ?\M-c] 'save-buffers-kill-emacs)

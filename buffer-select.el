@@ -145,6 +145,7 @@ Leave Buffer Selection Menu."
 
 (global-set-key [?\C-x ?b]    'rename-buffer)
 (global-set-key [?\C-x ?\C-b] 'iswitchb-buffer)
+(global-set-key [?\C-x ?\M-b] 'iswitchb-buffer)
 (global-set-key [?\C-x ?x]    'exchange-point-and-mark)
 (global-set-key [?\C-x ?\C-x] 'bs-show)
 (global-set-key [?\C-`]       'bs-show)
@@ -154,8 +155,3 @@ Leave Buffer Selection Menu."
 (global-set-key [C-f12]       'my-bury-buffer-other-window)
 (global-set-key [?\M-z]       (lambda () (interactive)
                                 (kill-buffer (buffer-name))))
-(global-set-key [?\C-x ?\C-y] (lambda () (interactive)
-                                (switch-to-buffer
-                                 (generate-new-buffer "*scratch*"))
-                                (text-mode)
-                                (yank)))

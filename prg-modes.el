@@ -159,6 +159,7 @@ Causes an intuitive indent level matching the specific argument."
 
         (setq yas/wrap-around-region t)
         (global-set-key [?\C-x ?\C-n] 'yas/insert-snippet)
+        (global-set-key [?\C-x ?\M-n] 'yas/insert-snippet)
       )
   )
 )

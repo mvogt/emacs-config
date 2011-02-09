@@ -79,11 +79,21 @@ insert-register with the prefix as the register number."
   )
 )
 
+(defun my-yank-scratch (&optional register)
+  "Same as my-yank but into a new scratch buffer."
+  (interactive "P")
+  (switch-to-buffer (generate-new-buffer "*scratch*"))
+  (text-mode)
+  (my-yank register)
+)
+
 ;; For setting the mark, Meta-space feels more natural to me, and F3 is
 ;; much more convenient.
-(global-set-key [f3]    'set-mark-command)
-(global-set-key [?\M- ] 'set-mark-command)
+(global-set-key [f3]          'set-mark-command)
+(global-set-key [?\M- ]       'set-mark-command)
 
-(global-set-key [?\C-w] 'my-kill-region)
-(global-set-key [?\M-w] 'my-kill-ring-save)
-(global-set-key [?\C-y] 'my-yank)
+(global-set-key [?\C-w]       'my-kill-region)
+(global-set-key [?\M-w]       'my-kill-ring-save)
+(global-set-key [?\C-y]       'my-yank)
+(global-set-key [?\C-x ?\C-y] 'my-yank-scratch)
+(global-set-key [?\C-x ?\M-y] 'my-yank-scratch)
