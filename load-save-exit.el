@@ -37,11 +37,13 @@
 
 ;; ffap is much better than plain old find-file.
 (global-set-key [?\C-x ?\C-f]     'find-file-at-point)
+(global-set-key [?\C-x ?\M-f]     'find-file-at-point)
 (global-set-key [f4]              'find-file-at-point)
 (global-set-key (kbd "M-<f4>")    'ffap-other-window)
 (global-set-key (kbd "<ESC><f4>") 'ffap-other-window)  ; for text console
 
 (global-set-key [f2]              'save-buffer)
+(global-set-key [?\C-x ?\M-s]     'save-buffer)
 (global-set-key (kbd "M-<f2>")    'write-file)
 (global-set-key (kbd "<ESC><f2>") 'write-file)         ; for text console
 (global-set-key [?\C-x ?z]        (lambda () (interactive)
