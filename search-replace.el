@@ -150,3 +150,4 @@ call the wrapped function with minimal coding pain."
 
 (define-key isearch-mode-map [?\M-s] 'isearch-repeat-forward)
 (define-key isearch-mode-map [?\M-r] 'isearch-repeat-backward)
+(define-key isearch-mode-map [?\M-w] 'isearch-yank-word-or-char)
