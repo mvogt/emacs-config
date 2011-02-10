@@ -106,7 +106,7 @@ to the decimal value at the point or region."
 (define-key universal-argument-map [?\M-u] 'universal-argument-more)
 
 ;; At some point these apparently became disabled by default.
-(put 'upcase-region 'disabled nil)
+(put 'upcase-region   'disabled nil)
 (put 'downcase-region 'disabled nil)
 
 ;; Note that M-c is capitalize, and that's somewhat inconsistent with the case

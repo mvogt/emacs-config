@@ -37,7 +37,6 @@
 (global-set-key [home]    'move-beginning-of-line)
 (global-set-key [end]     'move-end-of-line)
 (global-set-key [?\M-m]   'move-to-window-line)   ; middle of window
-(global-set-key [?\M-g]   'goto-line)
 
 ;; Set S-up/down (arrow keys) to scroll the current window up/down one line.
 ;; I used to set C-up/down for the same thing, but I found it interferes with
@@ -62,6 +61,12 @@
 (global-set-key [?\M-V] 'scroll-up)
 (global-set-key [?\M-L] 'recenter-top-bottom)
 
+(global-set-key [?\M-i] 'backward-char)
+(global-set-key [?\M-o] 'forward-char)
+
+(define-key minibuffer-local-map [?\M-i] 'backward-char)
+(define-key minibuffer-local-map [?\M-o] 'forward-char)
+
 (global-set-key [?\C-x ?\M-o] 'delete-blank-lines)
 
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
@@ -72,6 +77,9 @@
 (global-set-key [?\M-t]       'transpose-chars)
 (global-set-key [?\M-T]       'transpose-words)
 (global-set-key [?\C-x ?\M-t] 'transpose-lines)
+
+(global-set-key [?\M-g] 'keyboard-quit)
+(global-set-key [?\M-G] 'goto-line)
 
 (global-set-key [?\C-x ?\M-/] 'undo)
 

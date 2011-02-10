@@ -90,5 +90,7 @@ otherwise, it's unindented."
 (global-set-key [?\C-c ?\C-i] 'set-tab-width)
 (global-set-key [?\C-\\]      (lambda () (interactive)
                                 (my-basic-indent indent-basic-offset nil)))
-(global-set-key [?\M-i]       (lambda () (interactive)
+(global-set-key [?\C-x ?\M-i] (lambda () (interactive)
+                                (my-basic-indent indent-basic-offset nil)))
+(global-set-key [?\M-I]       (lambda () (interactive)
                                 (my-basic-indent indent-basic-offset t)))
