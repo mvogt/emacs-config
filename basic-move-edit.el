@@ -78,8 +78,9 @@
 (global-set-key [?\M-T]       'transpose-words)
 (global-set-key [?\C-x ?\M-t] 'transpose-lines)
 
-(global-set-key [?\M-g] 'keyboard-quit)
 (global-set-key [?\M-G] 'goto-line)
+(global-set-key [?\M-g] 'keyboard-quit)
+(define-key minibuffer-local-map [?\M-g] 'keyboard-quit)
 
 (global-set-key [?\C-x ?\M-/] 'undo)
 
