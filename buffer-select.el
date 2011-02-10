@@ -29,9 +29,11 @@
 
 ;; Add another, more familiar key to bs-show mode.
 (define-key bs-mode-map [?1]       'bs-select-in-one-window)
-;; Additional mapping for easier right-hand-only operation.
+
+;; Additional mappings for easier alternate hand operation.
 (define-key bs-mode-map [C-return] 'bs-select-other-window)
 (define-key bs-mode-map [?\C-j]    'bs-select-other-window)
+(define-key bs-mode-map [?\M-o]    'bs-tmp-select-other-window)
 
 ;; Redefine this func from bs.el so that the other window doesn't disappear
 ;; when exiting bs-show mode.
@@ -149,6 +151,7 @@ Leave Buffer Selection Menu."
 (global-set-key [?\C-x ?x]    'exchange-point-and-mark)
 (global-set-key [?\C-x ?\C-x] 'bs-show)
 (global-set-key [?\C-`]       'bs-show)
+(global-set-key [?\M-`]       'bs-show)
 (global-set-key [f10]         'delete-window)
 (global-set-key [f11]         'delete-other-windows)
 (global-set-key [f12]         'other-window)

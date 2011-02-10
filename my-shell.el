@@ -181,6 +181,5 @@ If buffer is omitted, select the shell command output buffer."
   )
 )
 
-(global-set-key [?\M-!] 'my-interactive-shell-command)
-(global-set-key [?\M-`] 'my-interactive-shell-command)
-(global-set-key [?\M-~] 'select-shell-command-output-window)
+(global-set-key [?\M-~] 'my-interactive-shell-command)
+(global-set-key [?\M-!] 'select-shell-command-output-window)

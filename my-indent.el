@@ -82,6 +82,7 @@ otherwise, it's unindented."
   )
 )
 
+(global-set-key [?\M-j]       'newline-and-indent)
 (global-set-key [?\M-,]       'decrease-left-margin)     ; this is a hack
 (global-set-key [?\M-.]       'indent-rigidly)
 (global-set-key [C-backspace] 'delete-indentation)

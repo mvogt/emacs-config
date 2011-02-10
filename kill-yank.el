@@ -92,8 +92,13 @@ insert-register with the prefix as the register number."
 (global-set-key [f3]          'set-mark-command)
 (global-set-key [?\M- ]       'set-mark-command)
 
+(global-set-key [?\M-k]       'kill-line)
+(global-set-key [?\M-K]       'kill-sentence)
+
 (global-set-key [?\C-w]       'my-kill-region)
+(global-set-key [?\M-W]       'my-kill-region)
 (global-set-key [?\M-w]       'my-kill-ring-save)
 (global-set-key [?\C-y]       'my-yank)
+(global-set-key [?\M-Y]       'my-yank)
 (global-set-key [?\C-x ?\C-y] 'my-yank-scratch)
 (global-set-key [?\C-x ?\M-y] 'my-yank-scratch)

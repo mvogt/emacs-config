@@ -115,12 +115,11 @@ to the decimal value at the point or region."
 (global-set-key [?\C-x ?u]    'upcase-word)
 
 (global-set-key [?\C-x ?\M-q] 'toggle-read-only)
-(global-set-key [?\C-x ?\M-t] 'transpose-lines)
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
 (global-set-key [?\C-x ?\M-u] 'my-browse-url)
-(global-set-key [?\C-x ?\M-a] 'my-git-gui)
+(global-set-key [M-f5]        'my-git-gui)
 (global-set-key [f8]          'gdb)
 
 ;; Dangerously similar to C-x C-c, but I set confirm-kill-emacs.

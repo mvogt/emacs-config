@@ -44,16 +44,36 @@
 ;; some local modes.
 (global-set-key [S-down] (lambda () (interactive) (scroll-up 1)))
 (global-set-key [S-up]   (lambda () (interactive) (scroll-down 1)))
+(global-set-key [?\M-N]  (lambda () (interactive) (scroll-up 1)))
+(global-set-key [?\M-P]  (lambda () (interactive) (scroll-down 1)))
 
-;; Use Shift-left and right arrow to scroll horizontally.
-(global-set-key [S-right] (lambda () (interactive) (scroll-left 1)))
-(global-set-key [S-left]  (lambda () (interactive) (scroll-right 1)))
+(global-set-key [?\M-n] 'next-line)
+(global-set-key [?\M-p] 'previous-line)
+
+(global-set-key [?\M-a] 'move-beginning-of-line)
+(global-set-key [?\M-e] 'move-end-of-line)
+
+(global-set-key [?\M-A] 'backward-paragraph)
+(global-set-key [?\M-E] 'forward-paragraph)
+
+(global-set-key [?\C-x ?\M-a] 'backward-sentence)
+(global-set-key [?\C-x ?\M-e] 'forward-sentence)
+
+(global-set-key [?\M-V] 'scroll-up)
+(global-set-key [?\M-L] 'recenter-top-bottom)
 
 (global-set-key [?\C-x ?\M-o] 'delete-blank-lines)
 
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)
+(global-set-key [?\M-D]  'delete-char)
+
+(global-set-key [?\M-t]       'transpose-chars)
+(global-set-key [?\M-T]       'transpose-words)
+(global-set-key [?\C-x ?\M-t] 'transpose-lines)
+
+(global-set-key [?\C-x ?\M-/] 'undo)
 
 ;; I find this to be almost useless, but it only works when mapped to a key.
 (global-set-key [?\M-?] 'repeat)

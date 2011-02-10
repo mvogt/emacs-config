@@ -99,7 +99,7 @@ Causes an intuitive indent level matching the specific argument."
 )
 
 (defun cperl-set-indent-interactive (num-spaces)
-  "Set the CPerl indetn level interactively."
+  "Set the CPerl indent level interactively."
   (interactive "NSet CPerl indent to: ")
   (if (not (null num-spaces))
       (cperl-set-indent num-spaces)
