@@ -46,27 +46,6 @@
 (global-set-key [?\M-N]  (lambda () (interactive) (scroll-up 1)))
 (global-set-key [?\M-P]  (lambda () (interactive) (scroll-down 1)))
 
-(global-set-key [?\M-n] 'next-line)
-(global-set-key [?\M-p] 'previous-line)
-
-(global-set-key [?\M-a] 'move-beginning-of-line)
-(global-set-key [?\M-e] 'move-end-of-line)
-
-(global-set-key [?\M-A] 'backward-paragraph)
-(global-set-key [?\M-E] 'forward-paragraph)
-
-(global-set-key [?\C-x ?\M-a] 'backward-sentence)
-(global-set-key [?\C-x ?\M-e] 'forward-sentence)
-
-(global-set-key [?\M-V] 'scroll-up)
-(global-set-key [?\M-L] 'recenter-top-bottom)
-
-(global-set-key [?\M-i] 'backward-char)
-(global-set-key [?\M-o] 'forward-char)
-
-(define-key minibuffer-local-map [?\M-i] 'backward-char)
-(define-key minibuffer-local-map [?\M-o] 'forward-char)
-
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)
