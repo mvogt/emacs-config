@@ -138,8 +138,6 @@ call the wrapped function with minimal coding pain."
   (query-replace-multibuf-worker 'query-replace-regexp regexp to-string)
 )
 
-;; I never use the default binding for M-s (search-map).
-(global-set-key [?\M-s]       'isearch-forward)
 (global-set-key [?\C-s]       'isearch-forward)
 (global-set-key [?\C-r]       'query-replace-regexp)
 (global-set-key [?\M-r]       'query-replace)
@@ -147,7 +145,3 @@ call the wrapped function with minimal coding pain."
 (global-set-key [?\C-x ?\M-r] 'query-replace-multibuf)
 (global-set-key [?\M-&]       'delete-trailing-whitespace)
 (global-set-key [?\M-#]       'replace-special-chars)
-
-(define-key isearch-mode-map [?\M-s] 'isearch-repeat-forward)
-(define-key isearch-mode-map [?\M-r] 'isearch-repeat-backward)
-(define-key isearch-mode-map [?\M-w] 'isearch-yank-word-or-char)
