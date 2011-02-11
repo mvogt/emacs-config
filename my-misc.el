@@ -19,6 +19,10 @@
 ;; Miscellaneous
 ;;
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
+;; It's useful for aliasing prefixes other than C-x.  (The method I used for
+;; aliasing C-x doesn't work for C-c.  It's probably because C-c is treated
+;; specially by major and minor modes.)  This hack is the only solution I
+;; could find.
 (defun my-replay-prefix-key (arg key)
   "Replace the current key in the input event queue with the specified key."
   (setq this-command last-command)    ; don't record this command
@@ -26,17 +30,6 @@
   (reset-this-command-lengths)
   ;; Insert the key at the front of the event queue.
   (setq unread-command-events (cons key unread-command-events))
-)
-
-;; The trick I used for aliasing C-x doesn't work for C-c.  (It's probably
-;; because C-c is treated specially by major and minor modes.)  This hack is
-;; the only solution I could find.  The func we're calling wouldn't take
-;; [?\C-c] for the key argument, so I used 3.  I couldn't figure out a value
-;; it would take that's more readable.
-(defun my-mode-specific-cmd-prefix (arg)
-  "Manually alias C-c by stuffing the input event queue."
-  (interactive "P")
-  (my-replay-prefix-key arg 3)
 )
 
 (defun insert-timestamp (detailed-p)
@@ -130,12 +123,10 @@ to the decimal value at the point or region."
 (put 'upcase-region   'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+;; Note that M-c is capitalize, and that's somewhat inconsistent with the case
+;; change commands prefixed by C-x.
 (global-set-key [?\C-x ?l]    'downcase-word)
 (global-set-key [?\C-x ?u]    'upcase-word)
-
-;; Alias M-c to C-c, and move capitalize out of the way.
-(global-set-key [?\M-c]       'my-mode-specific-cmd-prefix)
-(global-set-key [?\M-C]       'capitalize-word)
 
 (global-set-key [?\C-x ?\M-q] 'toggle-read-only)
 
