@@ -67,18 +67,9 @@
 (define-key minibuffer-local-map [?\M-i] 'backward-char)
 (define-key minibuffer-local-map [?\M-o] 'forward-char)
 
-(global-set-key [?\C-x ?\M-o] 'delete-blank-lines)
-
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)
-(global-set-key [?\M-D]  'delete-char)
-
-(global-set-key [?\M-t]       'transpose-chars)
-(global-set-key [?\M-T]       'transpose-words)
-(global-set-key [?\C-x ?\M-t] 'transpose-lines)
-
-(global-set-key [?\C-x ?\M-/] 'undo)
 
 ;; I find this to be almost useless, but it only works when mapped to a key.
 (global-set-key [?\M-?] 'repeat)

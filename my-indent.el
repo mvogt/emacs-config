@@ -82,7 +82,6 @@ otherwise, it's unindented."
   )
 )
 
-(global-set-key [?\M-j]       'newline-and-indent)
 (global-set-key [?\M-,]       'decrease-left-margin)     ; this is a hack
 (global-set-key [?\M-.]       'indent-rigidly)
 (global-set-key [C-backspace] 'delete-indentation)
@@ -90,7 +89,5 @@ otherwise, it's unindented."
 (global-set-key [?\C-c ?\C-i] 'set-tab-width)
 (global-set-key [?\C-\\]      (lambda () (interactive)
                                 (my-basic-indent indent-basic-offset nil)))
-(global-set-key [?\C-x ?\M-i] (lambda () (interactive)
-                                (my-basic-indent indent-basic-offset nil)))
-(global-set-key [?\M-I]       (lambda () (interactive)
+(global-set-key [?\M-i]       (lambda () (interactive)
                                 (my-basic-indent indent-basic-offset t)))

@@ -228,13 +228,9 @@ Prompts with the current name and location as the default."
 
 (add-hook 'dired-mode-hook
   (function (lambda ()
-              (local-set-key [?\M-n]       'dired-next-line)
-              (local-set-key [?\M-p]       'dired-previous-line)
               (local-set-key [?\C-c ?s]    'dired-subshell)
               (local-set-key [?\C-c ?\C-s] 'dired-subshell)
-              (local-set-key [?\C-c ?\M-s] 'dired-subshell)
               (local-set-key [?\C-c ?w]    'dired-marked-files-append-kill)
-              (local-set-key [?\C-c ?\M-c] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)

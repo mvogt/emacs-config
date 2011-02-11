@@ -33,7 +33,7 @@
 ;; Additional mappings for easier alternate hand operation.
 (define-key bs-mode-map [C-return] 'bs-select-other-window)
 (define-key bs-mode-map [?\C-j]    'bs-select-other-window)
-(define-key bs-mode-map [?\M-O]    'bs-tmp-select-other-window)
+(define-key bs-mode-map [?\M-o]    'bs-tmp-select-other-window)
 
 ;; Redefine this func from bs.el so that the other window doesn't disappear
 ;; when exiting bs-show mode.
