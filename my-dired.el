@@ -23,6 +23,10 @@
 ;; this entire file at startup.  I always launch dired anyway.
 (load "dired-aux")
 
+(if (file-accessible-directory-p my-3rd-party-elisp-path)
+    (require 'dired-efap)
+)
+
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-read-shell-command.
 (require 'my-read-shell-command "my-shell")
@@ -100,33 +104,6 @@ path."
                        (dired-get-filename)
                      )
                     )
-  )
-)
-
-(defun my-dired-do-rename ()
-  "Rename or move the file under the cursor in dired mode.
-Prompts with the current name and location as the default."
-  (interactive)
-  (let* ((old-name (dired-get-filename 'no-dir))
-         (abs-old-name (expand-file-name (concat (dired-current-directory)
-                                                 old-name)))
-         (new-name (expand-file-name
-                    (read-file-name (format "Rename %s to : " old-name)
-                                    (dired-current-directory) nil nil
-                                    old-name))))
-    (unless (string= abs-old-name new-name)
-      (rename-file abs-old-name new-name 1)
-      ;; Silently rename the visited file of any buffer visiting this file.
-      (and (get-file-buffer abs-old-name)
-           (with-current-buffer (get-file-buffer abs-old-name)
-             (set-visited-file-name new-name nil t)
-             )
-           )
-      (dired-remove-file abs-old-name)
-      ;; See if it's an inserted subdir, and rename that, too.
-      (dired-rename-subdir abs-old-name new-name)
-      (revert-buffer)
-    )
   )
 )
 
@@ -226,7 +203,7 @@ Prompts with the current name and location as the default."
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
-              (local-set-key [?r]          'my-dired-do-rename)
+              (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
             )
   )

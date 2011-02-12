@@ -87,6 +87,7 @@
      (dired-face-setuid ((t (:foreground "Red"))))
      (dired-face-socket ((t (:foreground "magenta"))))
      (dired-face-symlink ((t (:foreground "blue"))))
+     (dired-efap-face ((t (:background "darkseagreen2"))))
      (display-time-mail-balloon-enhance-face ((t (:background "orange"))))
      (display-time-mail-balloon-gnus-group-face ((t (:foreground "blue"))))
      (display-time-time-balloon-face ((t (:foreground "red"))))
