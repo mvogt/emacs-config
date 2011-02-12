@@ -81,35 +81,28 @@ otherwise, it's unindented."
   )
 )
 
-(defun my-rigid-multi-indent (from to go-right-p)
+(defun my-rigid-multi-indent (go-right-p)
   "Forcibly indent or unindent a region (if active) or the current line.
 Argument go-right-p specifies indent (t) or unindent (nil).
 Beware asymmetric behavior.  Indenting a region performs one space at a time,
 but the three other ops (unindent region, indent line, unindent line) perform
 one indent-basic-offset at a time."
-  (if mark-active
+  (if (and mark-ring mark-active)
       (let ((deactivate-mark))  ; keep region active
         (if go-right-p
-            (indent-rigidly from to 1)
-          (increase-left-margin from to (- indent-basic-offset))
+            (indent-rigidly (region-beginning) (region-end) 1)
+          (increase-left-margin (region-beginning) (region-end)
+                                (- indent-basic-offset))
         )
       )
     (my-basic-indent indent-basic-offset go-right-p)
   )
 )
 
-(defun my-rigid-multi-indent-left (from to)
-  (interactive "r")
-  (my-rigid-multi-indent from to nil)
-)
-
-(defun my-rigid-multi-indent-right (from to)
-  (interactive "r")
-  (my-rigid-multi-indent from to t)
-)
-
-(global-set-key [?\M-,]  'my-rigid-multi-indent-left)
-(global-set-key [?\M-.]  'my-rigid-multi-indent-right)
+(global-set-key [?\M-,]  (lambda () (interactive)
+                           (my-rigid-multi-indent nil)))
+(global-set-key [?\M-.]  (lambda () (interactive)
+                           (my-rigid-multi-indent t)))
 (global-set-key [?\C-\\] (lambda () (interactive)
                            (my-basic-indent indent-basic-offset nil)))
 
