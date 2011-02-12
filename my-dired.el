@@ -234,6 +234,7 @@ Prompts with the current name and location as the default."
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)
+              (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
               (local-set-key [?r]          'my-dired-do-rename)
               (local-set-key [?=]          'my-dired-diff)
             )
