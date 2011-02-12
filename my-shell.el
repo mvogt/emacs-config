@@ -33,7 +33,7 @@
 )
 
 ;; Unprintable chars to use as indicators when found in a string of user text.
-(setq my-background-indicator (char-to-string #x07))
+(setq my-foreground-indicator (char-to-string #x07))
 (setq my-incomplete-indicator (char-to-string #x0c))
 
 ;; This variable must always be bound to something.
@@ -54,9 +54,9 @@
                                minibuffer-local-shell-command-map
                              minibuffer-local-map))
     (define-key map [C-return]
-      (lambda () (interactive) (my-mb-prepend-exit my-background-indicator)))
+      (lambda () (interactive) (my-mb-prepend-exit my-foreground-indicator)))
     (define-key map [?\C-j]
-      (lambda () (interactive) (my-mb-prepend-exit my-background-indicator)))
+      (lambda () (interactive) (my-mb-prepend-exit my-foreground-indicator)))
     (define-key map [M-return]
       (lambda () (interactive) (my-mb-prepend-exit my-incomplete-indicator)))
     (define-key map (kbd "C-M-j")
@@ -92,26 +92,31 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
    ((string-equal (substring command 0 1) my-incomplete-indicator)
     ;; The user must have exited the minibuffer with Meta-Enter instead of
     ;; Enter.  Save the command for later, and don't execute it.
-    (setq command (substring command 1))
+    (setq my-incomplete-cmdline (substring command 1))
     (setq shell-command-history (cdr shell-command-history))
-    (setq my-incomplete-cmdline command)
-    )
-   ((string-equal (substring command 0 1) my-background-indicator)
+   )
+   ((string-equal (substring command 0 1) my-foreground-indicator)
     ;; The user must have exited the minibuffer with Ctrl-Enter instead of
-    ;; Enter.  Execute the command in a background child process with no
-    ;; associated buffer for the output.  This doesn't benefit from several
-    ;; advanced features in shell-command, such as remote buffers.
+    ;; Enter.  Just clean up the string (including in the history) and pass it
+    ;; to shell-command.  Assuming the user didn't append an ampersand, this
+    ;; will run in the foreground (i.e. synchronously).
+    (setq my-incomplete-cmdline nil)
     (setq command (substring command 1))
     (setq shell-command-history (cons command (cdr shell-command-history)))
-    (setq my-incomplete-cmdline nil)
-    (start-process "Shell" nil shell-file-name shell-command-switch command)
-    )
-   (t
-    (setq my-incomplete-cmdline nil)
-    ;; Put both sync and async command outputs in the same buffer.
+    ;; Same buffer for both sync and async command outputs.
     (shell-command command "*Shell Command Output*")
-    )
    )
+   (t
+    ;; Normal command, but we're going to run it in the background by
+    ;; appending an ampersand (if the user didn't already).
+    (setq my-incomplete-cmdline nil)
+    (shell-command (if (string-equal (substring command -1) "&")
+                       command
+                     (concat command "&"))
+                   ;; Same buffer for both sync and async command outputs.
+                   "*Shell Command Output*")
+   )
+  )
 )
 (provide 'my-shell-command)
 
