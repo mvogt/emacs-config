@@ -23,8 +23,9 @@
 ;; this entire file at startup.  I always launch dired anyway.
 (load "dired-aux")
 
-(if (file-accessible-directory-p my-3rd-party-elisp-path)
-    (require 'dired-efap)
+(when (file-accessible-directory-p my-3rd-party-elisp-path)
+  (require 'dired-efap)
+  (require 'dired-details+)    ; http://www.emacswiki.org/emacs/DiredDetails
 )
 
 ;; I'm redefining this dired func to customize it.
@@ -158,6 +159,10 @@ path."
   )
 )
 
+;; Use uni-diff with my preferred options instead of the default context diff.
+;; Applies to dired and maybe other modes, too.
+(setq diff-switches "-upN")
+
 ;; Don't preserve last modified time stamp when copying files in dired.
 ;; Reason: it can make version control (esp. Accurev) miss modified files.
 (setq dired-copy-preserve-time nil)
@@ -181,20 +186,73 @@ path."
 ;; start-up.  The short options need to appear at the end because of the
 ;; regexps below and because some older versions of Emacs appended other short
 ;; options without a leading space or dash.
-(setq dired-listing-switches "--time-style=long-iso -la")
+(setq dired-listing-switches "--time-style=long-iso -al")
 
-;; Redefine two regexps inside dired.  They don't expect any long (double
-;; hyphen) options.  This just checks the last set of options and assumes
-;; they're all short (single hyphen).
-(setq dired-sort-by-date-regexp
-      (concat " *-[^" dired-ls-sorting-switches
-              "]*t[^" dired-ls-sorting-switches "]*$"))
-(setq dired-sort-by-name-regexp
-      (concat " *-[^t" dired-ls-sorting-switches "]+$"))
+;; Redefine this dired function to match the custom sorting feature below.  We
+;; don't attempt to use generic regular expressions.  This is hard-coded to
+;; match the dired-listing-switches above, so the two must stay in sync when
+;; editing this code.
+(defun dired-sort-set-modeline ()
+  (when (eq major-mode 'dired-mode)
+    (setq mode-name
+	  (let (case-fold-search)
+	    (cond
+             ((string-match "-al$" dired-actual-switches)
+              "Dired by nm")
+             ((string-match "-al --group-directories-first$"
+                            dired-actual-switches)
+              "Dired by nd1")
+             ((string-match "-alX$" dired-actual-switches)
+              "Dired by ext")
+             ((string-match "-alS$" dired-actual-switches)
+              "Dired by sz")
+             ((string-match "-alt$" dired-actual-switches)
+              "Dired by tm")
+             (t
+              (concat "Dired " dired-actual-switches))
+            )
+          )
+    )
+    (force-mode-line-update)
+  )
+)
 
-;; Use uni-diff with my preferred options instead of the default context diff.
-;; Applies to dired and maybe other modes, too.
-(setq diff-switches "-upN")
+;; Adapted from Patrick Anderson's file
+;; http://www.emacswiki.org/emacs/dired-sort-map.el
+(defun dired-sort-by-name ()
+  "Sort dired listing by [n]ame"
+  (interactive)
+  (dired-sort-other dired-listing-switches)
+)
+(defun dired-sort-by-name-dirs-1st ()
+  "Sort dired listing by name, grouping [d]irs first"
+  (interactive)
+  (dired-sort-other (concat dired-listing-switches
+                            " --group-directories-first"))
+)
+(defun dired-sort-by-ext ()
+  "Sort dired listing by e[x]tension"
+  (interactive)
+  (dired-sort-other (concat dired-listing-switches "X"))
+)
+(defun dired-sort-by-size ()
+  "Sort dired listing by [s]ize"
+  (interactive)
+  (dired-sort-other (concat dired-listing-switches "S"))
+)
+(defun dired-sort-by-time ()
+  "Sort dired listing by [t]ime"
+  (interactive)
+  (dired-sort-other (concat dired-listing-switches "t"))
+)
+
+(defvar dired-sort-map (make-sparse-keymap))
+(define-key dired-mode-map "s" dired-sort-map)
+(define-key dired-sort-map "n" 'dired-sort-by-name)
+(define-key dired-sort-map "d" 'dired-sort-by-name-dirs-1st)
+(define-key dired-sort-map "x" 'dired-sort-by-ext)
+(define-key dired-sort-map "s" 'dired-sort-by-size)
+(define-key dired-sort-map "t" 'dired-sort-by-time)
 
 (add-hook 'dired-mode-hook
   (function (lambda ()
@@ -205,6 +263,7 @@ path."
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
               (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
+              (dired-sort-by-name-dirs-1st)
             )
   )
 )
