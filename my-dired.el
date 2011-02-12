@@ -58,22 +58,6 @@ FILES are affected."
   nil
 )
 
-(defun dired-subshell ()
-  "Launch a shell subprocess from the current dired directory in a
-uniquely named buffer."
-  (interactive)
-  (save-match-data
-    (let ((new-buf-name (concat "shell-" (buffer-name))))
-      (switch-to-buffer-other-window (current-buffer))
-      (shell)
-      (and (string-match "<[0-9]+>\\'" new-buf-name)
-           (setq new-buf-name (substring new-buf-name 0 (match-beginning 0))))
-      (rename-buffer (generate-new-buffer-name new-buf-name))
-      (force-mode-line-update)
-    )
-  )
-)
-
 (defun dired-abs-cur-file-new-kill ()
   "Make new entry at the head of the kill ring containing the absolute path
 to the file on the current dired line."
@@ -228,8 +212,6 @@ Prompts with the current name and location as the default."
 
 (add-hook 'dired-mode-hook
   (function (lambda ()
-              (local-set-key [?\C-c ?s]    'dired-subshell)
-              (local-set-key [?\C-c ?\C-s] 'dired-subshell)
               (local-set-key [?\C-c ?w]    'dired-marked-files-append-kill)
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)

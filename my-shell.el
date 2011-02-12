@@ -189,6 +189,25 @@ If buffer is omitted, select the shell command output buffer."
   )
 )
 
+(defun my-subshell ()
+  "Launch a shell subprocess in a uniquely named buffer.
+Prompt for the directory, and default to the current buffer's directory."
+  (interactive)
+  (save-match-data
+    (let ((dir (read-file-name "Run interactive shell in: "
+                               nil default-directory))
+          (buf-name (concat "shell-" (buffer-name)))
+          buf)
+      (and (string-match "<[0-9]+>\\'" buf-name)
+           (setq buf-name (substring buf-name 0 (match-beginning 0))))
+      (setq buf (get-buffer-create (generate-new-buffer-name buf-name)))
+      (switch-to-buffer-other-window buf)
+      (shell buf)
+      (force-mode-line-update)
+    )
+  )
+)
+
 ;; Interactive shell mode (command prompt window)
 ;; Set additional keys to scroll the command history so I can use it from a
 ;; terminal that doesn't have the full keyboard support that I'm accustomed
@@ -210,5 +229,6 @@ If buffer is omitted, select the shell command output buffer."
   )
 )
 
-(global-set-key [?\M-o] 'my-interactive-shell-command)
-(global-set-key [?\M-O] 'select-shell-command-output-window)
+(global-set-key [?\M-o]       'my-interactive-shell-command)
+(global-set-key [?\M-O]       'select-shell-command-output-window)
+(global-set-key [?\C-x ?\M-o] 'my-subshell)

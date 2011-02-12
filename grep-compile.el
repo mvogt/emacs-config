@@ -84,9 +84,9 @@ the search to a find without grep."
          (start-dir (read-file-name "Starting directory: "
                                     nil default-directory)))
     (if (>= emacs-major-version 22)
-        ;; Much easier, simpler, and better in ver 22.  I may want to change
-        ;; my key binding to just rgrep in ver 22 instead of this function.
-        ;; However, I like my sequence of prompts better.
+        ;; Much easier, simpler, and better starting in ver 22.  I may want to
+        ;; change my key binding to just rgrep in ver 22 instead of this
+        ;; function.  However, I like my sequence of prompts better.
         (compilation-start (concat "cd " start-dir " && " my-grep-cmd)
                            'grep-mode)
       (let* ((corrected-start-dir (if (string= "/" (substring start-dir -1))
