@@ -201,10 +201,19 @@ Prompts with the current name and location as the default."
 
 ;; The default time style doesn't seem to be the same on all Linux
 ;; distributions.  I have the same option in my "ll" alias created during bash
-;; start-up.  Beware that the short options need to appear at the end because
-;; some dired commands will cause "ls" to be run with other short options
-;; appended without a leading space or dash.
-(setq dired-listing-switches "--time-style=long-iso -al")
+;; start-up.  The short options need to appear at the end because of the
+;; regexps below and because some older versions of Emacs appended other short
+;; options without a leading space or dash.
+(setq dired-listing-switches "--time-style=long-iso -la")
+
+;; Redefine two regexps inside dired.  They don't expect any long (double
+;; hyphen) options.  This just checks the last set of options and assumes
+;; they're all short (single hyphen).
+(setq dired-sort-by-date-regexp
+      (concat " *-[^" dired-ls-sorting-switches
+              "]*t[^" dired-ls-sorting-switches "]*$"))
+(setq dired-sort-by-name-regexp
+      (concat " *-[^t" dired-ls-sorting-switches "]+$"))
 
 ;; Use uni-diff with my preferred options instead of the default context diff.
 ;; Applies to dired and maybe other modes, too.
