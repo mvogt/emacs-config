@@ -69,7 +69,6 @@
 The uniform distance between tabs is specified by tab-stop.
 The current line is indented if increment-p is non-nil;
 otherwise, it's unindented."
-  (interactive)
   (save-excursion
     (beginning-of-line-text)
     (let* ((cur-col (current-column))
@@ -82,12 +81,38 @@ otherwise, it's unindented."
   )
 )
 
-(global-set-key [?\M-,]       'decrease-left-margin)     ; this is a hack
-(global-set-key [?\M-.]       'indent-rigidly)
+(defun my-rigid-multi-indent (from to go-right-p)
+  "Forcibly indent or unindent a region (if active) or the current line.
+Argument go-right-p specifies indent (t) or unindent (nil).
+Beware asymmetric behavior.  Indenting a region performs one space at a time,
+but the three other ops (unindent region, indent line, unindent line) perform
+one indent-basic-offset at a time."
+  (if mark-active
+      (let ((deactivate-mark))  ; keep region active
+        (if go-right-p
+            (indent-rigidly from to 1)
+          (increase-left-margin from to (- indent-basic-offset))
+        )
+      )
+    (my-basic-indent indent-basic-offset go-right-p)
+  )
+)
+
+(defun my-rigid-multi-indent-left (from to)
+  (interactive "r")
+  (my-rigid-multi-indent from to nil)
+)
+
+(defun my-rigid-multi-indent-right (from to)
+  (interactive "r")
+  (my-rigid-multi-indent from to t)
+)
+
+(global-set-key [?\M-,]  'my-rigid-multi-indent-left)
+(global-set-key [?\M-.]  'my-rigid-multi-indent-right)
+(global-set-key [?\C-\\] (lambda () (interactive)
+                           (my-basic-indent indent-basic-offset nil)))
+
 (global-set-key [C-backspace] 'delete-indentation)
 (global-set-key [?\C-c ?i]    'my-set-indent-basic-offset)
 (global-set-key [?\C-c ?\C-i] 'set-tab-width)
-(global-set-key [?\C-\\]      (lambda () (interactive)
-                                (my-basic-indent indent-basic-offset nil)))
-(global-set-key [?\M-i]       (lambda () (interactive)
-                                (my-basic-indent indent-basic-offset t)))
