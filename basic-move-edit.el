@@ -46,6 +46,21 @@
 (global-set-key [?\M-N]  (lambda () (interactive) (scroll-up 1)))
 (global-set-key [?\M-P]  (lambda () (interactive) (scroll-down 1)))
 
+;; Put these unused keys to good use.
+(global-set-key [?\M-n] 'forward-paragraph)
+(global-set-key [?\M-p] 'backward-paragraph)
+
+;; Inverted "T" arrow keys on M-S-jkli.
+(global-set-key [?\M-J] 'backward-char)
+(global-set-key [?\M-L] 'forward-char)
+(global-set-key [?\M-I] 'previous-line)
+(global-set-key [?\M-K] 'next-line)
+
+;; This is more useful than the default of duplicating backward/forward
+;; paragraph like C-left/C-right does.
+(global-set-key [M-left]  'backward-sentence)
+(global-set-key [M-right] 'forward-sentence)
+
 ;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
 ;; defaulting to backspace instead of delete-char.
 (global-set-key [delete] 'delete-char)
