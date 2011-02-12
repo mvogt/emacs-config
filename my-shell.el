@@ -108,11 +108,35 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
     )
    (t
     (setq my-incomplete-cmdline nil)
-    (shell-command command)
+    ;; Put both sync and async command outputs in the same buffer.
+    (shell-command command "*Shell Command Output*")
     )
    )
 )
 (provide 'my-shell-command)
+
+;; Redefine standard func with extra stuff at the beginning to work around an
+;; annoying bug where async command output intermittently disappears because
+;; the last line of the buffer is shown at the first line of the window.  This
+;; switches to that window (if visible), displays the last line of the buffer
+;; at the bottom of the window, and switches back to the original window.
+(defun shell-command-sentinel (process signal)
+  (if (memq (process-status process) '(exit signal))
+      (let ((cur-win (get-buffer-window))
+            (out-win (get-buffer-window "*Shell Command Output*")))
+        (if out-win
+            (progn
+              (select-window out-win)
+              (recenter -1)
+              (select-window cur-win)
+            )
+        )
+        (message "%s: %s."
+                 (car (cdr (cdr (process-command process))))
+                 (substring signal 0 -1))
+      )
+  )
+)
 
 (require 'my-cur-word-or-region "grep-compile")
 (defun my-interactive-shell-command (append-p)
