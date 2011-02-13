@@ -18,6 +18,8 @@
 ;;----------------------------------------------------------------------------
 ;; Miscellaneous
 ;;
+(autoload 'magit-status "magit" nil t)
+
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
 ;; It's useful for aliasing prefixes other than C-x.  (The method I used for
 ;; aliasing C-x doesn't work for C-c.  It's probably because C-c is treated
@@ -53,14 +55,6 @@ and it can be: FIXME, NOTE, HACK.
                       (if (= str-type ?d) "DEBUG" "FIXME")))
                   (user-login-name)
                   (format-time-string "%Y%m%d" (current-time))))
-)
-
-(defun my-git-gui (gitk-p)
-  "Run git gui in a child process.  Non-null prefix means run gitk instead.
-No buffer is associated with the output."
-  (interactive "P")
-  (start-process "Git GUI" nil shell-file-name shell-command-switch
-                 (if (null gitk-p) "git gui" "gitk --all"))
 )
 
 (defun my-format-search-url (terms)
@@ -112,6 +106,12 @@ to the decimal value at the point or region."
   )
 )
 
+(define-key vc-prefix-map [?x] 'magit-status)
+(define-key vc-prefix-map [?k] (lambda () (interactive)
+                                 (start-process "Git GUI" nil "git" "gui")))
+(define-key vc-prefix-map [?K] (lambda () (interactive)
+                                 (start-process "gitk" nil "gitk" "--all")))
+
 ;; I never use the default upcase-word binding of M-u.  It's much more useful
 ;; to me as the universal prefix because it allows me to hold down Alt for the
 ;; entirety of many key sequences.
@@ -133,7 +133,6 @@ to the decimal value at the point or region."
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
 (global-set-key [?\C-x ?\M-u] 'my-browse-url)
-(global-set-key [M-f5]        'my-git-gui)
 (global-set-key [f8]          'gdb)
 
 ;; Dangerously similar to C-x C-c, but I set confirm-kill-emacs.
