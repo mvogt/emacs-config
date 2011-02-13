@@ -29,6 +29,7 @@
 )
 
 (setq dired-details-hide-link-targets nil)
+(setq dired-details-initially-hide nil)
 
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-read-shell-command.
@@ -284,6 +285,7 @@ path."
 
 (add-hook 'dired-mode-hook
   (function (lambda ()
+              (setq autopair-dont-activate t)
               (local-set-key [?\C-c ?w]    'dired-marked-files-append-kill)
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
