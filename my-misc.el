@@ -18,7 +18,34 @@
 ;;----------------------------------------------------------------------------
 ;; Miscellaneous
 ;;
-(autoload 'magit-status "magit" nil t)
+;; Can't use autoload because of my custom function below.
+(when (file-accessible-directory-p my-3rd-party-elisp-path)
+  (require 'magit)
+  (define-key magit-status-mode-map [?\C-c ?\C-d] 'my-magit-difftool-item)
+)
+
+(defun my-magit-difftool-item ()
+  "Launch difftool on the item at point."
+  (interactive)
+  (magit-section-action (item info "stage")
+    ((untracked *)
+     (error "Can't run difftool on untracked file"))
+    ((unstaged diff)
+     (start-process "git difftool" nil "git" "difftool"
+                    (magit-diff-item-file item)))
+    ((unstaged *)
+     (error "Must select all of a single file to run difftool"))
+    ((staged diff)
+     (start-process "git difftool" nil "git" "difftool" "--cached"
+                    (magit-diff-item-file item)))
+    ((staged *)
+     (error "Must select all of a single file to run difftool"))
+    ((hunk)
+     (error "Can't diff this hunk"))
+    ((diff)
+     (error "Can't diff this (FIXME: What is it?)"))
+  )
+)
 
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
 ;; It's useful for aliasing prefixes other than C-x.  (The method I used for
