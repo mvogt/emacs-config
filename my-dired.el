@@ -28,6 +28,8 @@
   (require 'dired-details+)    ; http://www.emacswiki.org/emacs/DiredDetails
 )
 
+(setq dired-details-hide-link-targets nil)
+
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-read-shell-command.
 (require 'my-read-shell-command "my-shell")
@@ -107,6 +109,24 @@ path."
                     )
   )
 )
+
+(setq dired-re-exec (concat dired-re-maybe-mark
+                            dired-re-inode-size
+                            "-[-r][-w]x"))
+(defface dired-executable
+  '((t (:inherit font-lock-keyword-face)))
+  "Face used for executable files."
+  :group 'dired-faces
+  :version "22.1")
+(defvar dired-executable-face 'dired-executable
+  "Face name used for executable files.")
+
+;; Add this face for executables to the ones dired already recognizes.
+(add-to-list 'dired-font-lock-keywords
+             (list dired-re-exec
+                   '(".+" (dired-move-to-filename)
+                     nil (0 dired-executable-face)))
+             t)
 
 (defun my-dired-sandbox (which-sandbox)
   "Launch dired in one of several pre-defined paths."
