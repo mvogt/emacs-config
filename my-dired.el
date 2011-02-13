@@ -298,4 +298,5 @@ path."
   )
 )
 
-(global-set-key [f5] 'my-dired-sandbox)
+(global-set-key [f5]          'my-dired-sandbox)
+(global-set-key [?\M-g ?\M-w] 'my-dired-sandbox)

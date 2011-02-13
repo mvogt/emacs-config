@@ -106,12 +106,13 @@ the search to a find without grep."
   )
 )
 
-(global-set-key [f9]   'compile)
-(global-set-key [f4]   'my-recursive-grep)
+(global-set-key [f9] 'compile)
+(global-set-key [f4] 'my-recursive-grep)
+(global-set-key [?\M-g ?\M-s] 'my-recursive-grep)
 ;; For find-tag, must do visit-tags-table first (once per session).
 (global-set-key [C-f4] 'find-tag)
 ;; For grep and compile buffers (or anything in compilation-mode).
-(global-set-key [f6]   'next-error)
+(global-set-key [f6] 'next-error)
 
 (add-hook 'compilation-mode-hook
   (function (lambda ()

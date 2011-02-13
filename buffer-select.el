@@ -154,5 +154,6 @@ Leave Buffer Selection Menu."
 (global-set-key [f11]         'delete-other-windows)
 (global-set-key [f12]         'other-window)
 (global-set-key [C-f12]       'my-bury-buffer-other-window)
+(global-set-key [?\C-x ?9]    'my-bury-buffer-other-window)
 (global-set-key [?\M-z]       (lambda () (interactive)
                                 (kill-buffer (buffer-name))))
