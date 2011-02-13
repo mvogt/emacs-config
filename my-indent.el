@@ -87,7 +87,7 @@ Argument go-right-p specifies indent (t) or unindent (nil).
 Beware asymmetric behavior.  Indenting a region performs one space at a time,
 but the three other ops (unindent region, indent line, unindent line) perform
 one indent-basic-offset at a time."
-  (if (and mark-ring mark-active)
+  (if mark-active
       (let ((deactivate-mark))  ; keep region active
         (if go-right-p
             (indent-rigidly (region-beginning) (region-end) 1)
