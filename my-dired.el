@@ -110,6 +110,14 @@ path."
   )
 )
 
+;; I don't understand the functional difference between call-process and
+;; start-process, but gnome-open only works with call-process.
+(defun my-dired-gnome-open ()
+  "Call gnome-open on the current line's file name."
+  (interactive)
+  (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+)
+
 (setq dired-re-exec (concat dired-re-maybe-mark
                             dired-re-inode-size
                             "-[-r][-w]x"))
@@ -281,6 +289,8 @@ path."
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
+              (local-set-key [C-return]    'my-dired-gnome-open)
+              (local-set-key [?\C-j]       'my-dired-gnome-open)
               (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
               (dired-sort-by-name-dirs-1st)
