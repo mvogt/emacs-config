@@ -29,12 +29,10 @@
 When switching back to the minibuffer, quit the completions window to show the
 buffer that was there before."
   (interactive)
-  (if (eq (get-buffer-window) (get-buffer-window "*Completions*"))
-      (progn
-        (quit-window)
-        (select-window (minibuffer-window))
-      )
-    (switch-to-completions)
+  (if (not (eq (get-buffer-window) (get-buffer-window "*Completions*")))
+      (switch-to-completions)
+    (quit-window)
+    (select-window (minibuffer-window))
   )
 )
 

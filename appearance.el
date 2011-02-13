@@ -44,11 +44,9 @@
     (global-set-key [?\C-x ?W] (lambda () (interactive)
                                  (setq line-move-visual
                                        (if line-move-visual nil t))))
-  (if (file-accessible-directory-p my-3rd-party-elisp-path)
-      (progn
-        (autoload 'visible-lines-mode "visible-lines")
-        (global-set-key [?\C-x ?W] 'visible-lines-mode)
-      )
+  (when (file-accessible-directory-p my-3rd-party-elisp-path)
+    (autoload 'visible-lines-mode "visible-lines")
+    (global-set-key [?\C-x ?W] 'visible-lines-mode)
   )
 )
 (global-set-key [?\C-x ?w]    'toggle-truncate-lines)
@@ -67,21 +65,19 @@
 (defvar my-font     "Liberation Mono-10")
 (defvar my-geometry '((width . 90) (height . 60) (top . 0) (left . -3)))
 
-(if (and (boundp 'my-unix-p) my-unix-p)
-    (progn
-      (defun my-frame-create-hook (frame)
-        (select-frame frame)
-        (set-frame-font my-font)
-        ;; Only set geometry on the first frame.  The length of frame-list is
-        ;; always one more than the number of frames.
-        (if (<= (length (frame-list)) 2)
-            (modify-frame-parameters frame my-geometry))
-      )
-      (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
-      ;; Only required before Emacs 23, but doesn't hurt anything in later
-      ;; versions.
-      (set-frame-font my-font)
-    )
+(when (and (boundp 'my-unix-p) my-unix-p)
+  (defun my-frame-create-hook (frame)
+    (select-frame frame)
+    (set-frame-font my-font)
+    ;; Only set geometry on the first frame.  The length of frame-list is
+    ;; always one more than the number of frames.
+    (if (<= (length (frame-list)) 2)
+        (modify-frame-parameters frame my-geometry))
+  )
+  (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
+  ;; Only required before Emacs 23, but doesn't hurt anything in later
+  ;; versions.
+  (set-frame-font my-font)
 )
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything

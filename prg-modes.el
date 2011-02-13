@@ -148,18 +148,16 @@ Causes an intuitive indent level matching the specific argument."
 ;;
 (let ((my-yas-path (concat my-3rd-party-elisp-path "yasnippet-0.6.1c"))
       (my-snippets-path (concat my-elisp-path "snippets")))
-  (if (and (file-accessible-directory-p my-yas-path)
-           (file-accessible-directory-p my-snippets-path))
-      (progn
-        (add-to-list 'load-path my-yas-path t)
-        (require 'yasnippet)
-        (yas/initialize)
-        ;; Reload with yas/reload-all
-        (yas/load-directory my-snippets-path)
+  (when (and (file-accessible-directory-p my-yas-path)
+             (file-accessible-directory-p my-snippets-path))
+    (add-to-list 'load-path my-yas-path t)
+    (require 'yasnippet)
+    (yas/initialize)
+    ;; Reload with yas/reload-all
+    (yas/load-directory my-snippets-path)
 
-        (setq yas/wrap-around-region t)
-        (global-set-key [?\C-x ?\C-n] 'yas/insert-snippet)
-        (global-set-key [?\C-x ?\M-n] 'yas/insert-snippet)
-      )
+    (setq yas/wrap-around-region t)
+    (global-set-key [?\C-x ?\C-n] 'yas/insert-snippet)
+    (global-set-key [?\C-x ?\M-n] 'yas/insert-snippet)
   )
 )

@@ -19,17 +19,15 @@
 ;; Shell stuff
 ;;
 ;; Under Windows, use Cygwin's bash for our shell mode.
-(and (boundp 'my-unix-p)
-     (not my-unix-p)
-     (file-directory-p "c:/cygwin")
-     (progn
-       (setq exec-path (cons "c:/cygwin/bin" exec-path))
-       (setenv "PATH" (concat "c:\\cygwin\\bin;" (getenv "PATH")))
-       (setq process-coding-system-alist '(("bash" . undecided-unix)))
-       (setq shell-file-name "bash")
-       (setenv "SHELL" shell-file-name)
-       (setq explicit-shell-file-name shell-file-name)
-     )
+(when (and (boundp 'my-unix-p)
+           (not my-unix-p)
+           (file-directory-p "c:/cygwin"))
+  (setq exec-path (cons "c:/cygwin/bin" exec-path))
+  (setenv "PATH" (concat "c:\\cygwin\\bin;" (getenv "PATH")))
+  (setq process-coding-system-alist '(("bash" . undecided-unix)))
+  (setq shell-file-name "bash")
+  (setenv "SHELL" shell-file-name)
+  (setq explicit-shell-file-name shell-file-name)
 )
 
 (setq my-shell-outbuf "*Shell Command Output*")
@@ -131,12 +129,10 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
   (if (memq (process-status process) '(exit signal))
       (let ((cur-win (get-buffer-window))
             (out-win (get-buffer-window my-shell-outbuf)))
-        (if out-win
-            (progn
-              (select-window out-win)
-              (recenter -1)
-              (select-window cur-win)
-            )
+        (when out-win
+          (select-window out-win)
+          (recenter -1)
+          (select-window cur-win)
         )
         (message "%s: %s."
                  (car (cdr (cdr (process-command process))))

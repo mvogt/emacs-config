@@ -103,11 +103,9 @@
 ;; Separate package by the author of YASnippet.  They go well together.
 ;; http://code.google.com/p/autopair/
 ;; http://www.emacswiki.org/emacs/AutoPairs
-(if (file-accessible-directory-p my-3rd-party-elisp-path)
-    (progn
-      (require 'autopair)
-      (autopair-global-mode 1)
-    )
+(when (file-accessible-directory-p my-3rd-party-elisp-path)
+  (require 'autopair)
+  (autopair-global-mode 1)
 )
 
 ;; This is at the end because it's very disruptive visually, and
