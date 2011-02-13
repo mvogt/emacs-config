@@ -32,6 +32,8 @@
      )
 )
 
+(setq my-shell-outbuf "*Shell Command Output*")
+
 ;; Unprintable chars to use as indicators when found in a string of user text.
 (setq my-foreground-indicator (char-to-string #x07))
 (setq my-incomplete-indicator (char-to-string #x0c))
@@ -104,7 +106,7 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
     (setq command (substring command 1))
     (setq shell-command-history (cons command (cdr shell-command-history)))
     ;; Same buffer for both sync and async command outputs.
-    (shell-command command "*Shell Command Output*")
+    (shell-command command my-shell-outbuf)
    )
    (t
     ;; Normal command, but we're going to run it in the background by
@@ -114,7 +116,7 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
                        command
                      (concat command "&"))
                    ;; Same buffer for both sync and async command outputs.
-                   "*Shell Command Output*")
+                   my-shell-outbuf)
    )
   )
 )
@@ -128,7 +130,7 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
 (defun shell-command-sentinel (process signal)
   (if (memq (process-status process) '(exit signal))
       (let ((cur-win (get-buffer-window))
-            (out-win (get-buffer-window "*Shell Command Output*")))
+            (out-win (get-buffer-window my-shell-outbuf)))
         (if out-win
             (progn
               (select-window out-win)
@@ -173,7 +175,7 @@ in the background without a buffer showing its output."
 If buffer is omitted, select the shell command output buffer."
   (interactive)
   (setq buffer (if (null buffer)
-                   (get-buffer "*Shell Command Output*")
+                   (get-buffer my-shell-outbuf)
                  (if (bufferp buffer) buffer (get-buffer buffer))
                )
   )
