@@ -200,6 +200,7 @@ Prompt for the directory, and default to the current buffer's directory."
            (setq buf-name (substring buf-name 0 (match-beginning 0))))
       (setq buf (get-buffer-create (generate-new-buffer-name buf-name)))
       (switch-to-buffer-other-window buf)
+      (cd dir)
       (shell buf)
       (force-mode-line-update)
     )
