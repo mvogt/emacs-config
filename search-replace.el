@@ -139,7 +139,6 @@ call the wrapped function with minimal coding pain."
 )
 
 (global-set-key [?\C-s]       'isearch-forward)
-(global-set-key [?\M-s]       'isearch-forward-word)
 (global-set-key [?\C-r]       'query-replace-regexp)
 (global-set-key [?\M-r]       'query-replace)
 (global-set-key [?\C-x ?\C-r] 'query-replace-regexp-multibuf)

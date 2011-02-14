@@ -43,6 +43,7 @@
 (global-set-key [?\C-x ?\M-i]     'ffap-other-window)
 
 (global-set-key [?\C-\;]          'save-buffer)
+(global-set-key [?\M-s]           'save-buffer)
 (global-set-key [?\C-x ?\M-s]     'save-buffer)
 (global-set-key [f2]              'save-buffer)
 (global-set-key (kbd "M-<f2>")    'write-file)
