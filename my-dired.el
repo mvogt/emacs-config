@@ -218,7 +218,7 @@ path."
 ;; start-up.  The short options need to appear at the end because of the
 ;; regexps below and because some older versions of Emacs appended other short
 ;; options without a leading space or dash.
-(setq dired-listing-switches "--time-style=long-iso -al")
+(setq dired-listing-switches "--time-style=long-iso -ahl")
 
 ;; Redefine this dired function to match the custom sorting feature below.  We
 ;; don't attempt to use generic regular expressions.  This is hard-coded to
@@ -229,16 +229,16 @@ path."
     (setq mode-name
 	  (let (case-fold-search)
 	    (cond
-             ((string-match "-al$" dired-actual-switches)
+             ((string-match "-ahl$" dired-actual-switches)
               "Dired by nm")
-             ((string-match "-al --group-directories-first$"
+             ((string-match "-ahl --group-directories-first$"
                             dired-actual-switches)
               "Dired by nd1")
-             ((string-match "-alX$" dired-actual-switches)
+             ((string-match "-ahlX$" dired-actual-switches)
               "Dired by ext")
-             ((string-match "-alS$" dired-actual-switches)
+             ((string-match "-ahlS$" dired-actual-switches)
               "Dired by sz")
-             ((string-match "-alt$" dired-actual-switches)
+             ((string-match "-ahlt$" dired-actual-switches)
               "Dired by tm")
              (t
               (concat "Dired " dired-actual-switches))
