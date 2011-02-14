@@ -106,8 +106,9 @@ the search to a find without grep."
   )
 )
 
-(global-set-key [f9] 'compile)
-(global-set-key [f4] 'my-recursive-grep)
+(global-set-key [f9]          'compile)
+(global-set-key [?\C-x ?7]    'compile)
+(global-set-key [f4]          'my-recursive-grep)
 (global-set-key [?\M-g ?\M-s] 'my-recursive-grep)
 ;; For find-tag, must do visit-tags-table first (once per session).
 (global-set-key [C-f4] 'find-tag)
