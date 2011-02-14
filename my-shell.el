@@ -228,5 +228,5 @@ Prompt for the directory, and default to the current buffer's directory."
 )
 
 (global-set-key [?\M-o]       'my-interactive-shell-command)
-(global-set-key [?\M-O]       'select-shell-command-output-window)
+(global-set-key [?\C-x ?O]    'select-shell-command-output-window)
 (global-set-key [?\C-x ?\M-o] 'my-subshell)
