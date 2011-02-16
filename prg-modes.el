@@ -143,6 +143,19 @@ Causes an intuitive indent level matching the specific argument."
 
 
 ;;----------------------------------------------------------------------------
+;; Makefile mode
+;;
+;; Restore global bindings for these keys with broken, useless mode-specific
+;; defaults.
+(add-hook 'makefile-mode-hook
+  (function (lambda ()
+              (local-unset-key [?\M-p])
+              (local-unset-key [?\M-n]))
+  )
+)
+
+
+;;----------------------------------------------------------------------------
 ;; YASnippet
 ;; http://code.google.com/p/yasnippet/
 ;;
