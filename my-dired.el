@@ -337,6 +337,7 @@ With a prefix argument, creates a buffer."
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
+              (local-set-key [C-backspace] 'my-dired-up-directory)
               (local-set-key [?^]          'my-dired-up-directory)
               (local-set-key [?e]          'my-dired-find-file)
               (local-set-key [?f]          'my-dired-find-file)
