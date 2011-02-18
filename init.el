@@ -97,6 +97,7 @@
 (load "my-shell")
 (load "my-dired")
 (load "my-completion")
+(load "my-vcs")
 (load "my-misc")
 (load "my-html")
 
