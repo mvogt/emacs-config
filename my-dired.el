@@ -111,12 +111,55 @@ path."
   )
 )
 
-;; I don't understand the functional difference between call-process and
-;; start-process, but gnome-open only works with call-process.
 (defun my-dired-gnome-open ()
-  "Call gnome-open on the current line's file name."
+  "Call gnome-open on the current line's file name.
+If it's a directory, just open a new dired buffer."
   (interactive)
-  (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+  ;; Bind find-file-run-dired so that the command works on directories, too,
+  ;; independent of the user's setting.
+  (let ((find-file-run-dired t)
+        (file (dired-get-file-for-visit)))
+    (if (file-directory-p file)
+        (find-file file)
+      ;; I don't understand the functional difference between call-process and
+      ;; start-process, but gnome-open only works with call-process.
+      (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+    )
+  )
+)
+
+(defun my-dired-find-file ()
+  "Visit the file or directory named on this line.
+Same as dired-find-file, but when visiting a directory, kill the current
+buffer before launching the new one."
+  (interactive)
+  ;; Bind find-file-run-dired so that the command works on directories, too,
+  ;; independent of the user's setting.
+  (let ((find-file-run-dired t)
+        (file (dired-get-file-for-visit)))
+    (and (file-directory-p file)
+         (kill-buffer))
+    (find-file file))
+)
+
+(defun my-dired-up-directory (&optional create-buf-p)
+  "Run Dired on parent directory of current directory.
+With a prefix argument, creates a buffer."
+  (interactive "P")
+  (let* ((dir (dired-current-directory))
+	 (up (file-name-directory (directory-file-name dir))))
+    (or (dired-goto-file (directory-file-name dir))
+	;; Only try dired-goto-subdir if buffer has more than one dir.
+	(and (cdr dired-subdir-alist)
+	     (dired-goto-subdir up))
+	(progn
+	  (unless create-buf-p
+            (kill-buffer))
+          (dired up)
+          (dired-goto-file dir)
+        )
+    )
+  )
 )
 
 (setq dired-re-exec (concat dired-re-maybe-mark
@@ -294,6 +337,11 @@ path."
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
               (local-set-key [?\C-c ?\r]   'dired-run-file)
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
+              (local-set-key [?^]          'my-dired-up-directory)
+              (local-set-key [?e]          'my-dired-find-file)
+              (local-set-key [?f]          'my-dired-find-file)
+              (local-set-key [return]      'my-dired-find-file)
+              (local-set-key [?\C-m]       'my-dired-find-file)
               (local-set-key [C-return]    'my-dired-gnome-open)
               (local-set-key [?\C-j]       'my-dired-gnome-open)
               (local-set-key [?r]          'dired-efap)
