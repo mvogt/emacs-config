@@ -41,8 +41,8 @@ ARG is the prefix arg and may be used to indicate in the prompt which
 FILES are affected."
   (minibuffer-with-setup-hook
       (lambda ()
-	(set (make-local-variable 'minibuffer-default-add-function)
-	     'minibuffer-default-add-dired-shell-commands))
+        (set (make-local-variable 'minibuffer-default-add-function)
+             'minibuffer-default-add-dired-shell-commands))
     (dired-mark-pop-up
      nil 'shell files
      #'my-read-shell-command
@@ -56,8 +56,8 @@ FILES are affected."
 (require 'my-shell-command "my-shell")
 (defun dired-run-shell-command (command)
   (let ((handler
-	 (find-file-name-handler (directory-file-name default-directory)
-				 'shell-command)))
+         (find-file-name-handler (directory-file-name default-directory)
+                                 'shell-command)))
     (if handler
         (apply handler 'shell-command (list command))
       (my-shell-command command))
@@ -113,47 +113,34 @@ path."
 
 (defun my-dired-gnome-open ()
   "Call gnome-open on the current line's file name.
-If it's a directory, just open a new dired buffer."
+If it's a directory, open a new dired buffer, and kill the current one."
   (interactive)
   ;; Bind find-file-run-dired so that the command works on directories, too,
   ;; independent of the user's setting.
   (let ((find-file-run-dired t)
         (file (dired-get-file-for-visit)))
-    (if (file-directory-p file)
-        (find-file file)
-      ;; I don't understand the functional difference between call-process and
-      ;; start-process, but gnome-open only works with call-process.
-      (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+    (if (not (file-directory-p file))
+        ;; I don't understand the functional difference between call-process
+        ;; and start-process, but gnome-open only works with call-process.
+        (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+      (kill-buffer)
+      (find-file file)
     )
   )
 )
 
-(defun my-dired-find-file ()
-  "Visit the file or directory named on this line.
-Same as dired-find-file, but when visiting a directory, kill the current
-buffer before launching the new one."
-  (interactive)
-  ;; Bind find-file-run-dired so that the command works on directories, too,
-  ;; independent of the user's setting.
-  (let ((find-file-run-dired t)
-        (file (dired-get-file-for-visit)))
-    (and (file-directory-p file)
-         (kill-buffer))
-    (find-file file))
-)
-
-(defun my-dired-up-directory (&optional create-buf-p)
+(defun my-dired-up-directory (&optional kill-buf-p)
   "Run Dired on parent directory of current directory.
-With a prefix argument, creates a buffer."
+With a prefix argument, kills the current buffer."
   (interactive "P")
   (let* ((dir (dired-current-directory))
-	 (up (file-name-directory (directory-file-name dir))))
+         (up (file-name-directory (directory-file-name dir))))
     (or (dired-goto-file (directory-file-name dir))
-	;; Only try dired-goto-subdir if buffer has more than one dir.
-	(and (cdr dired-subdir-alist)
-	     (dired-goto-subdir up))
-	(progn
-	  (unless create-buf-p
+        ;; Only try dired-goto-subdir if buffer has more than one dir.
+        (and (cdr dired-subdir-alist)
+             (dired-goto-subdir up))
+        (progn
+          (if kill-buf-p
             (kill-buffer))
           (dired up)
           (dired-goto-file dir)
@@ -270,8 +257,8 @@ With a prefix argument, creates a buffer."
 (defun dired-sort-set-modeline ()
   (when (eq major-mode 'dired-mode)
     (setq mode-name
-	  (let (case-fold-search)
-	    (cond
+          (let (case-fold-search)
+            (cond
              ((string-match "-ahl$" dired-actual-switches)
               "Dired by nm")
              ((string-match "-ahl --group-directories-first$"
@@ -339,10 +326,6 @@ With a prefix argument, creates a buffer."
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
               (local-set-key [C-backspace] 'my-dired-up-directory)
               (local-set-key [?^]          'my-dired-up-directory)
-              (local-set-key [?e]          'my-dired-find-file)
-              (local-set-key [?f]          'my-dired-find-file)
-              (local-set-key [return]      'my-dired-find-file)
-              (local-set-key [?\C-m]       'my-dired-find-file)
               (local-set-key [C-return]    'my-dired-gnome-open)
               (local-set-key [?\C-j]       'my-dired-gnome-open)
               (local-set-key [?r]          'dired-efap)
