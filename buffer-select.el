@@ -27,6 +27,10 @@
 ;; don't like that because it requires pressing more keys to navigate around.
 (setq bs-default-configuration "all")
 
+;; Default buffer selection max window height is 20, and I sometimes have more
+;; than 20 buffers open and want to see them all.
+(setq bs-max-window-height 40)
+
 ;; Add another, more familiar key to bs-show mode.
 (define-key bs-mode-map [?1]       'bs-select-in-one-window)
 
