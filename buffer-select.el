@@ -49,6 +49,18 @@ The current window remains selected."
   )
 )
 
+;; Redefine this func from bs.el so that it doesn't try to visit the buffer
+;; inside the tiny buffer selection window.
+(defun bs-view ()
+  "View current line's buffer in View mode, and leave Buffer Selection Menu."
+  (interactive)
+  (let ((buffer (bs--current-buffer)))
+    (bury-buffer (current-buffer))
+    (bs--restore-window-config)
+    (view-buffer buffer)
+  )
+)
+
 (defun my-equal-window-split-vert (num-windows)
   (delete-other-windows)
   (let ((width (/ (frame-width) num-windows)))
