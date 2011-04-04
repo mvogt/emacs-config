@@ -39,6 +39,10 @@
 (define-key bs-mode-map [?\C-j]    'bs-select-other-window)
 (define-key bs-mode-map [?\M-o]    'bs-tmp-select-other-window)
 
+;; Additional custom funcs.
+(define-key bs-mode-map [?i]       'my-bs-vert-select-other-window)
+(define-key bs-mode-map [?l]       'my-bs-horiz-select-other-window)
+
 ;; Redefine this func from bs.el so that the other window doesn't disappear
 ;; when exiting bs-show mode.
 (defun bs-tmp-select-other-window ()
@@ -62,6 +66,33 @@ The current window remains selected."
     (bury-buffer (current-buffer))
     (bs--restore-window-config)
     (view-buffer buffer)
+  )
+)
+
+(defun my-bs-vert-select-other-window ()
+  "Split the original window vertically, and make the other window select this
+line's buffer."
+  (interactive)
+  (let ((buffer (bs--current-buffer)))
+    (bury-buffer (current-buffer))
+    (bs--restore-window-config)
+    ;; Similar hack to my-equal-window-split-vert
+    (split-window nil (+ 2 (/ (window-width) 2)) t)
+    (other-window 1)
+    (switch-to-buffer buffer)
+  )
+)
+
+(defun my-bs-horiz-select-other-window ()
+  "Split the original window horizontally, and make the other window select
+this line's buffer."
+  (interactive)
+  (let ((buffer (bs--current-buffer)))
+    (bury-buffer (current-buffer))
+    (bs--restore-window-config)
+    (split-window nil (/ (window-height) 2))
+    (other-window 1)
+    (switch-to-buffer buffer)
   )
 )
 
