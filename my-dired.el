@@ -29,7 +29,35 @@
 )
 
 (setq dired-details-hide-link-targets nil)
-(setq dired-details-initially-hide nil)
+(setq dired-details-initially-hide t)
+
+(defun my-dired-details-message ()
+  "Print the current dired entry's details in the minibuffer."
+  (interactive)
+  (save-excursion
+    (message (buffer-substring
+              (+ 2 (progn (beginning-of-line) (point)))
+              (progn (dired-move-to-filename) (point))))
+  )
+)
+
+(defun my-dired-next-line (arg)
+  "Wrapper for dired-next-line that afterward displays the file's details
+in the minibuffer if dired-details-state is set to 'hidden."
+  (interactive "p")
+  (and (dired-next-line arg)     ; returns nil when cur line isn't a dir entry
+       (eq 'hidden dired-details-state)
+       (my-dired-details-message))
+)
+
+(defun my-dired-previous-line (arg)
+  "Wrapper for dired-previous-line that afterward displays the file's details
+in the minibuffer if dired-details-state is set to 'hidden."
+  (interactive "p")
+  (and (dired-previous-line arg) ; returns nil when cur line isn't a dir entry
+       (eq 'hidden dired-details-state)
+       (my-dired-details-message))
+)
 
 ;; I'm redefining this dired func to customize it.
 ;; The only change is the use of my-read-shell-command.
@@ -331,6 +359,13 @@ With a prefix argument, kills the current buffer."
               (local-set-key [?\C-j]       'my-dired-gnome-open)
               (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
+              (local-set-key [?n]          'my-dired-next-line)
+              (local-set-key [?\C-n]       'my-dired-next-line)
+              (local-set-key [? ]          'my-dired-next-line)
+              (local-set-key [down]        'my-dired-next-line)
+              (local-set-key [?p]          'my-dired-previous-line)
+              (local-set-key [?\C-p]       'my-dired-previous-line)
+              (local-set-key [up]          'my-dired-previous-line)
               (dired-sort-by-name-dirs-1st)
             )
   )
