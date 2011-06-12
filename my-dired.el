@@ -42,8 +42,9 @@
 )
 
 (defun my-dired-next-line (arg)
-  "Wrapper for dired-next-line that afterward displays the file's details
-in the minibuffer if dired-details-state is set to 'hidden."
+  "Wrapper for \\[dired-next-line] that afterward displays the
+current entry's details in the minibuffer if dired-details-state
+is set to 'hidden."
   (interactive "p")
   (and (dired-next-line arg)     ; returns nil when cur line isn't a dir entry
        (eq 'hidden dired-details-state)
@@ -51,12 +52,40 @@ in the minibuffer if dired-details-state is set to 'hidden."
 )
 
 (defun my-dired-previous-line (arg)
-  "Wrapper for dired-previous-line that afterward displays the file's details
-in the minibuffer if dired-details-state is set to 'hidden."
+  "Wrapper for \\[dired-previous-line] that afterward displays
+the current entry's details in the minibuffer if
+dired-details-state is set to 'hidden."
   (interactive "p")
   (and (dired-previous-line arg) ; returns nil when cur line isn't a dir entry
        (eq 'hidden dired-details-state)
        (my-dired-details-message))
+)
+
+(defun my-dired-revert (&optional arg noconfirm)
+  "Wrapper for \\[dired-revert] that afterward displays the
+current entry's details in the minibuffer if dired-details-state
+is set to 'hidden."
+  (interactive)
+  (dired-revert arg noconfirm)
+  (and (dired-move-to-filename)  ; returns nil when cur line isn't a dir entry
+       (eq 'hidden dired-details-state)
+       (my-dired-details-message))
+)
+
+(defun my-dired-show-file-info (file &optional deref-symlinks)
+  "Same as \\[dired-show-file-type] but also runs stat."
+  (interactive (list (dired-get-filename t) current-prefix-arg))
+  (let (process-file-side-effects)
+    (with-temp-buffer
+      (if deref-symlinks
+	  (process-file "file" nil t t "-L" "--" file)
+	(process-file "file" nil t t "--" file))
+      (process-file "stat" nil t t "--" file)
+      (when (bolp)
+	(backward-delete-char 1))
+      (message "%s" (buffer-string))
+    )
+  )
 )
 
 ;; I'm redefining this dired func to customize it.
@@ -347,6 +376,7 @@ With a prefix argument, kills the current buffer."
 (add-hook 'dired-mode-hook
   (function (lambda ()
               (setq autopair-dont-activate t)
+              (setq revert-buffer-function (function my-dired-revert))
               (local-set-key [?\C-c ?w]    'dired-marked-files-append-kill)
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
@@ -359,6 +389,7 @@ With a prefix argument, kills the current buffer."
               (local-set-key [?\C-j]       'my-dired-gnome-open)
               (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
+              (local-set-key [?y]          'my-dired-show-file-info)
               (local-set-key [?n]          'my-dired-next-line)
               (local-set-key [?\C-n]       'my-dired-next-line)
               (local-set-key [? ]          'my-dired-next-line)
