@@ -136,7 +136,12 @@ to the decimal value at the point or region."
 ;; Separate apropos command to search variables names.
 (global-set-key [?\C-h ?A]    'apropos-variable)
 
+(setq Man-width (/ split-width-threshold 2))  ; default is frame width (wrong)
 (global-set-key [?\C-h ?M]    'manual-entry)
+
+(global-set-key [?\C-x ?r ?z] 'delete-whitespace-rectangle)
+
+(global-set-key [?\M-+]       'sort-lines)
 
 ;; Using M-x as an alias for C-x enables faster typing of C-x sequences that
 ;; don't involve the Ctrl key.  Moving the traditional M-x to double M-x is an

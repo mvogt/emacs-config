@@ -20,8 +20,6 @@
 ;;
 ;; Override the nominal indentation amount for all C Mode styles.  This will
 ;; get reset back to a style's own value if the user manually selects a style.
-;; I much prefer 2 (as in my "hybrid" style below), but 4 appears to be more
-;; popular.
 (setq c-basic-offset 4)
 
 ;; My custom style inherits from the GNU style because it's the closest to
