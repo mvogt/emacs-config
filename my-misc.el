@@ -98,6 +98,70 @@ to the decimal value at the point or region."
   )
 )
 
+(defun my-man-cleanup ()
+  "Convert current buffer into a manual page.
+Cleans up ANSI formatting chars."
+  (interactive)
+  (Man-fontify-manpage)
+  (Man-cleanup-manpage)
+  (Man-mode)
+)
+
+
+;;
+;; Actual prefix key maps are the proper Emacs solution, but I want a menu of
+;; all my choices.  I guess I could customize the pull-down menus, but those
+;; waste screen real estate, and I've had them disabled for years.
+;;
+
+(defun my-prefix-menu-modes ()
+  "Display a shortcut menu in the minibuffer of my favorite mode
+enable functions that I don't use often enough to bind to keys of
+their own."
+  (interactive)
+  (message "Mode [d]iff, [t]ext, [h]tml, [s]hell, [c]++, [m]ake,\n[e]macs lisp, lisp [i]nteraction, [l]ine numbers, [w]hitespace?")
+  (let ((which-func (read-char)))
+    (cond
+     ((= which-func ?d) (diff-mode))
+     ((= which-func ?t) (text-mode))
+     ((= which-func ?h) (html-mode))
+     ((= which-func ?s) (sh-mode))
+     ((= which-func ?c) (c++-mode))
+     ((= which-func ?m) (makefile-mode))
+     ((= which-func ?e) (emacs-lisp-mode))
+     ((= which-func ?i) (lisp-interaction-mode))
+     ((= which-func ?l) (linum-mode))
+     ((= which-func ?w) (whitespace-mode))
+    )
+  )
+)
+
+(defun my-prefix-menu-misc ()
+  "Display a shortcut menu in the minibuffer of miscellaneous
+functions that I don't use often enough to bind to keys of their
+own."
+  (interactive)
+  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,\n[m]an cleanup, [u]nfontify, describe [c]har, describe ke[y],\n[g]db many windows, i[s]earch fwd word,\n[l]ist colors, read col[o]r, customize [f]ace?")
+  (let ((which-func (read-char)))
+    (cond
+     ((= which-func ?e) (eval-buffer))
+     ((= which-func ?r) (eval-region (point) (mark)))
+     ((= which-func ?h) (describe-variable 'command-history))
+     ((= which-func ?k) (browse-kill-ring))
+     ((= which-func ?m) (my-man-cleanup))
+     ((= which-func ?u) (my-unfontify))
+     ((= which-func ?c) (describe-char))
+     ((= which-func ?y) (my-describe-key))
+     ((= which-func ?g) (gdb-many-windows))
+     ((= which-func ?s) (isearch-forward-word))
+     ((= which-func ?l) (list-colors-display))
+     ((= which-func ?o) (read-color))
+     ((= which-func ?f) (customize-face))
+    )
+  )
+)
+
+
 (add-hook 'diff-mode-hook
   (function (lambda ()
               (whitespace-mode 1))
@@ -129,6 +193,9 @@ to the decimal value at the point or region."
 
 ;; Dangerously similar to C-x C-c, but I set confirm-kill-emacs.
 (global-set-key [?\C-x ?c]    'calc)
+
+(global-set-key [?\M-g ?\M-m] 'my-prefix-menu-modes)
+(global-set-key [?\M-g ?\M-v] 'my-prefix-menu-misc)
 
 ;; Make apropos show interactive and non-interactive functions.
 (setq apropos-do-all t)
