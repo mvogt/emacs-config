@@ -80,11 +80,12 @@ insert-register with the prefix as the register number."
 )
 
 (defun my-yank-scratch (&optional register)
-  "Same as my-yank but into a new scratch buffer."
+  "Same as my-yank but into a new 'wip' buffer.
+Also, if the universal argument is given, don't yank anything."
   (interactive "P")
-  (switch-to-buffer (generate-new-buffer "*scratch*"))
+  (switch-to-buffer (generate-new-buffer "wip"))
   (text-mode)
-  (my-yank register)
+  (or (consp register) (my-yank register))
 )
 
 ;; For setting the mark, Meta-space feels more natural to me, and F3 is
