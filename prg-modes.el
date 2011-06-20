@@ -51,6 +51,7 @@
 (add-hook 'c-mode-common-hook
   (function (lambda ()
               (hide-ifdef-mode 1)
+              (toggle-truncate-lines 1)  ; disable line wrap
               (local-set-key [?\C-c ?i] 'set-c-basic-offset)
               (local-set-key [?\C-c ?-] 'hide-ifdef-block)
               (local-set-key [?\C-c ?=] 'show-ifdef-block)
