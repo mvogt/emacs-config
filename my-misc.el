@@ -122,12 +122,13 @@ Cleans up ANSI formatting chars."
 enable functions that I don't use often enough to bind to keys of
 their own."
   (interactive)
-  (message "Mode [d]iff, [t]ext, [h]tml, [s]hell, [c]++, [m]ake,\n[e]macs lisp, lisp [i]nteraction, [l]ine numbers, [w]hitespace?")
+  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake,\n[e]macs lisp, lisp [i]nteraction, [l]ine numbers, [w]hitespace?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?d) (diff-mode))
      ((= which-func ?t) (text-mode))
      ((= which-func ?h) (html-mode))
+     ((= which-func ?x) (xml-mode))
      ((= which-func ?s) (sh-mode))
      ((= which-func ?c) (c++-mode))
      ((= which-func ?m) (makefile-mode))
