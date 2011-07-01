@@ -56,33 +56,38 @@
 (provide 'my-cur-word-or-region)
 
 (autoload 'compile-internal "compile")
-(defun my-recursive-grep (variant)
+(defun my-recursive-grep ()
   "Search all files recursively.
 Like grep-find, but prompts for a starting directory, guesses the search
-string from context, and adds my favorite find and grep options.  A C-u
-prefix changes the file name match to *.c, and a C-u C-u prefix changes
-the search to a find without grep."
-  (interactive "P")
-  (setenv "colon" ":")
-  (let* ((cmd-prefix (if (null variant)
-                         "find . -type f"
-                         "find . -type f -name \"*.c\""))
+string from context, and adds my favorite find and grep options.
+First prompts for the type of files search."
+  (interactive)
+  (message "Search [a]ll files, by e[x]tension, or [j]ust file names?")
+  (let* ((my-xargs-grep (concat "xargs --null"
+                                " grep --line-number --ignore-case"
+                                " --no-messages --extended-regexp -e"))
+         (which-func (read-char))
          (my-initial-grep-cmd
-          (if (= (prefix-numeric-value variant) 16)
-              (format (concat "find . -type f -name \"%s\" -print"
-                              " -o -name .git -prune | while read x ; do"
-                              " echo ${x}${colon}1${colon} ; done")
-                      (my-cur-word-or-region))
-            (format (concat "%s -print0 -o -name .git -prune"
-                            " | xargs --null"
-                            " grep --line-number --ignore-case"
-                            " --no-messages --extended-regexp -e \"%s\"")
-                    cmd-prefix (my-cur-word-or-region))
+          (cond
+           ((= which-func ?a)
+            (format "find . -type f -print0 -o -name .git -prune | %s \"%s\""
+                    my-xargs-grep (my-cur-word-or-region)))
+           ((= which-func ?x)
+            (format (concat "find . -type f -name \"*.c\" -print0"
+                            " -o -name .git -prune | %s \"%s\"")
+                    my-xargs-grep (my-cur-word-or-region)))
+           ((= which-func ?j)
+            (format (concat "find . -type f -name \"%s\" -print"
+                            " -o -name .git -prune | while read x ; do"
+                            " echo ${x}${colon}1${colon} ; done")
+                    (my-cur-word-or-region)))
           )
          )
          (my-grep-cmd (read-string "Search command: " my-initial-grep-cmd))
          (start-dir (read-file-name "Starting directory: "
-                                    nil default-directory)))
+                                    nil default-directory))
+        )
+    (setenv "colon" ":")
     (if (>= emacs-major-version 22)
         ;; Much easier, simpler, and better starting in ver 22.  I may want to
         ;; change my key binding to just rgrep in ver 22 instead of this
