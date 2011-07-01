@@ -66,21 +66,24 @@ and it can be: FIXME, NOTE, HACK.
 
 (autoload 'browse-url "browse-url")
 (require 'my-cur-word-or-region "grep-compile")
-(defun my-browse-url (variant)
-  "Wrapper for browse-url.  With a single C-u prefix, prompt for search terms,
-using the word around the point or the active region as the default.
+(defun my-browse-url ()
+  "Wrapper for browse-url.  Prompts for URL, search, or Jira issue.
+Defaults to the word around the point or the active region as the default.
 Search terms are passed as a single string to func my-format-search-url,
-which should return a URL string.
-With a double C-u prefix, open a Jira issue, prompting with the same method."
-  (interactive "P")
-  (if (null variant)
-      (call-interactively 'browse-url)
-    (if (= (prefix-numeric-value variant) 16)
-        (browse-url (concat my-jira-base-url
-                            (read-string "Jira issue: "
-                                         (my-cur-word-or-region))))
+which should return a URL string."
+  (interactive)
+  (message "[U]RL, [S]earch, or [J]ira?")
+  (let ((which-func (read-char)))
+    (cond
+     ((= which-func ?u)
+      (call-interactively 'browse-url))
+     ((= which-func ?s)
       (browse-url (my-format-search-url
-                   (read-string "Search terms: " (my-cur-word-or-region))))
+                   (read-string "Search terms: " (my-cur-word-or-region)))))
+     ((= which-func ?j)
+      (browse-url (concat my-jira-base-url
+                          (read-string "Jira issue: "
+                                       (my-cur-word-or-region)))))
     )
   )
 )
