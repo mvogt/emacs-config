@@ -62,7 +62,7 @@ Like grep-find, but prompts for a starting directory, guesses the search
 string from context, and adds my favorite find and grep options.
 First prompts for the type of files search."
   (interactive)
-  (message "Search [a]ll files, by e[x]tension, or [j]ust file names?")
+  (message "Search [a]ll files, for one e[x]tension,\nfor [m]ultiple extensions, or [j]ust file names?")
   (let* ((my-xargs-grep (concat "xargs --null"
                                 " grep --line-number --ignore-case"
                                 " --no-messages --extended-regexp -e"))
@@ -74,6 +74,11 @@ First prompts for the type of files search."
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?x)
             (format (concat "find . -type f -name \"*.c\" -print0"
+                            " -o -name .git -prune | %s \"%s\"")
+                    my-xargs-grep (my-cur-word-or-region)))
+           ((= which-func ?m)
+            (format (concat "find . -type f -name \"*.c\" -print0"
+                            " -o -name \"*.h\" -print0"
                             " -o -name .git -prune | %s \"%s\"")
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?j)
