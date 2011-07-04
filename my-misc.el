@@ -145,7 +145,7 @@ their own."
 functions that I don't use often enough to bind to keys of their
 own."
   (interactive)
-  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,\n[m]an cleanup, [u]nfontify, describe [c]har, describe ke[y],\n[g]db many windows, i[s]earch fwd word, re[n]ame uniquely,\n[l]ist colors, read col[o]r, customize [f]ace?")
+  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,\n[m]an cleanup, [x] unfontify, [t]abify, [u]ntabify,\ndescribe [c]har, describe ke[y], [g]db many windows, i[s]earch fwd word,\nre[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?e) (eval-buffer))
@@ -153,7 +153,9 @@ own."
      ((= which-func ?h) (describe-variable 'command-history))
      ((= which-func ?k) (browse-kill-ring))
      ((= which-func ?m) (my-man-cleanup))
-     ((= which-func ?u) (my-unfontify))
+     ((= which-func ?x) (my-unfontify))
+     ((= which-func ?t) (call-interactively 'tabify))
+     ((= which-func ?u) (call-interactively 'untabify))
      ((= which-func ?c) (call-interactively 'describe-char))
      ((= which-func ?y) (my-describe-key))
      ((= which-func ?g) (call-interactively 'gdb-many-windows))
