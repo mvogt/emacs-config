@@ -39,10 +39,6 @@
                         (other . "hybrid"))
 )
 
-(require 'protobuf-mode)
-;; Not sure why the autoload for this in protobuf-mode.el doesn't work.
-(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
-
 ;; Make it easier to change the nominal indentation for a given buffer.
 (defun set-c-basic-offset (num-spaces)
   "Set the variable c-basic-offset interactively."
@@ -177,3 +173,11 @@ Causes an intuitive indent level matching the specific argument."
     (global-set-key [?\C-x ?\M-n] 'yas/insert-snippet)
   )
 )
+
+
+;; This needs to be after yasnippet to avoid an error on startup that I don't
+;; understand.  For some reason, I see that problem with Emacs 23.1 on Ubuntu
+;; 10.04 but not Emacs 23.2 on Ubuntu 11.04.
+(require 'protobuf-mode)
+;; Not sure why the autoload for this in protobuf-mode.el doesn't work.
+(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
