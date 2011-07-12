@@ -39,6 +39,10 @@
                         (other . "hybrid"))
 )
 
+(require 'protobuf-mode)
+;; Not sure why the autoload for this in protobuf-mode.el doesn't work.
+(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
+
 ;; Make it easier to change the nominal indentation for a given buffer.
 (defun set-c-basic-offset (num-spaces)
   "Set the variable c-basic-offset interactively."
