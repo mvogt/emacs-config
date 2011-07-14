@@ -181,3 +181,8 @@ Causes an intuitive indent level matching the specific argument."
 (require 'protobuf-mode)
 ;; Not sure why the autoload for this in protobuf-mode.el doesn't work.
 (add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
+
+
+;; The built-in Sieve mode is broken for the flavor of the language used by my
+;; web mail service.
+(add-to-list 'auto-mode-alist '("\\.sieve\\'" . c-mode))
