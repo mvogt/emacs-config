@@ -23,12 +23,16 @@
 (setq c-basic-offset 4)
 
 ;; My custom style inherits from the GNU style because it's the closest to
-;; what I want.  I call it hybrid because it's a little like the K&R style.
+;; what I want.  I call it hybrid because it's a little like the K&R style and
+;; uses some stuff from the cc-mode style.
 (c-add-style "hybrid"
              '("gnu" (c-offsets-alist . ((substatement-open . 0)
                                          (statement-case-open . 0)
                                          (brace-list-open . 0)
-                                         (case-label . +))))
+                                         (case-label . +)
+                                         (arglist-intro . +)
+                                         (arglist-close . +)
+                                         (knr-argdecl-intro . +))))
 )
 
 ;; Make my hybrid style the default.  Note that I'm replacing the full alist
