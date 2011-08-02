@@ -136,6 +136,15 @@ Cleans up ANSI formatting chars."
   (interactive "p")
   (insert-pair qty ?< ?>)
 )
+;; Undo for the above.
+(defun my-enclose-undo ()
+  "Delete the characters before and after the active region."
+  (interactive)
+  (when (and transient-mark-mode mark-active)
+    (save-excursion (goto-char (region-end))       (delete-char 1))
+    (save-excursion (goto-char (region-beginning)) (delete-char -1))
+  )
+)
 
 
 ;;
@@ -218,15 +227,16 @@ own."
 (global-set-key [?\C-x ?l]    'downcase-word)
 (global-set-key [?\C-x ?u]    'upcase-word)
 
+;; I hate the inconsistency, but I'm leaving insert-parentheses on
+;; "M-open-paren" because "C-x open-paren" has the venerable
+;; kmacro-start-macro.
 (global-set-key [?\C-x ?\"]   'my-enclose-double-quotes)
 (global-set-key [?\C-x ?']    'my-enclose-single-quotes)   ; was expand-abbrev
 (global-set-key [?\C-x ?`]    'my-enclose-back-quotes)     ; was next-error
 (global-set-key [?\C-x ?{]    'my-enclose-braces)
 (global-set-key [?\C-x ?[]    'my-enclose-square-brackets) ; was backward-page
 (global-set-key [?\C-x ?<]    'my-enclose-angle-brackets)  ; was scroll-left
-;; I hate the inconsistency, but I'm leaving insert-parentheses on
-;; "M-open-paren" because "C-x open-paren" has the venerable
-;; kmacro-start-macro.
+(global-set-key [?\C-x ?\]]   'my-enclose-undo)            ; was forward-page
 
 (global-set-key [?\C-x ?\M-q] 'toggle-read-only)
 
