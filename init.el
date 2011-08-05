@@ -101,14 +101,6 @@
 (load "my-misc")
 (load "my-html")
 
-;; Separate package by the author of YASnippet.  They go well together.
-;; http://code.google.com/p/autopair/
-;; http://www.emacswiki.org/emacs/AutoPairs
-(when (file-accessible-directory-p my-3rd-party-elisp-path)
-  (require 'autopair)
-  (autopair-global-mode 1)
-)
-
 ;; This is at the end because it's very disruptive visually, and
 ;; color-theme.el is huge and slow.  Also, if there are any errors, I want
 ;; them to occur after as many of my preferred settings are configured as
