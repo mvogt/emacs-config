@@ -136,6 +136,13 @@ Cleans up ANSI formatting chars."
   (interactive "P")
   (insert-pair qty ?< ?>)
 )
+(defun my-enclose-tag (&optional qty)
+  (interactive "P")
+  (let* ((tag-open (read-string "Tag (with optional args): "))
+         (tag-name (car (split-string tag-open))))
+    (insert-pair qty (format "<%s>" tag-open) (format "</%s>" tag-name))
+  )
+)
 ;; Undo for the above.
 (defun my-enclose-undo ()
   "Delete the characters before and after the active region."
@@ -236,6 +243,7 @@ own."
 (global-set-key [?\C-x ?{]    'my-enclose-braces)
 (global-set-key [?\C-x ?[]    'my-enclose-square-brackets) ; was backward-page
 (global-set-key [?\C-x ?<]    'my-enclose-angle-brackets)  ; was scroll-left
+(global-set-key [?\C-x ?>]    'my-enclose-tag)             ; was scroll-right
 (global-set-key [?\C-x ?\]]   'my-enclose-undo)            ; was forward-page
 
 (global-set-key [?\C-x ?\M-q] 'toggle-read-only)
