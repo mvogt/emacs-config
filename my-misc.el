@@ -165,7 +165,7 @@ Cleans up ANSI formatting chars."
 enable functions that I don't use often enough to bind to keys of
 their own."
   (interactive)
-  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake,\n[e]macs lisp, lisp [i]nteraction, [l]ine numbers, [w]hitespace?")
+  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake,\n[e]macs lisp, lisp [i]nteraction, [w]ord wrap, [l]ine numbers,\nwhitesp[a]ce?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?d) (diff-mode))
@@ -177,8 +177,9 @@ their own."
      ((= which-func ?m) (makefile-mode))
      ((= which-func ?e) (emacs-lisp-mode))
      ((= which-func ?i) (lisp-interaction-mode))
+     ((= which-func ?w) (visual-line-mode))
      ((= which-func ?l) (linum-mode))
-     ((= which-func ?w) (whitespace-mode))
+     ((= which-func ?a) (whitespace-mode))
     )
   )
 )
