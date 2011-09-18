@@ -39,7 +39,8 @@
 
 (defun my-kill-region (start end &optional user-register)
   "Call kill-region and set-register.  Without a prefix, use register #0.
-With a numeric prefix, use that register number."
+With a numeric prefix, use that register number.
+If the region is inactive, operate on the current line."
   ;; Actually, registers are indexed by character (i.e. numbers 0 - 255) and
   ;; not number.  So, if you answer '3' when prompted by the functions
   ;; copy-to-register or insert-register, they're actually operating on
@@ -48,6 +49,10 @@ With a numeric prefix, use that register number."
   ;; 10 (0 - 9) and add the value to 48 (the decimal ASCII value for '0', of
   ;; course).
   (interactive "r\nP")
+  (unless (use-region-p)
+    (setq start (line-beginning-position))
+    (setq end (line-beginning-position 2))
+  )
   (set-register (+ 48 (if (null user-register) 0 (mod user-register 10)))
                 (filter-buffer-substring start end))
   (kill-region start end)
@@ -55,13 +60,23 @@ With a numeric prefix, use that register number."
 
 (defun my-kill-ring-save (start end &optional user-register)
   "Call kill-ring-save and set-register.  Without a prefix, use register #0.
-With a numeric prefix, use that register number."
+With a numeric prefix, use that register number.
+If the region is inactive, operate on the current line, move to the next one,
+and cause any following kill command to append the previous kill."
   ;; The comment about register numbers in func my-kill-region above also
   ;; applies here.
   (interactive "r\nP")
+  (unless (use-region-p)
+    (setq start (line-beginning-position))
+    (setq end (line-beginning-position 2))
+  )
   (set-register (+ 48 (if (null user-register) 0 (mod user-register 10)))
                 (filter-buffer-substring start end))
   (kill-ring-save start end)
+  (unless (use-region-p)
+    (forward-line)
+    (setq this-command 'kill-region)
+  )
 )
 
 (defun my-yank (&optional register)
