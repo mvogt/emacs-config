@@ -93,6 +93,12 @@ in MS Word."
   )
 )
 
+(defun replace-whitespace-linefeed ()
+  "Replace one or more spaces with a line break throughout the current buffer."
+  (interactive)
+  (replace-regexp "  *" "\n" nil (point-min) (point-max))
+)
+
 (defun query-replace-multibuf-worker (replace-func from-string to-string)
   "Worker function for two different multibuf wrappers."
   (dolist (buffer (buffer-list))
@@ -143,5 +149,6 @@ call the wrapped function with minimal coding pain."
 (global-set-key [?\M-r]       'query-replace)
 (global-set-key [?\C-x ?\C-r] 'query-replace-regexp-multibuf)
 (global-set-key [?\C-x ?\M-r] 'query-replace-multibuf)
-(global-set-key [?\M-&]       'delete-trailing-whitespace)
 (global-set-key [?\M-#]       'replace-special-chars)
+(global-set-key [?\M-%]       'replace-whitespace-linefeed)
+(global-set-key [?\M-&]       'delete-trailing-whitespace)
