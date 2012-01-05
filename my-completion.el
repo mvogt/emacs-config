@@ -40,3 +40,7 @@ buffer that was there before."
 (define-key completion-list-mode-map [backtab] 'my-toggle-completions-window)
 (define-key completion-list-mode-map [?q]      'my-toggle-completions-window)
 (define-key completion-list-mode-map [?\C-g]   'my-toggle-completions-window)
+
+
+;; Better than the default dabbrev-expand
+(global-set-key [?\M-/] 'hippie-expand)
