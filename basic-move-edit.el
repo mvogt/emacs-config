@@ -18,6 +18,27 @@
 ;;----------------------------------------------------------------------------
 ;; Basic movement and editing
 ;;
+;; First, a work-around for S-up being mapped to 'select' in console mode on
+;; some machines.  Presumably, the terminfo database is hosed somehow,
+;; although xev reports the same results for S-up as a machine without this
+;; problem.  Got the solution from here:
+;; http://lists.nongnu.org/archive/html/help-gnu-emacs/2011-05/msg00211.html
+;;
+;; This works by calling define-key after terminal-init-xterm runs.  The
+;; function terminal-init-xterm is in term/xterm.el, and that file is only
+;; loaded in console mode.  For an explanation of ELisp's "advice" feature,
+;; see the Info node `(elisp)Advising Functions'.
+;;
+;; The link above said this additional define-key call is needed, but I
+;; haven't found that to be true:
+;;
+;; (if (string-prefix-p "xterm" (tty-type))
+;;     (define-key input-decode-map "\e[1;2A" [S-up])
+;; )
+(defadvice terminal-init-xterm (after select-shift-up activate)
+    (define-key input-decode-map "\e[1;2A" [S-up])
+)
+
 ;; Turn off obnoxious jump scroll.
 (setq scroll-conservatively 10)
 
