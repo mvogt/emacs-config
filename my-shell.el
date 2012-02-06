@@ -30,6 +30,9 @@
   (setq explicit-shell-file-name shell-file-name)
 )
 
+;; Default command history is too short (30).
+(setq history-length 100)
+
 (setq my-shell-outbuf "*Shell Command Output*")
 
 ;; Unprintable chars to use as indicators when found in a string of user text.
