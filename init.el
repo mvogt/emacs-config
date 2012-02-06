@@ -26,9 +26,14 @@
 (setq my-elisp-path (and load-file-name (file-name-directory load-file-name)))
 
 ;; This is where I store ELisp code that I didn't write or modify.
+;; Overrides for built-in stuff goes at the start of the path and the rest at
+;; the end.
 (setq my-3rd-party-elisp-path "~/src/emacs/")
-(and (file-accessible-directory-p my-3rd-party-elisp-path)
-     (add-to-list 'load-path my-3rd-party-elisp-path t))
+(when (file-accessible-directory-p my-3rd-party-elisp-path)
+  (setq load-path (cons (concat my-3rd-party-elisp-path "org-mode/lisp")
+                        load-path))
+  (add-to-list 'load-path my-3rd-party-elisp-path t)
+)
 
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.
 ;; Under Linux, the variable gnuserv-frame is ignored.  I'm pretty sure this

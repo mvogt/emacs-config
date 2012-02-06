@@ -170,7 +170,15 @@
      (diff-context ((t (:foreground "slate gray"))))
      (diff-removed ((t (:foreground "green4"))))
      (diff-added ((t (:foreground "blue"))))
-     (diff-refine-change ((t (:background "paleturquoise")))))))
+     (diff-refine-change ((t (:background "paleturquoise"))))
+
+     ;; I don't understand why, but this one has to be different in order to
+     ;; work.  Maybe because the original definition is conditioned upon a
+     ;; light vs. dark background.
+     (org-hide ((((background light)) (:foreground "lightgrey"))))
+    )
+  )
+)
 
 (add-to-list 'color-themes '(color-theme-ramangalahy-improved
                              "Tweaked 'Ramangalahy'" "local user"))
