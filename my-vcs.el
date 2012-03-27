@@ -21,9 +21,11 @@
 ;; Can't use autoload because of my custom function below.
 (when (file-accessible-directory-p my-3rd-party-elisp-path)
   (require 'magit)
+  (require 'magit-classic-theme)
   (define-key magit-status-mode-map [?\C-c ?\C-d] 'my-magit-difftool-item)
 )
 
+;; Used magit-stage-item as a guide.
 (defun my-magit-difftool-item ()
   "Launch difftool on the item at point."
   (interactive)
@@ -44,44 +46,6 @@
      (error "Can't diff this hunk"))
     ((diff)
      (error "Can't diff this (FIXME: What is it?)"))
-  )
-)
-
-;; Redefines standard function to fix a bug and change the recenter behavior
-;; to my liking.
-(defun magit-goto-next-section ()
-  "Go to the next magit section."
-  (interactive)
-  (let* ((section (magit-current-section))
-	 (next (or (and (not (magit-section-hidden section))
-			(magit-section-children section)
-			(magit-find-section-after (point)
-						  (magit-section-children
-						   section)))
-		   (magit-next-section section))))
-
-    (if next
-	(progn
-	  (goto-char (magit-section-beginning next))
-	  (if (memq magit-submode '(log reflog))
-	      (magit-show-commit next))
-	  (if (not (magit-section-hidden next))
-	      (let ((offset (- (line-number-at-pos
-				(magit-section-beginning next))
-			       (line-number-at-pos
-				(magit-section-end next)))))
-                (unless (pos-visible-in-window-p (magit-section-end next))
-                  ;; Bug in original: missing abs
-                  (if (< (abs offset) (window-height))
-                      (recenter offset)
-                    (recenter 0)
-                  )
-                )
-              )
-          )
-        )
-      (message "No next section")
-    )
   )
 )
 
