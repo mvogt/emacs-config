@@ -219,6 +219,12 @@ own."
   )
 )
 
+;; Even though it's correct in a fixed-width font to use two spaces after a
+;; period at the end of a sentence, and even though I always edit in Emacs in
+;; a fixed-width font, it causes no end of compatibility hassles with the rest
+;; of the world.
+(setq sentence-end-double-space nil)
+
 ;; I never use the default upcase-word binding of M-u.  It's much more useful
 ;; to me as the universal prefix because it allows me to hold down Alt for the
 ;; entirety of many key sequences.
