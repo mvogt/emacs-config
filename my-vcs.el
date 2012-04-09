@@ -49,6 +49,13 @@
   )
 )
 
+;; The default definition of this function stays in the same window if the
+;; current buffer is already part of magit. I strongly prefer that the
+;; commands calling this (like log) switch to the "other" window.
+(defun magit-buffer-switch (buf)
+  (pop-to-buffer buf)
+)
+
 (define-key vc-prefix-map [?x] 'magit-status)
 (define-key vc-prefix-map [?k] (lambda () (interactive)
                                  (start-process "Git GUI" nil "git" "gui")))
