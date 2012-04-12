@@ -157,6 +157,8 @@ Causes an intuitive indent level matching the specific argument."
   )
 )
 
+(add-to-list 'auto-mode-alist '("/[Mm]akefile\\." . makefile-gmake-mode))
+
 
 ;;----------------------------------------------------------------------------
 ;; YASnippet
