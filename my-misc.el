@@ -293,6 +293,13 @@ own."
 ;;
 ;; http://orgmode.org
 ;;
+;; Move some org-mode keys to alternates that don't conflict with my preferred
+;; global mappings.
+;; This must be defined before initializing org-mode.
+(setq org-disputed-keys '(([(shift up)]   . [(meta p)])
+                          ([(shift down)] . [(meta n)])))
+(setq org-replace-disputed-keys t)
+
 (require 'org-install)
 
 ;; A little navigation help.  Set to 'reversed for opposite behavior.  Set to
