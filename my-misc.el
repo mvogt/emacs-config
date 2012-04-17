@@ -309,6 +309,9 @@ own."
 ;; Blank all but the last star in a heading so it appears to be indented.
 (setq org-hide-leading-stars t)
 
+;; When opening a file, show it fully expanded.
+(setq org-startup-folded nil)
+
 (add-hook 'org-mode-hook
   (function (lambda ()
               ;; Match C-a / C-e
