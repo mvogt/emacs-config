@@ -86,6 +86,9 @@
 ;; names that end in -hook, -hooks, -function, or -functions.
 (setq enable-local-eval nil)
 
+;; Tell Emacs that in my OS, the Window focus does not follow the mouse.
+(setq focus-follows-mouse nil)
+
 
 ;;
 ;; The rest of startup is broken down into files by area of functionality.
