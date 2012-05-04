@@ -42,14 +42,11 @@ buffer that was there before."
 (define-key completion-list-mode-map [?\C-g]   'my-toggle-completions-window)
 
 
-;; Disable Tramp's completion function for its default connection protocol. It
-;; parses host names from ~/.ssh/config and fails loudly when they're
-;; unreachable -- even when the name is only partially spelled out. This is
-;; obnoxious when there are SSH aliases with spellings similar to frequently
-;; visited local paths.
+;; Disable Tramp's completion function for SSH-related protocols. It parses
+;; host names from ~/.ssh/config and ~/.ssh/known_hosts, and it fails loudly
+;; when they're unreachable -- even when the name is only partially spelled
+;; out. This is obnoxious when there are SSH aliases or host names with
+;; spellings similar to frequently visited local paths.
 (require 'tramp)
 (tramp-set-completion-function "scp" nil)
-
-;; Uncomment to change Tramp's default connection protocol. The completion
-;; function work-around above should match.
-;;(setq tramp-default-method "ssh")
+(tramp-set-completion-function "ssh" nil)
