@@ -35,6 +35,14 @@
   (save-buffers-kill-emacs)
 )
 
+(defun my-init-mark ()
+  "Initialize mark at point.
+Intended to be called from find-file-hook so that interactive functions
+whose input is a region won't complain about the mark not being set."
+  (push-mark nil t)
+)
+(add-hook 'find-file-hook 'my-init-mark)
+
 ;; ffap is much better than plain old find-file.
 (global-set-key [?\C-x ?\C-f]     'find-file-at-point)
 (global-set-key [?\C-x ?\M-f]     'find-file-at-point)
