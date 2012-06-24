@@ -37,46 +37,54 @@
 ;; supply a prefix for immediate subsequent set-mark commands.
 (setq set-mark-command-repeat-pop t)
 
-(defun my-kill-region (start end &optional user-register)
-  "Call kill-region and set-register.  Without a prefix, use register #0.
-With a numeric prefix, use that register number.
-If the region is inactive, operate on the current line."
-  ;; Actually, registers are indexed by character (i.e. numbers 0 - 255) and
-  ;; not number.  So, if you answer '3' when prompted by the functions
+
+(defun my-cut-or-copy (cut-p user-register)
+  "Worker function for my-kill-region and my-kill-ring-save.
+If cut-p is nil, copy, else cut."
+  ;; Note: Registers are indexed by character (i.e. numbers 0 - 255) and not
+  ;; number. So, if you answer '3' when prompted by the functions
   ;; copy-to-register or insert-register, they're actually operating on
-  ;; register 51.  In order to stay compatible with those two built-in
+  ;; register 51. In order to stay compatible with those two built-in
   ;; functions, we limit the number of supported registers in this function to
   ;; 10 (0 - 9) and add the value to 48 (the decimal ASCII value for '0', of
   ;; course).
-  (interactive "r\nP")
-  (unless (use-region-p)
-    (setq start (line-beginning-position))
-    (setq end (line-beginning-position 2))
+  (let (start end)
+    (if (and (mark t) (use-region-p))
+        (progn
+          (setq start (min (mark) (point)))
+          (setq end (max (mark) (point)))
+        )
+      (setq start (line-beginning-position))
+      (setq end (line-beginning-position 2))
+    )
+    (set-register (+ 48 (if (null user-register) 0 (mod user-register 10)))
+                  (filter-buffer-substring start end))
+    (if cut-p
+        (kill-region start end)
+      (kill-ring-save start end)
+      (unless (and (mark t) (use-region-p))
+        (forward-line)
+        (setq this-command 'kill-region)
+      )
+    )
   )
-  (set-register (+ 48 (if (null user-register) 0 (mod user-register 10)))
-                (filter-buffer-substring start end))
-  (kill-region start end)
 )
 
-(defun my-kill-ring-save (start end &optional user-register)
+(defun my-kill-region (&optional user-register)
+  "Call kill-region and set-register.  Without a prefix, use register #0.
+With a numeric prefix, use that register number.
+If the region is inactive, operate on the current line."
+  (interactive "P")
+  (my-cut-or-copy t user-register)
+)
+
+(defun my-kill-ring-save (&optional user-register)
   "Call kill-ring-save and set-register.  Without a prefix, use register #0.
 With a numeric prefix, use that register number.
 If the region is inactive, operate on the current line, move to the next one,
 and cause any following kill command to append the previous kill."
-  ;; The comment about register numbers in func my-kill-region above also
-  ;; applies here.
-  (interactive "r\nP")
-  (unless (use-region-p)
-    (setq start (line-beginning-position))
-    (setq end (line-beginning-position 2))
-  )
-  (set-register (+ 48 (if (null user-register) 0 (mod user-register 10)))
-                (filter-buffer-substring start end))
-  (kill-ring-save start end)
-  (unless (use-region-p)
-    (forward-line)
-    (setq this-command 'kill-region)
-  )
+  (interactive "P")
+  (my-cut-or-copy nil user-register)
 )
 
 (defun my-yank (&optional register)
