@@ -42,18 +42,11 @@
 (eval-when-compile
   (require 'cl))
 (require 'tree-mode)
-(require 'windata)
 (require 'dired-x)
 
 (defgroup dirtree nil
   "Directory tree views"
   :group 'tools)
-
-(defcustom dirtree-windata '(frame left 0.3 delete)
-  "*Arguments to set the window buffer display.
-See `windata-display-buffer' for setup the arguments."
-  :type 'sexp
-  :group 'dirtree)
 
 (defcustom dirtree-buffer "*dirtree*"
   "*Buffer name for `dirtree'"
@@ -94,9 +87,9 @@ See `windata-display-buffer' for setup the arguments."
               (goto-char (widget-get (car button) :from))))
       (call-interactively 'dirtree))))
 
-(defun dirtree (root select)
-  "create tree of `root' directory
-With prefix arguement select `dirtree-buffer'"
+(defun dirtree (root other-p)
+  "Create tree of `root' directory and select it.
+With prefix argument, create in other window."
   (interactive "DDirectory: \nP")
   (let ((buffer (get-buffer-create dirtree-buffer))
         tree win)
@@ -108,17 +101,15 @@ With prefix arguement select `dirtree-buffer'"
             (setq tree atree)))
       (or tree
           (setq tree (tree-mode-insert (dirtree-root-widget root)))))
+    (if other-p
+        (switch-to-buffer-other-window buffer)
+      (switch-to-buffer buffer))
     (setq win (get-buffer-window dirtree-buffer))
-    (unless win
-      (setq win (apply 'windata-display-buffer dirtree-buffer dirtree-windata))
-      (select-window win))
     (with-selected-window win
       (unless (widget-get tree :open)
         (widget-apply-action tree))
       (goto-char (widget-get tree :from))
-      (recenter 1))
-    (if select
-        (select-window win))))
+      (recenter 1))))
 
 (define-derived-mode dirtree-mode tree-mode "Dir-Tree"
   "A mode to display tree of directory"
