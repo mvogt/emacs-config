@@ -107,6 +107,43 @@ If it's already collapsed, goto the parent."
   )
 )
 
+(defun my-dirtree-get-file ()
+  "Return the full path of the dirtree node on the current line."
+  (let ((me (tree-mode-icon-current-line)))
+    (goto-char (widget-get me :from))
+    (if (tree-widget-leaf-node-icon-p me)
+        (setq me (widget-get me :node))
+      (setq me (widget-get me :parent))
+    )
+    (widget-get me :file)
+  )
+)
+
+(defun my-dirtree-copy-full-path ()
+  "Push onto the kill ring the full path of the current dirtree node."
+  (interactive)
+  (kill-new (my-dirtree-get-file))
+)
+
+(defun my-dirtree-copy-file ()
+  "Push onto the kill ring the file name of the current dirtree node."
+  (interactive)
+  (kill-new (car (reverse (split-string (my-dirtree-get-file) "/" t))))
+)
+
+(defun my-dirtree-append-file ()
+  "Append onto the kill ring the file name of the current dirtree node."
+  (interactive)
+  (kill-append
+   (concat " " (car (reverse (split-string (my-dirtree-get-file) "/" t))))
+   nil
+  )
+)
+
+(define-key dirtree-mode-map [?\C-c ?w]    'my-dirtree-append-file)
+(define-key dirtree-mode-map [?\C-c ?\C-w] 'my-dirtree-copy-file)
+(define-key dirtree-mode-map [?\C-c ?\M-w] 'my-dirtree-copy-full-path)
+
 (defun my-bs-dirtree-wrapper (arg)
   "Launch bs-show without a prefix or dirtree with one.
 Intended to combine them into one key binding."
