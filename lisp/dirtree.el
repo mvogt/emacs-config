@@ -42,7 +42,6 @@
 (eval-when-compile
   (require 'cl))
 (require 'tree-mode)
-(require 'dired-x)
 
 (defgroup dirtree nil
   "Directory tree views"
@@ -129,11 +128,10 @@ With prefix argument, create in other window."
   "expand directory"
   (or (widget-get tree :args)
       (let ((directory (widget-get tree :file))
-            (re (dired-omit-regexp))
             dirs files basename)
         (dolist (file (directory-files directory t))
           (setq basename (file-name-nondirectory file))
-          (unless (string-match re basename)
+          (unless (or (string= basename ".") (string= basename ".."))
             (if (file-directory-p file)
                 (push (cons file basename) dirs)
               (push (cons file basename) files))))
