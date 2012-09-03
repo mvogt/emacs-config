@@ -195,8 +195,6 @@ Leave Buffer Selection Menu."
 (global-set-key [?\C-x ?b]    'rename-buffer)
 (global-set-key [?\C-x ?\C-b] 'iswitchb-buffer)
 (global-set-key [?\C-x ?\M-b] 'iswitchb-buffer)
-(global-set-key [?\C-`]       'bs-show)
-(global-set-key [?\M-j]       'bs-show)
 (global-set-key [f10]         'delete-window)
 (global-set-key [f11]         'delete-other-windows)
 (global-set-key [f12]         'other-window)

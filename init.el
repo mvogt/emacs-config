@@ -108,6 +108,7 @@
 (load "my-dired")
 (load "my-completion")
 (load "my-vcs")
+(load "my-dirtree")
 (load "my-misc")
 (load "my-html")
 

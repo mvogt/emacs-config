@@ -80,6 +80,13 @@
   (set-frame-font my-font)
 )
 
+(defun my-frame-images-check (frame)
+  ;; This variable is initialized by calling the same function, but somehow
+  ;; it's evaluated before a graphical frame has been created.
+  (setq tree-widget-image-enable (display-images-p))
+)
+(add-to-list 'after-make-frame-functions 'my-frame-images-check t)
+
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
 ;; in later versions.
 (setq default-frame-alist my-geometry)
