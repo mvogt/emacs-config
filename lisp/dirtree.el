@@ -94,6 +94,7 @@ With prefix argument, create in other window."
   (let ((buffer (get-buffer-create dirtree-buffer))
         tree win)
     (with-current-buffer buffer
+      (push-mark (point) t nil)
       (unless (eq major-mode 'dirtree-mode)
         (dirtree-mode))
       (dolist (atree tree-mode-list)
