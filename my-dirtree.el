@@ -71,6 +71,32 @@ With prefix argument, create in other window."
   (dirtree "/" other-p)
 )
 
+(defun my-dirtree-cycle-visibility ()
+  "Cycle through visibility of the tree on the current line.
+If it's collapsed, expand it.
+If it's already expanded, show files.
+If files are already shown, stop showing files, and collapse."
+  (interactive)
+  (let ((me (tree-mode-icon-current-line)))
+    (unless (tree-widget-leaf-node-icon-p me)
+      (goto-char (widget-get me :from))
+      (setq me (widget-get me :parent))
+      (let ((files-p (dirtree-get-show-files me)))
+        (if (widget-get me :open)
+            (progn
+              (setq files-p (- 1 files-p))
+              (widget-put me :show-files files-p)
+              (and (= files-p 0) (widget-apply-action me))
+              (tree-mode-reflesh-tree me)
+            )
+          (widget-put me :show-files 0)
+          (widget-apply-action me)
+        )
+      )
+    )
+  )
+)
+
 (defun my-dirtree-cycle-expand ()
   "If the tree on the current line is collapsed, expand it.
 If it's already expanded, show files.
@@ -93,10 +119,11 @@ If files are already shown, stop showing files."
 
 (defun my-dirtree-cycle-collapse ()
   "If the tree on the current line is shown, collapse it.
-If it's already collapsed, goto the parent."
+If it's already collapsed or a file, goto the parent."
   (interactive)
   (let ((me (tree-mode-icon-current-line)))
-    (unless (tree-widget-leaf-node-icon-p me)
+    (if (tree-widget-leaf-node-icon-p me)
+        (tree-mode-goto-parent 1)
       (goto-char (widget-get me :from))
       (setq me (widget-get me :parent))
       (if (widget-get me :open)
@@ -172,11 +199,12 @@ Intended to combine them into one key binding."
 (define-key dirtree-mode-map "\\"        (lambda () (interactive)
                                            (tree-mode-expand-level 1)))
 (define-key dirtree-mode-map "|"         'tree-mode-collapse-other-except)
-(define-key dirtree-mode-map "\t"        'tree-mode-toggle-expand)
-(define-key widget-keymap "\t"           'tree-mode-toggle-expand)
-(define-key widget-keymap "\e\t"         'tree-mode-toggle-expand)
-(define-key widget-keymap [(shift tab)]  'tree-mode-toggle-expand)
-(define-key widget-keymap [backtab]      'tree-mode-toggle-expand)
+(define-key dirtree-mode-map "\t"        'my-dirtree-cycle-visibility)
+(define-key dirtree-mode-map "e"         'my-dirtree-cycle-visibility)
+(define-key widget-keymap "\t"           'my-dirtree-cycle-visibility)
+(define-key widget-keymap "\e\t"         'my-dirtree-cycle-visibility)
+(define-key widget-keymap [(shift tab)]  'my-dirtree-cycle-visibility)
+(define-key widget-keymap [backtab]      'my-dirtree-cycle-visibility)
 
 (defun my-dirtree-display-other-window ()
   (interactive)
