@@ -52,6 +52,12 @@
   :type 'string
   :group 'dirtree)
 
+;; Uses integer instead of boolean to distinguish from a missing property.
+(defcustom dirtree-show-files 0
+  "*Whether to show files in addition to directories"
+  :type 'integer
+  :group 'dirtree)
+
 (define-widget 'dirtree-dir-widget 'tree-widget
   "Directory Tree widget."
   :dynargs        'dirtree-expand
@@ -124,6 +130,18 @@ With prefix argument, create in other window."
     :file ,directory
     :open t))
 
+(defun dirtree-get-show-files (tree)
+"Retrieve the show-files setting from the specified tree.
+If it's missing, first set it to the default."
+  (let ((files-p (widget-get tree :show-files)))
+    (when (null files-p)
+      (setq files-p dirtree-show-files)
+      (widget-put tree :show-files files-p)
+    )
+    files-p
+  )
+)
+
 (defun dirtree-expand (tree)
   "expand directory"
   (or (widget-get tree :args)
@@ -145,11 +163,12 @@ With prefix argument, create in other window."
                             :tag ,(cdr file)
                             :file ,(car file))))
                  dirs)
-         (mapcar (lambda (file)
-                   `(dirtree-file-widget
-                     :file ,(car file)
-                     :tag ,(cdr file)))
-                 files)))))
+         (unless (= 0 (dirtree-get-show-files tree))
+             (mapcar (lambda (file)
+                       `(dirtree-file-widget
+                         :file ,(car file)
+                         :tag ,(cdr file)))
+                     files))))))
 
 (defun dirtree-select (node &rest ignore)
   "Open file"
