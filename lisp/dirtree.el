@@ -154,19 +154,22 @@ With prefix argument, create in other window."
                  files)))))
 
 (defun dirtree-select (node &rest ignore)
-  "Open file in other window"
+  "Open file"
   (let ((file (widget-get node :file)))
     (and file
-         (find-file-other-window file))))
+         (find-file file))))
 
-(defun dirtree-display ()
-  "Open file under point"
-  (interactive)
+(defun dirtree-display (other-p)
+  "Open file under point.
+With prefix, open in other window."
+  (interactive "P")
   (let ((widget (widget-at (1- (line-end-position))))
         file)
     (if (setq file (widget-get widget :file))
-        (find-file-other-window file))))
+        (if other-p
+            (find-file-other-window file)
+          (find-file file)))))
 
-(define-key dirtree-mode-map "\C-o" 'dirtree-display)
+(define-key dirtree-mode-map "f" 'dirtree-display)
 (provide 'dirtree)
 ;;; dirtree.el ends here
