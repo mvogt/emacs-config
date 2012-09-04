@@ -173,9 +173,21 @@ If it's already collapsed or a file, goto the parent."
 
 (defun my-bs-dirtree-wrapper (arg)
   "Launch bs-show without a prefix or dirtree with one.
-Intended to combine them into one key binding."
+One universal prefix means start dirtree in the current dir.
+Two universal prefixes mean prompt for the dir in which to start dirtree.
+Intended to combine all this into one key binding."
   (interactive "P")
-  (if arg (my-dirtree-rootfs-cwd t) (call-interactively 'bs-show))
+  (if arg
+      (if (= 4 (prefix-numeric-value arg))
+          (my-dirtree-rootfs-cwd t)
+        (let ((start-dir (read-file-name "Starting directory: "
+                                         nil default-directory)))
+          (dirtree "/" t)
+          (my-dirtree-find-full-path (expand-file-name start-dir))
+        )
+      )
+    (call-interactively 'bs-show)
+  )
 )
 (global-set-key [?\M-j] 'my-bs-dirtree-wrapper)
 (global-set-key [?\C-`] 'my-bs-dirtree-wrapper)
