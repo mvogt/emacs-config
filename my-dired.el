@@ -168,6 +168,24 @@ path."
   )
 )
 
+(defun path-to-tilde (path)
+  "If path start with $HOME, replace $HOME with ~."
+  (let ((homedir (getenv "HOME")))
+    (if (and homedir (string-prefix-p homedir path))
+        (concat "~" (substring path (length homedir)))
+      path
+    )
+  )
+)
+
+(defun my-dired-breadcrumb (func)
+  "Prepends current file to file-name-history, and calls func."
+  (interactive)
+  (setq file-name-history (cons (path-to-tilde (dired-get-file-for-visit))
+                                file-name-history))
+  (call-interactively func)
+)
+
 (defun my-dired-gnome-open ()
   "Call gnome-open on the current line's file name.
 If it's a directory, open a new dired buffer, and kill the current one."
@@ -180,6 +198,7 @@ If it's a directory, open a new dired buffer, and kill the current one."
         ;; I don't understand the functional difference between call-process
         ;; and start-process, but gnome-open only works with call-process.
         (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+      (setq file-name-history (cons (path-to-tilde file) file-name-history))
       (kill-buffer)
       (find-file file)
     )
@@ -197,6 +216,7 @@ With a prefix argument, kills the current buffer."
         (and (cdr dired-subdir-alist)
              (dired-goto-subdir up))
         (progn
+          (setq file-name-history (cons (path-to-tilde up) file-name-history))
           (if kill-buf-p
             (kill-buffer))
           (dired up)
@@ -401,6 +421,21 @@ With a prefix argument, kills the current buffer."
               (local-set-key [?p]          'my-dired-previous-line)
               (local-set-key [?\C-p]       'my-dired-previous-line)
               (local-set-key [up]          'my-dired-previous-line)
+              (local-set-key [return]      (lambda () (interactive)
+                                             (my-dired-breadcrumb
+                                              'dired-find-file)))
+              (local-set-key [?f]          (lambda () (interactive)
+                                             (my-dired-breadcrumb
+                                              'dired-find-file)))
+              (local-set-key [?e]          (lambda () (interactive)
+                                             (my-dired-breadcrumb
+                                              'dired-find-file)))
+              (local-set-key [?o]          (lambda () (interactive)
+                                             (my-dired-breadcrumb
+                                              'dired-find-file-other-window)))
+              (local-set-key [?\C-o]       (lambda () (interactive)
+                                             (my-dired-breadcrumb
+                                              'dired-display-file)))
               (dired-sort-by-name-dirs-1st)
             )
   )
