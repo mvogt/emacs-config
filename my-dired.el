@@ -170,9 +170,12 @@ path."
 
 (defun path-to-tilde (path)
   "If path start with $HOME, replace $HOME with ~."
-  (let ((homedir (getenv "HOME")))
-    (if (and homedir (string-prefix-p homedir path))
-        (concat "~" (substring path (length homedir)))
+  (let* ((homedir (getenv "HOME"))
+         (home-len (length homedir)))
+    (if (and homedir
+             (> (length path) home-len)
+             (string= homedir (substring path 0 home-len)))
+        (concat "~" (substring path home-len))
       path
     )
   )
