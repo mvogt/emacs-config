@@ -53,7 +53,7 @@
   :group 'dirtree)
 
 ;; Uses integer instead of boolean to distinguish from a missing property.
-(defcustom dirtree-show-files 0
+(defcustom dirtree-show-files 1
   "*Whether to show files in addition to directories"
   :type 'integer
   :group 'dirtree)
