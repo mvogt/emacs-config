@@ -103,7 +103,6 @@
 (load "search-replace")
 (load "grep-compile")
 (load "my-indent")
-(load "prg-modes")
 (load "my-shell")
 (load "my-dired")
 (load "my-completion")
@@ -112,8 +111,15 @@
 (load "my-misc")
 (load "my-html")
 
-;; This is at the end because it's very disruptive visually, and
+;; This is near the end because it's very disruptive visually, and
 ;; color-theme.el is huge and slow.  Also, if there are any errors, I want
 ;; them to occur after as many of my preferred settings are configured as
 ;; possible.
 (load "appearance")
+
+;; This is at the end because it evaluates protobuf-mode.el, which in turn
+;; evaluates cc-mode.el, which calls substitute-key-definition. That function
+;; will override a global key binding in cc-mode -- unless you've ALREADY
+;; bound it before cc-mode.el is evaluated. So, putting this at the end
+;; preserves all the global key bindings I've made in the files above.
+(load "prg-modes")
