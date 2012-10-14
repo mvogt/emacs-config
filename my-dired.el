@@ -189,8 +189,8 @@ path."
   (call-interactively func)
 )
 
-(defun my-dired-gnome-open ()
-  "Call gnome-open on the current line's file name.
+(defun my-dired-xdg-open ()
+  "Call xdg-open on the current line's file name.
 If it's a directory, open a new dired buffer, and kill the current one."
   (interactive)
   ;; Bind find-file-run-dired so that the command works on directories, too,
@@ -199,8 +199,9 @@ If it's a directory, open a new dired buffer, and kill the current one."
         (file (dired-get-file-for-visit)))
     (if (not (file-directory-p file))
         ;; I don't understand the functional difference between call-process
-        ;; and start-process, but gnome-open only works with call-process.
-        (call-process "gnome-open" nil 0 nil (dired-get-filename 'no-dir))
+        ;; and start-process, but when I first wrote this with gnome-open, it
+        ;; only worked with call-process. I didn't recheck later.
+        (call-process "xdg-open" nil 0 nil (dired-get-filename 'no-dir))
       (setq file-name-history (cons (path-to-tilde file) file-name-history))
       (kill-buffer)
       (find-file file)
@@ -412,8 +413,8 @@ With a prefix argument, kills the current buffer."
               (local-set-key [C-backspace] (lambda () (interactive)
                                              (my-dired-up-directory t)))
               (local-set-key [?^]          'my-dired-up-directory)
-              (local-set-key [C-return]    'my-dired-gnome-open)
-              (local-set-key [?\C-j]       'my-dired-gnome-open)
+              (local-set-key [C-return]    'my-dired-xdg-open)
+              (local-set-key [?\C-j]       'my-dired-xdg-open)
               (local-set-key [?r]          'dired-efap)
               (local-set-key [?=]          'my-dired-diff)
               (local-set-key [?y]          'my-dired-show-file-info)
