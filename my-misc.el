@@ -72,7 +72,7 @@ Defaults to the word around the point or the active region as the default.
 Search terms are passed as a single string to func my-format-search-url,
 which should return a URL string."
   (interactive)
-  (message "[U]RL, [S]earch, or [J]ira?")
+  (message "[U]RL, [S]earch, [J]ira, or [C]ommander?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?u)
@@ -83,6 +83,10 @@ which should return a URL string."
      ((= which-func ?j)
       (browse-url (concat my-jira-base-url
                           (read-string "Jira issue: "
+                                       (my-cur-word-or-region)))))
+     ((= which-func ?c)
+      (browse-url (format "%s%s" my-ecommander-base-url
+                          (read-string "Electric Commander job ID: "
                                        (my-cur-word-or-region)))))
     )
   )
