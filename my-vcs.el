@@ -20,6 +20,21 @@
 ;;
 (autoload 'magit-status "magit")
 
+(defvar my-gitk-load-limit 10000)
+(setq magit-gitk-load-limit my-gitk-load-limit)
+
+(defun my-launch-gitk (arg)
+  "Launch gitk showing all branches.
+With a prefix, don't limit the number of commits loaded to
+my-gitk-load-limit."
+  (interactive "P")
+  (if arg
+      (start-process "gitk" nil "gitk" "--all")
+    (start-process "gitk" nil "gitk"
+                   (format "--max-count=%d" my-gitk-load-limit) "--all")
+  )
+)
+
 (if (file-accessible-directory-p my-3rd-party-elisp-path)
     (define-key vc-prefix-map [?x] (lambda () (interactive)
                                      (magit-status default-directory)
@@ -27,5 +42,4 @@
 )
 (define-key vc-prefix-map [?k] (lambda () (interactive)
                                  (start-process "Git GUI" nil "git" "gui")))
-(define-key vc-prefix-map [?K] (lambda () (interactive)
-                                 (start-process "gitk" nil "gitk" "--all")))
+(define-key vc-prefix-map [?K] 'my-launch-gitk)
