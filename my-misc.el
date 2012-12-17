@@ -62,7 +62,8 @@ and it can be: FIXME, NOTE, HACK.
            (replace-regexp-in-string "+" "%2B" terms)))
 )
 
-(defvar my-jira-base-url "https://sandbox.onjira.com/browse/")
+(defvar my-jira-base-url "https://jira.atlassian.com/browse/")
+(defvar my-jira-default-prefix "JRA-")
 
 (autoload 'browse-url "browse-url")
 (require 'my-cur-word-or-region "grep-compile")
@@ -73,21 +74,25 @@ Search terms are passed as a single string to func my-format-search-url,
 which should return a URL string."
   (interactive)
   (message "[U]RL, [S]earch, [J]ira, or [C]ommander?")
-  (let ((which-func (read-char)))
+  (let ((which-func (read-char))
+        (context (my-cur-word-or-region)))
     (cond
      ((= which-func ?u)
       (call-interactively 'browse-url))
      ((= which-func ?s)
       (browse-url (my-format-search-url
-                   (read-string "Search terms: " (my-cur-word-or-region)))))
+                   (read-string "Search terms: " context))))
      ((= which-func ?j)
-      (browse-url (concat my-jira-base-url
-                          (read-string "Jira issue: "
-                                       (my-cur-word-or-region)))))
+      (browse-url
+       (concat my-jira-base-url
+               (read-string "Jira issue: "
+                            (if (string-match "^[A-Za-z]*-[0-9]*$" context)
+                                context
+                              (concat my-jira-default-prefix context))))))
      ((= which-func ?c)
       (browse-url (format "%s%s" my-ecommander-base-url
                           (read-string "Electric Commander job ID: "
-                                       (my-cur-word-or-region)))))
+                                       context))))
     )
   )
 )
