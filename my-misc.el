@@ -56,10 +56,12 @@ and it can be: FIXME, NOTE, HACK.
 )
 
 (defun my-format-search-url (terms)
-  (concat "https://duckduckgo.com/?q="
-          (replace-regexp-in-string
-           "\\s +" "+"
-           (replace-regexp-in-string "+" "%2B" terms)))
+  (let ((url-suffix (replace-regexp-in-string
+                     "\\s +" "+"
+                     (replace-regexp-in-string "+" "%2B" terms))))
+    (list (concat "https://duckduckgo.com/?q=" url-suffix)
+          (concat "https://google.com/?q=" url-suffix))
+  )
 )
 
 (defvar my-jira-base-url "https://jira.atlassian.com/browse/")
@@ -80,8 +82,10 @@ which should return a URL string."
      ((= which-func ?u)
       (call-interactively 'browse-url))
      ((= which-func ?s)
-      (browse-url (my-format-search-url
-                   (read-string "Search terms: " context))))
+      (dolist (url (my-format-search-url
+                    (read-string "Search terms: " context)))
+        (browse-url url)
+      ))
      ((= which-func ?j)
       (browse-url
        (concat my-jira-base-url
