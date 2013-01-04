@@ -84,7 +84,12 @@ which should return a URL string."
      ((= which-func ?s)
       (dolist (url (my-format-search-url
                     (read-string "Search terms: " context)))
-        (browse-url url)
+        ;; I set the "generic" browser to Chrome in my ~/.emacs file.
+        ;; Using it here works around an unexplained delay with Firefox when
+        ;; calling browse-url twice in a row.
+        (if browse-url-generic-program
+            (browse-url-generic url)
+          (browse-url url))
       ))
      ((= which-func ?j)
       (browse-url
