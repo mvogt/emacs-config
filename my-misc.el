@@ -306,38 +306,3 @@ own."
 ;; acceptable inconvenience to me.
 (global-set-key [?\M-x]       'Control-X-prefix)
 (global-set-key [?\C-x ?\M-x] 'execute-extended-command)
-
-
-;;
-;; http://orgmode.org
-;;
-;; Move some org-mode keys to alternates that don't conflict with my preferred
-;; global mappings.
-;; This must be defined before initializing org-mode.
-(setq org-disputed-keys '(([(shift up)]   . [(meta p)])
-                          ([(shift down)] . [(meta n)])))
-(setq org-replace-disputed-keys t)
-
-(require 'org-install)
-
-;; A little navigation help.  Set to 'reversed for opposite behavior.  Set to
-;; nil (which is the default) to disable.
-(setq org-special-ctrl-a/e t)
-
-;; Blank all but the last star in a heading so it appears to be indented.
-(setq org-hide-leading-stars t)
-
-;; When opening a file, show it fully expanded.
-(setq org-startup-folded nil)
-
-(add-hook 'org-mode-hook
-  (function (lambda ()
-              ;; Match C-a / C-e
-              (local-set-key [home] 'org-beginning-of-line)
-              (local-set-key [end]  'org-end-of-line)
-              ;; More familiar to me than M-S-left/right
-              (local-set-key [?\M-,] 'org-promote-subtree)
-              (local-set-key [?\M-.] 'org-demote-subtree)
-            )
-  )
-)

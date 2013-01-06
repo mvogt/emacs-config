@@ -109,6 +109,7 @@
 (load "my-vcs")
 (load "my-dirtree")
 (load "my-misc")
+(load "my-org")
 (load "my-html")
 
 ;; This is near the end because it's very disruptive visually, and
