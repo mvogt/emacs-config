@@ -146,6 +146,78 @@ depending on context.  See the individual commands for more information."
   )
 )
 
+(defun org-shiftmetaleft ()
+  "Promote subtree or delete table column.
+Calls `org-promote-subtree', `org-outdent-item-tree', or
+`org-table-delete-column', depending on context.  See the
+individual commands for more information."
+  (interactive)
+  (cond
+   ((run-hook-with-args-until-success 'org-shiftmetaleft-hook))
+   ((org-at-table-p) (call-interactively 'org-table-delete-column))
+   ((org-at-heading-p) (call-interactively 'org-promote-subtree))
+   ((if (not (org-region-active-p)) (org-at-item-p)
+      (save-excursion (goto-char (region-beginning))
+		      (org-at-item-p)))
+    (call-interactively 'org-outdent-item-tree))
+   (t (org-modifier-cursor-error))
+  )
+)
+
+(defun org-shiftmetaright ()
+  "Demote subtree or insert table column.
+Calls `org-demote-subtree', `org-indent-item-tree', or
+`org-table-insert-column', depending on context.  See the
+individual commands for more information."
+  (interactive)
+  (cond
+   ((run-hook-with-args-until-success 'org-shiftmetaright-hook))
+   ((org-at-table-p) (call-interactively 'org-table-insert-column))
+   ((org-at-heading-p) (call-interactively 'org-demote-subtree))
+   ((if (not (org-region-active-p)) (org-at-item-p)
+      (save-excursion (goto-char (region-beginning))
+		      (org-at-item-p)))
+    (call-interactively 'org-indent-item-tree))
+   (t (org-modifier-cursor-error))
+  )
+)
+
+(defun org-shiftmetaup (&optional arg)
+  "Move subtree up or kill table row.
+Calls `org-move-subtree-up' or `org-table-kill-row' or
+`org-move-item-up' or `org-timestamp-up', depending on context.
+See the individual commands for more information."
+  (interactive "P")
+  (cond
+   ((run-hook-with-args-until-success 'org-shiftmetaup-hook))
+   ((org-at-table-p) (call-interactively 'org-table-kill-row))
+   ((org-at-heading-p) (call-interactively 'org-move-subtree-up))
+   ((org-at-item-p) (call-interactively 'org-move-item-up))
+   ((org-at-clock-log-p)
+    (let ((org-clock-adjust-closest t))
+      (call-interactively 'org-timestamp-up)))
+   (t (org-modifier-cursor-error))
+  )
+)
+
+(defun org-shiftmetadown (&optional arg)
+  "Move subtree down or insert table row.
+Calls `org-move-subtree-down' or `org-table-insert-row' or
+`org-move-item-down' or `org-timestamp-up', depending on context.
+See the individual commands for more information."
+  (interactive "P")
+  (cond
+   ((run-hook-with-args-until-success 'org-shiftmetadown-hook))
+   ((org-at-table-p) (call-interactively 'org-table-insert-row))
+   ((org-at-heading-p) (call-interactively 'org-move-subtree-down))
+   ((org-at-item-p) (call-interactively 'org-move-item-down))
+   ((org-at-clock-log-p)
+    (let ((org-clock-adjust-closest t))
+      (call-interactively 'org-timestamp-down)))
+   (t (org-modifier-cursor-error))
+  )
+)
+
 ;; A little navigation help.  Set to 'reversed for opposite behavior.  Set to
 ;; nil (which is the default) to disable.
 (setq org-special-ctrl-a/e t)
