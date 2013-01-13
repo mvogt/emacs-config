@@ -44,16 +44,18 @@ first item, unless `org-list-use-circular-motion' is non-nil."
       (if (not item)
           (error "Not in an item")
         (goto-char item)
-        (let* ((struct (org-list-struct))
-               (prevs (org-list-prevs-alist struct))
-               (prevp (org-list-get-prev-item item struct prevs)))
-          (cond
-           (prevp (goto-char prevp))
-           (org-list-use-circular-motion
-            (goto-char (org-list-get-last-item item struct prevs)))
-           (t
-            (goto-char saved-pos)
-            (backward-paragraph))
+        (when (= item saved-pos)
+          (let* ((struct (org-list-struct))
+                 (prevs (org-list-prevs-alist struct))
+                 (prevp (org-list-get-prev-item item struct prevs)))
+            (cond
+             (prevp (goto-char prevp))
+             (org-list-use-circular-motion
+              (goto-char (org-list-get-last-item item struct prevs)))
+             (t
+              (goto-char saved-pos)
+              (backward-paragraph))
+            )
           )
         )
       )
