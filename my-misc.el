@@ -260,9 +260,12 @@ own."
 
 (add-hook 'org-mode-hook
   (function (lambda ()
+              (toggle-truncate-lines 0)    ; enable line wrap
+              (local-set-key [?\C-c ?\C-8] 'org-list-make-subtree)
+              (local-set-key [?\C-c ?\C-6] 'org-up-element)
               ;; Match C-a / C-e
-              (local-set-key [home] 'org-beginning-of-line)
-              (local-set-key [end]  'org-end-of-line)
+              (local-set-key [home]        'org-beginning-of-line)
+              (local-set-key [end]         'org-end-of-line)
             )
   )
 )
