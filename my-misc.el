@@ -235,6 +235,39 @@ own."
 )
 
 
+;;
+;; http://orgmode.org
+;;
+
+;; Move some Org mode keys to alternates that don't conflict with my preferred
+;; global mappings.
+;; This must be defined before initializing org-mode.
+(setq org-disputed-keys '(([(shift up)]   . [(meta p)])
+                          ([(shift down)] . [(meta n)])))
+(setq org-replace-disputed-keys t)
+
+;; A little navigation help.  Set to 'reversed for opposite behavior.  Set to
+;; nil (which is the default) to disable.
+(setq org-special-ctrl-a/e t)
+
+;; Blank all but the last star in a heading so it appears to be indented.
+(setq org-hide-leading-stars t)
+
+;; When opening a file, show it fully expanded.
+(setq org-startup-folded nil)
+
+(setq org-edit-timestamp-down-means-later t)
+
+(add-hook 'org-mode-hook
+  (function (lambda ()
+              ;; Match C-a / C-e
+              (local-set-key [home] 'org-beginning-of-line)
+              (local-set-key [end]  'org-end-of-line)
+            )
+  )
+)
+
+
 (add-hook 'diff-mode-hook
   (function (lambda ()
               (whitespace-mode 1))
