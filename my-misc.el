@@ -270,6 +270,21 @@ own."
   )
 )
 
+(add-hook 'org-read-date-minibuffer-setup-hook
+  (function (lambda ()
+              ;; These are the defaults, but for some reason they don't work
+              ;; for me until I repeat what I want here. Maybe this is a
+              ;; regression in the version of Org mode that I'm using.
+              (define-key minibuffer-local-map [(shift up)]
+                (lambda () (interactive)
+                  (org-eval-in-calendar '(calendar-backward-week 1))))
+              (define-key minibuffer-local-map [(shift down)]
+                (lambda () (interactive)
+                  (org-eval-in-calendar '(calendar-forward-week 1))))
+            )
+  )
+)
+
 
 (add-hook 'diff-mode-hook
   (function (lambda ()
