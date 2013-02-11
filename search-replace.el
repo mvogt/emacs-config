@@ -73,7 +73,12 @@ in MS Word."
                              (cons (char-to-string #x53978) "'")
                              (cons (char-to-string #x53979) "'")
                              (cons (char-to-string #x5397c) "\"")
-                             (cons (char-to-string #x5397d) "\"")))
+                             (cons (char-to-string #x5397d) "\"")
+                             (cons (char-to-string #x3fff85) "...")
+                             (cons (char-to-string #x3fff92) "'")
+                             (cons (char-to-string #x3fff93) "\"")
+                             (cons (char-to-string #x3fff94) "\"")
+                             (cons (char-to-string #x3fff96) "--")))
         ;; Declaring this local variable causes the Emacs variable of the same
         ;; name to be preserved after this function completes.  save-excursion
         ;; doesn't cover this one.
