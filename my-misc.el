@@ -75,7 +75,7 @@ Defaults to the word around the point or the active region as the default.
 Search terms are passed as a single string to func my-format-search-url,
 which should return a URL string."
   (interactive)
-  (message "[U]RL, [S]earch, [J]ira, or [C]ommander?")
+  (message "[U]RL, [S]earch, [J]ira, [C]ommander, or [T]icker?")
   (let ((which-func (read-char))
         (context (my-cur-word-or-region)))
     (cond
@@ -102,6 +102,9 @@ which should return a URL string."
       (browse-url (format "%s%s" my-ecommander-base-url
                           (read-string "Electric Commander job ID: "
                                        context))))
+     ((= which-func ?t)
+      (browse-url (format "http://finance.yahoo.com/q/pr?s=%s+Profile"
+                          (read-string "Stock ticker symbol: " context))))
     )
   )
 )
