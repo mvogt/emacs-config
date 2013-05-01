@@ -210,14 +210,35 @@ Prompt for the directory, and default to the current buffer's directory."
   )
 )
 
+;; The original comint-{interrupt,quit,kill}-subjob functions don't work in a
+;; buffer containing the output of shell-command. They first try and fail to
+;; kill some input. This provides an alternate way to just send the desired
+;; signal.
+(defun my-kill-subshell (&optional sigtype)
+  "Kill the current buffer's subprocess.
+
+Sends one of three different signals depending on the optional prefix arg:
+- No prefix: interrupt
+- One universal prefixes: kill
+- Two universal prefix: quit"
+  (interactive "p")
+  (cond
+   ((= sigtype 1) (interrupt-process nil comint-ptyp))
+   ((= sigtype 4) (kill-process nil comint-ptyp))
+   ((= sigtype 16) (quit-process nil comint-ptyp))
+  )
+)
+
 ;; Interactive shell mode (command prompt window)
-;; Set additional keys to scroll the command history so I can use it from a
-;; terminal that doesn't have the full keyboard support that I'm accustomed
-;; to.
 (add-hook 'shell-mode-hook
   (function (lambda ()
-             (local-set-key [?\C-c ?\C-p] 'comint-previous-input)
-             (local-set-key [?\C-c ?\C-n] 'comint-next-input))
+              ;; Additional keys to scroll the command history so I can use it
+              ;; from a terminal that doesn't have the full keyboard support
+              ;; that I'm accustomed to.
+              (local-set-key [?\C-c ?\C-p] 'comint-previous-input)
+              (local-set-key [?\C-c ?\C-n] 'comint-next-input)
+              ;; Work-around for broken comint-{interrupt,quit,kill}-subjob.
+              (local-set-key [?\C-c ?\C-k] 'my-kill-subshell))
   )
 )
 
