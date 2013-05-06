@@ -75,7 +75,8 @@ Defaults to the word around the point or the active region as the default.
 Search terms are passed as a single string to func my-format-search-url,
 which should return a URL string."
   (interactive)
-  (message "[U]RL, [S]earch, [J]ira, [C]ommander, [P]ython, or [T]icker?")
+  (message
+   "[U]RL, [S]earch, [D]ictionary, [J]ira, [C]ommander, [P]ython, or [T]icker?")
   (let ((which-func (read-char))
         (context (my-cur-word-or-region)))
     (cond
@@ -91,6 +92,10 @@ which should return a URL string."
             (browse-url-generic url)
           (browse-url url))
       ))
+     ((= which-func ?d)
+      (browse-url (format "http://www.onelook.com/?w=%s"
+                          (read-string "OneLook.com dictionary search: "
+                                       context))))
      ((= which-func ?j)
       (browse-url
        (concat my-jira-base-url
