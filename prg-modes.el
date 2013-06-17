@@ -189,6 +189,10 @@ Causes an intuitive indent level matching the specific argument."
 (add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
 
 
+;; JavaScript mode is the best built-in mode for JSON.
+(add-to-list 'auto-mode-alist '("\\.json\\'" . js-mode))
+
+
 ;; The built-in Sieve mode is broken for the flavor of the language used by my
 ;; web mail service.
 (add-to-list 'auto-mode-alist '("\\.sieve\\'" . c-mode))
