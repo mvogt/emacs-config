@@ -20,8 +20,8 @@
 ;;
 (defun replace-special-chars ()
   "Replace characters that are not printable in 7-bit ASCII with something
-that is.  These obnoxious special chars typically come from documents edited
-in MS Word."
+that is.  These obnoxious special chars typically come from MS Word or
+Outlook."
   (interactive)
   (let ((search-for)
         (replace-with)
@@ -40,6 +40,22 @@ in MS Word."
                              (cons (char-to-string #x00a9) "(c)")
                              (cons (char-to-string #x00ae) "(r)")
                              (cons (char-to-string #x00b7) "*")
+
+                             ;; Same as above but with some kooky extra
+                             ;; leading bytes. I guess these come from UTF-8
+                             ;; somehow. Emacs still shows these as single
+                             ;; byte characters, so they're indistinguishable
+                             ;; from the list above.
+                             (cons (char-to-string #x3fff85) "...")
+                             (cons (char-to-string #x3fff91) "'")
+                             (cons (char-to-string #x3fff92) "'")
+                             (cons (char-to-string #x3fff93) "\"")
+                             (cons (char-to-string #x3fff94) "\"")
+                             (cons (char-to-string #x3fff95) "*")
+                             (cons (char-to-string #x3fff96) "--")
+                             (cons (char-to-string #x3fffa9) "(c)")
+                             (cons (char-to-string #x3fffae) "(r)")
+                             (cons (char-to-string #x3fffb7) "*")
 
                              (cons (char-to-string #x2010) "-")
                              (cons (char-to-string #x2011) "-")
@@ -73,12 +89,7 @@ in MS Word."
                              (cons (char-to-string #x53978) "'")
                              (cons (char-to-string #x53979) "'")
                              (cons (char-to-string #x5397c) "\"")
-                             (cons (char-to-string #x5397d) "\"")
-                             (cons (char-to-string #x3fff85) "...")
-                             (cons (char-to-string #x3fff92) "'")
-                             (cons (char-to-string #x3fff93) "\"")
-                             (cons (char-to-string #x3fff94) "\"")
-                             (cons (char-to-string #x3fff96) "--")))
+                             (cons (char-to-string #x5397d) "\"")))
         ;; Declaring this local variable causes the Emacs variable of the same
         ;; name to be preserved after this function completes.  save-excursion
         ;; doesn't cover this one.
