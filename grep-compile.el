@@ -66,24 +66,25 @@ First prompts for the type of files search."
   (let* ((my-xargs-grep (concat "xargs --null"
                                 " grep --line-number --ignore-case"
                                 " --no-messages --extended-regexp -e"))
+         (find-args-ignore "-o -name .git -prune -o -name .svn -prune")
          (which-func (read-char))
          (my-initial-grep-cmd
           (cond
            ((= which-func ?a)
-            (format "find . -type f -print0 -o -name .git -prune | %s \"%s\""
-                    my-xargs-grep (my-cur-word-or-region)))
+            (format "find . -type f -print0 %s | %s \"%s\""
+                    find-args-ignore my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?x)
-            (format (concat "find . -type f -name \"*.c\" -print0"
-                            " -o -name .git -prune | %s \"%s\"")
+            (format (concat "find . -type f -name \"*.c\" -print0 "
+                            find-args-ignore " | %s \"%s\"")
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?m)
             (format (concat "find . -type f -name \"*.c\" -print0"
-                            " -o -name \"*.h\" -print0"
-                            " -o -name .git -prune | %s \"%s\"")
+                            " -o -name \"*.h\" -print0 "
+                            find-args-ignore " | %s \"%s\"")
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?j)
-            (format (concat "find . -type f -name \"%s\" -print"
-                            " -o -name .git -prune | while read x ; do"
+            (format (concat "find . -type f -name \"%s\" -print "
+                            find-args-ignore " | while read x ; do"
                             " echo ${x}${colon}1${colon} ; done")
                     (my-cur-word-or-region)))
           )
