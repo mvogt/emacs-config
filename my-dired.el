@@ -268,6 +268,7 @@ With a prefix argument, kills the current buffer."
                   ((= which-sandbox ?^) '("~/ws/ndiags1/obj"  "diags1-obj"))
                   ((= which-sandbox ?&) '("~/ws/ndiags2/obj"  "diags2-obj"))
                   ((= which-sandbox ?*) '("~/ws/ndiags3/obj"  "diags3-obj"))
+                  ((= which-sandbox ?t) '("~/tmp"             "tmp"))
                  )))
     (dired (car sandbox))
     (rename-buffer (cadr sandbox))
