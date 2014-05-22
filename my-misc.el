@@ -301,7 +301,9 @@ own."
 
 (add-hook 'diff-mode-hook
   (function (lambda ()
-              (whitespace-mode 1))
+              (whitespace-mode 1)
+              (local-unset-key [?\M-o])
+              (local-unset-key [?\M-g]))
   )
 )
 
