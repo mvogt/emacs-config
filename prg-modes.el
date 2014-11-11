@@ -161,6 +161,48 @@ Causes an intuitive indent level matching the specific argument."
 
 
 ;;----------------------------------------------------------------------------
+;; nXML mode
+;;
+(defun nxml-where ()
+  "Display the hierarchy of XML elements the point is on as a path."
+  ;; From http://www.emacswiki.org/emacs/XmlMode
+  (interactive)
+  (let ((path nil))
+    (save-excursion
+      (save-restriction
+        (widen)
+        ;; The first and clause avoids running the loop at all if the point is
+        ;; at the beginning of the buffer.
+        (while (and (< (point-min) (point))
+                    (condition-case nil
+                        ;; Run this until it throws an error
+                        (progn
+                          (nxml-backward-up-element)
+                          t ; because the nxml func always returns nil
+                        )
+                      (error nil) ; handle error: return nil to abort loop
+                    )
+               )
+          (setq path (cons (xmltok-start-tag-local-name) path))
+        )
+        (if (called-interactively-p t)
+            (message "/%s" (mapconcat 'identity path "/"))
+          (format "/%s" (mapconcat 'identity path "/"))
+        )
+      )
+    )
+  )
+)
+
+(add-hook 'nxml-mode-hook
+  (function (lambda ()
+              (local-set-key [?\C-c ??] 'nxml-where)
+            )
+  )
+)
+
+
+;;----------------------------------------------------------------------------
 ;; YASnippet
 ;; http://code.google.com/p/yasnippet/
 ;;
