@@ -30,11 +30,14 @@
 ;; the end.
 (setq my-3rd-party-elisp-path "~/src/emacs/")
 (when (file-accessible-directory-p my-3rd-party-elisp-path)
-  (setq load-path (cons (concat my-3rd-party-elisp-path "org-mode/lisp")
-                        load-path))
-  (add-to-list 'load-path my-3rd-party-elisp-path t)
-  (add-to-list 'load-path (concat my-3rd-party-elisp-path "magit") t)
-  (add-to-list 'load-path (concat my-3rd-party-elisp-path "magit/contrib") t)
+  (setq load-path
+        (append
+         (list (concat my-3rd-party-elisp-path "org-mode/lisp"))
+         (list (concat my-3rd-party-elisp-path "org-mode/contrib/lisp"))
+         load-path
+         (list my-3rd-party-elisp-path)
+         (list (concat my-3rd-party-elisp-path "magit"))
+         (list (concat my-3rd-party-elisp-path "magit/contrib"))))
 )
 
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.
