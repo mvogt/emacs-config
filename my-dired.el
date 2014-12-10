@@ -275,8 +275,8 @@ With a prefix argument, kills the current buffer."
   )
 )
 
-(defun my-dired-diff (xxdiff-p)
-  "Same as dired-diff, but prefix arg now means run xxdiff instead."
+(defun my-dired-diff (gui-p)
+  "Same as dired-diff, but prefix arg now means run meld instead."
   (interactive "P")
   (let* ((current (dired-get-filename t))
          (init-default (if (mark t)
@@ -297,9 +297,9 @@ With a prefix argument, kills the current buffer."
                    (dired-dwim-target-directory))
                  default t))
          (file2 (dired-get-filename t)))
-    (if xxdiff-p
+    (if gui-p
         (start-process "Diff" nil shell-file-name shell-command-switch
-                       (format "xxdiff %s %s" file1 file2))
+                       (format "meld %s %s" file1 file2))
       (require 'diff)
       (diff file1 file2)
     )
