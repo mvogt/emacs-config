@@ -71,6 +71,10 @@
 ;; For CVS, too.
 (setq-default vc-cvs-stay-local nil)
 
+;; Disable auto-save completely. It has never rescued me, and I manually save
+;; religiously, anyway.
+(setq auto-save-default nil)
+
 ;; Disable obnoxious prompt when following symlinks to RCS or CVS files.
 (setq vc-follow-symlinks nil)
 
