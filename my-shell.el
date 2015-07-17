@@ -242,12 +242,21 @@ Sends one of three different signals depending on the optional prefix arg:
   )
 )
 
-;; Shell mode
+;; Make it easier to change the nominal indentation for a given buffer.
+(defun set-sh-basic-offset (num-spaces)
+  "Set the variable sh-basic-offset interactively."
+  (interactive "NSet sh-basic-offset to: ")
+  (or (null num-spaces)
+      (set-variable (make-local-variable 'sh-basic-offset) num-spaces))
+)
+
+;; Shell (editing) mode
 ;; I assign C-c C-i globally to this function, but this mode happens to have a
 ;; pre-defined local assignment that overrides it.  So, we have to do this...
 (require 'set-tab-width "my-indent")
 (add-hook 'sh-mode-hook
   (function (lambda ()
+              (local-set-key [?\C-c ?i] 'set-sh-basic-offset)
               (local-set-key [?\C-c ?\C-i] 'set-tab-width))
   )
 )
