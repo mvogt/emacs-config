@@ -238,3 +238,10 @@ Causes an intuitive indent level matching the specific argument."
 ;; The built-in Sieve mode is broken for the flavor of the language used by my
 ;; web mail service.
 (add-to-list 'auto-mode-alist '("\\.sieve\\'" . c-mode))
+
+
+(require 'groovy-mode)
+(add-to-list 'auto-mode-alist '("\\.g\\(?:ant\\|roovy\\|radle\\)\\'" . groovy-mode))
+
+
+(require 'yaml-mode)
