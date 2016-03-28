@@ -49,3 +49,6 @@ my-gitk-load-limit."
 (define-key vc-prefix-map [?k] (lambda () (interactive)
                                  (start-process "Git GUI" nil "git" "gui")))
 (define-key vc-prefix-map [?K] 'my-launch-gitk)
+
+;; This hook just seems to slow me down.
+(remove-hook 'find-file-hooks 'vc-find-file-hook)
