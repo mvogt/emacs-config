@@ -15,6 +15,13 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+(require 'sr-speedbar)
+(setq sr-speedbar-delete-windows t)
+(setq sr-speedbar-width 50)
+(setq sr-speedbar-default-width 50)
+(setq sr-speedbar-max-width 90)
+(setq speedbar-show-unknown-files t)
+
 ;;----------------------------------------------------------------------------
 ;; Directory tree mode
 ;;
@@ -191,21 +198,28 @@ If it's already collapsed or a file, goto the parent."
 (define-key dirtree-mode-map [?\C-c ?\M-w] 'my-dirtree-copy-full-path)
 
 (defun my-bs-dirtree-wrapper (arg)
-  "Launch bs-show without a prefix or dirtree with one.
-One universal prefix means start dirtree in the current dir.
-Two universal prefixes mean prompt for the dir in which to start dirtree.
-Intended to combine all this into one key binding."
+  "Wraps bs-show, sr-speedbar, and dirtree.
+Without a prefix, run bs-show.
+With one universal prefix, toggle speedbar.
+With two universal prefixes, start dirtree in the current dir.
+With three universal prefixes, prompt for the dir in which to start dirtree."
   (interactive "P")
-  (if arg
-      (if (= 4 (prefix-numeric-value arg))
-          (my-dirtree-rootfs-cwd t)
-        (let ((start-dir (read-file-name "Starting directory: "
-                                         nil default-directory)))
-          (dirtree "/" t)
-          (my-dirtree-find-full-path (expand-file-name start-dir))
-        )
-      )
-    (call-interactively 'bs-show)
+  (cond
+   ((= 4 (prefix-numeric-value arg))
+    (if (sr-speedbar-exist-p)
+        (sr-speedbar-close)
+      (sr-speedbar-open)
+      (select-window sr-speedbar-window)))
+   ((= 16 (prefix-numeric-value arg))
+    (my-dirtree-rootfs-cwd t))
+   ((= 64 (prefix-numeric-value arg))
+    (let ((start-dir (read-file-name "Starting directory: "
+                                     nil default-directory)))
+      (dirtree "/" t)
+      (my-dirtree-find-full-path (expand-file-name start-dir))
+    ))
+   (t
+    (call-interactively 'bs-show))
   )
 )
 (global-set-key [?\M-j] 'my-bs-dirtree-wrapper)
