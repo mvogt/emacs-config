@@ -23,6 +23,10 @@
 ;; ...and don't print boilerplate text at the top.
 (setq completion-show-help nil)
 
+;; Use space to complete file names.
+(define-key minibuffer-local-filename-completion-map " " 'minibuffer-complete-word)
+(define-key minibuffer-local-must-match-filename-map " " 'minibuffer-complete-word)
+
 ;; Makes default completion tolerable until I learn ido or icicles.
 (defun my-toggle-completions-window ()
   "Toggle between the completions window and the minibuffer.
