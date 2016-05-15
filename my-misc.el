@@ -342,6 +342,7 @@ own."
 (global-set-key [?\C-x ?\]]   'my-enclose-undo)            ; was forward-page
 
 (global-set-key [?\C-x ?\M-q] 'toggle-read-only)
+(global-set-key [?\M-!]       'toggle-read-only)
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)

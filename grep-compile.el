@@ -132,3 +132,5 @@ First prompts for the type of files search."
             )
   )
 )
+;; Prevent accidental changes to files visited through grep or compile mode.
+(add-hook 'next-error-hook (function (lambda () (toggle-read-only 1))))
