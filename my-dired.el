@@ -181,12 +181,47 @@ path."
   )
 )
 
-(defun my-dired-breadcrumb (func)
-  "Prepends current file to file-name-history, and calls func."
-  (interactive)
-  (setq file-name-history (cons (path-to-tilde (dired-get-file-for-visit))
-                                file-name-history))
-  (call-interactively func)
+(defun dropbox-p (path)
+  "If path is a file and starts with $HOME/Dropbox, return t, else nil."
+  (let* ((dropbox (concat (getenv "HOME") "/Dropbox"))
+         (dbox-len (length dropbox)))
+    (and (not (file-directory-p path))
+         (> (length path) dbox-len)
+         (string= dropbox (substring path 0 dbox-len)))
+  )
+)
+
+(defun my-dired-find-file (which-window)
+  "My implementation of dired-find-file with extra features.
+First prepends current file to file-name-history.
+Arg which-window must be one of the following three symbols:
+  'cur:            current window
+  'other:          other window
+  'other-but-stay: other window, but leave current window selected
+If the path to edit is a file and under ~/Dropbox, use wrapper
+script edit-dbox instead of opening the file directly. This skips
+modifying file-name-history because the whole point of the
+wrapper is to never accidentally open the original file.
+Unfortunately for now, because the file gets opened through a
+child process call to emacsclient, this overrides which-window to
+'cur."
+  ;; Set find-file-run-dired so that the command works on directories too,
+  ;; independent of the user's setting.
+  (let ((find-file-run-dired t)
+        (tgt (dired-get-file-for-visit)))
+    (if (dropbox-p tgt)
+        (start-process "edit-dbox" nil "edit-dbox" tgt)
+      (setq file-name-history (cons (path-to-tilde tgt) file-name-history))
+      (cond
+       ((eq which-window 'cur)
+        (find-file tgt))
+       ((eq which-window 'other)
+        (find-file-other-window tgt))
+       ((eq which-window 'other-but-stay)
+        (display-buffer (find-file-noselect tgt)))
+      )
+    )
+  )
 )
 
 (defun my-dired-xdg-open ()
@@ -427,20 +462,16 @@ With a prefix argument, kills the current buffer."
               (local-set-key [?\C-p]       'my-dired-previous-line)
               (local-set-key [up]          'my-dired-previous-line)
               (local-set-key [return]      (lambda () (interactive)
-                                             (my-dired-breadcrumb
-                                              'dired-find-file)))
+                                             (my-dired-find-file 'cur)))
               (local-set-key [?f]          (lambda () (interactive)
-                                             (my-dired-breadcrumb
-                                              'dired-find-file)))
+                                             (my-dired-find-file 'cur)))
               (local-set-key [?e]          (lambda () (interactive)
-                                             (my-dired-breadcrumb
-                                              'dired-find-file)))
+                                             (my-dired-find-file 'cur)))
               (local-set-key [?o]          (lambda () (interactive)
-                                             (my-dired-breadcrumb
-                                              'dired-find-file-other-window)))
+                                             (my-dired-find-file 'other)))
               (local-set-key [?\C-o]       (lambda () (interactive)
-                                             (my-dired-breadcrumb
-                                              'dired-display-file)))
+                                             (my-dired-find-file
+                                              'other-but-stay)))
               (dired-sort-by-name-dirs-1st)
             )
   )
