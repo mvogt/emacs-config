@@ -35,94 +35,6 @@
 
 (setq my-shell-outbuf "*Shell Command Output*")
 
-;; Unprintable chars to use as indicators when found in a string of user text.
-(setq my-foreground-indicator (char-to-string #x07))
-(setq my-incomplete-indicator (char-to-string #x0c))
-
-;; This variable must always be bound to something.
-(setq my-incomplete-cmdline nil)
-
-(defun my-mb-prepend-exit (str)
-  "Helper func for my-minibuffer-local-shell-command-map."
-  (move-beginning-of-line nil)
-  (insert str)
-  (exit-minibuffer)
-)
-
-;; This keymap is the same as minibuffer-local-shell-command-map, but it
-;; defines some additional keys.
-(defvar my-minibuffer-local-shell-command-map
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map (if (>= emacs-major-version 23)
-                               minibuffer-local-shell-command-map
-                             minibuffer-local-map))
-    (define-key map [C-return]
-      (lambda () (interactive) (my-mb-prepend-exit my-foreground-indicator)))
-    (define-key map [?\C-j]
-      (lambda () (interactive) (my-mb-prepend-exit my-foreground-indicator)))
-    (define-key map [M-return]
-      (lambda () (interactive) (my-mb-prepend-exit my-incomplete-indicator)))
-    (define-key map (kbd "C-M-j")
-      (lambda () (interactive) (my-mb-prepend-exit my-incomplete-indicator)))
-    map
-  )
-  "My keymap used for editing shell commands in the minibuffer."
-)
-
-(defun my-read-shell-command (prompt &optional initial-contents hist
-                              &rest args)
-  "Same as read-shell-command but uses my-minibuffer-local-shell-command-map
-for the keymap in the minibuffer."
-  (minibuffer-with-setup-hook
-      (lambda ()
-	(set (make-local-variable 'minibuffer-default-add-function)
-	     'minibuffer-default-add-shell-commands)
-      )
-    (apply 'read-from-minibuffer prompt initial-contents
-	   my-minibuffer-local-shell-command-map
-	   nil
-	   (or hist 'shell-command-history)
-	   args)
-  )
-)
-(provide 'my-read-shell-command)
-
-(defun my-shell-command (command)
-  "Look for special trailing chars in the minibuffer text (if any), interpret
-them, and apply a hack similar to the ampersand suffix feature in the
-shell-command function.  Adjust my-incomplete-cmdline as necessary."
-  (cond
-   ((string-equal (substring command 0 1) my-incomplete-indicator)
-    ;; The user must have exited the minibuffer with Meta-Enter instead of
-    ;; Enter.  Save the command for later, and don't execute it.
-    (setq my-incomplete-cmdline (substring command 1))
-    (setq shell-command-history (cdr shell-command-history))
-   )
-   ((string-equal (substring command 0 1) my-foreground-indicator)
-    ;; The user must have exited the minibuffer with Ctrl-Enter instead of
-    ;; Enter.  Just clean up the string (including in the history) and pass it
-    ;; to shell-command.  Assuming the user didn't append an ampersand, this
-    ;; will run in the foreground (i.e. synchronously).
-    (setq my-incomplete-cmdline nil)
-    (setq command (substring command 1))
-    (setq shell-command-history (cons command (cdr shell-command-history)))
-    ;; Same buffer for both sync and async command outputs.
-    (shell-command command my-shell-outbuf)
-   )
-   (t
-    ;; Normal command, but we're going to run it in the background by
-    ;; appending an ampersand (if the user didn't already).
-    (setq my-incomplete-cmdline nil)
-    (shell-command (if (string-equal (substring command -1) "&")
-                       command
-                     (concat command "&"))
-                   ;; Same buffer for both sync and async command outputs.
-                   my-shell-outbuf)
-   )
-  )
-)
-(provide 'my-shell-command)
-
 ;; Redefine standard func with extra stuff at the beginning to work around an
 ;; annoying bug where async command output intermittently disappears because
 ;; the last line of the buffer is shown at the first line of the window.  This
@@ -142,31 +54,6 @@ shell-command function.  Adjust my-incomplete-cmdline as necessary."
                  (substring signal 0 -1))
       )
   )
-)
-
-(require 'my-cur-word-or-region "grep-compile")
-(defun my-interactive-shell-command (append-p)
-  "Wrapper for shell-command that saves the command without running it if
-the minibuffer is exited with Meta-Enter instead of Enter.
-The initial command text to be edited is the previous command if it wasn't
-run (because of that key sequence).
-
-With a non-nil prefix, append to that initial command using text from the
-current buffer.  If the current region is active, append it.
-Otherwise, append the word surrounding the point.
-
-Variable my-incomplete-cmdline stores the command that has not yet run.
-
-If the minibuffer is exited with Ctrl-Enter instead of Enter, run the command
-in the background without a buffer showing its output."
-  (interactive "P")
-  (my-shell-command (my-read-shell-command
-                     "Shell command: "
-                     (concat (or my-incomplete-cmdline "")
-                             (if (null append-p) ""
-                               (if (null my-incomplete-cmdline)
-                                   (my-cur-word-or-region)
-                                 (concat " " (my-cur-word-or-region)))))))
 )
 
 (defun select-shell-command-output-window (&optional buffer)
@@ -261,6 +148,6 @@ Sends one of three different signals depending on the optional prefix arg:
   )
 )
 
-(global-set-key [?\M-o]       'my-interactive-shell-command)
+(global-set-key [?\M-o]       'shell-command)
 (global-set-key [?\C-x ?O]    'select-shell-command-output-window)
 (global-set-key [?\C-x ?\M-o] 'my-subshell)

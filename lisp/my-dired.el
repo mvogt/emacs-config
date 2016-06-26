@@ -81,41 +81,6 @@ is enabled."
   )
 )
 
-;; I'm redefining this dired func to customize it.
-;; The only change is the use of my-read-shell-command.
-(require 'my-read-shell-command "my-shell")
-(defun dired-read-shell-command (prompt arg files)
-  "Read a dired shell command prompting with PROMPT (using
-my-read-shell-command).
-ARG is the prefix arg and may be used to indicate in the prompt which
-FILES are affected."
-  (minibuffer-with-setup-hook
-      (lambda ()
-        (set (make-local-variable 'minibuffer-default-add-function)
-             'minibuffer-default-add-dired-shell-commands))
-    (dired-mark-pop-up
-     nil 'shell files
-     #'my-read-shell-command
-     (format prompt (dired-mark-prompt arg files))
-     nil nil)
-  )
-)
-
-;; I'm redefining this dired func to customize it.
-;; The only change is the use of my-shell-command.
-(require 'my-shell-command "my-shell")
-(defun dired-run-shell-command (command)
-  (let ((handler
-         (find-file-name-handler (directory-file-name default-directory)
-                                 'shell-command)))
-    (if handler
-        (apply handler 'shell-command (list command))
-      (my-shell-command command))
-  )
-  ;; Return nil for the sake of nconc in dired-bunch-files.
-  nil
-)
-
 (defun dired-abs-cur-file-new-kill ()
   "Make new entry at the head of the kill ring containing the absolute path
 to the file on the current dired line."
@@ -144,20 +109,18 @@ file names in the current dired buffer."
   )
 )
 
-(require 'my-shell-command "my-shell")
-(require 'my-read-shell-command "my-shell")
-(defun dired-run-file (abs-path-p)
+(defun my-dired-run-file (abs-path-p)
   "Execute the current line's file name, and give the user a chance to edit
 the command line.  With optional prefix arg, use the current line's absolute
 path."
   (interactive "P")
-  (my-shell-command (my-read-shell-command
-                     "Shell command: "
-                     (if (null abs-path-p)
-                         (concat "./" (dired-get-filename 'no-dir))
-                       (dired-get-filename)
-                     )
-                    )
+  (shell-command (read-shell-command
+                  "Shell command: "
+                  (if (null abs-path-p)
+                      (concat "./" (dired-get-filename 'no-dir))
+                    (dired-get-filename)
+                  )
+                 )
   )
 )
 
@@ -443,7 +406,7 @@ With a prefix argument, kills the current buffer."
               (local-set-key [?\C-c ?w]    'dired-marked-files-append-kill)
               (local-set-key [?\C-c ?\C-w] 'dired-marked-files-new-kill)
               (local-set-key [?\C-c ?\M-w] 'dired-abs-cur-file-new-kill)
-              (local-set-key [?\C-c ?\r]   'dired-run-file)
+              (local-set-key [?\C-c ?\r]   'my-dired-run-file)
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
               (local-set-key [C-backspace] (lambda () (interactive)
                                              (my-dired-up-directory t)))
