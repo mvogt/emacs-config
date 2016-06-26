@@ -15,17 +15,10 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'sr-speedbar)
-(setq sr-speedbar-delete-windows t)
-(setq sr-speedbar-width 50)
-(setq sr-speedbar-default-width 50)
-(setq sr-speedbar-max-width 90)
-(setq speedbar-show-unknown-files t)
-
 ;;----------------------------------------------------------------------------
 ;; Directory tree mode
 ;;
-(require 'dirtree)
+(load "dirtree")
 
 (defun my-dirtree-find-child (tree file)
   "Given a dirtree tree object, select and expand the child matching file."
@@ -198,21 +191,15 @@ If it's already collapsed or a file, goto the parent."
 (define-key dirtree-mode-map [?\C-c ?\M-w] 'my-dirtree-copy-full-path)
 
 (defun my-bs-dirtree-wrapper (arg)
-  "Wraps bs-show, sr-speedbar, and dirtree.
+  "Wraps bs-show and dirtree.
 Without a prefix, run bs-show.
-With one universal prefix, toggle speedbar.
-With two universal prefixes, start dirtree in the current dir.
-With three universal prefixes, prompt for the dir in which to start dirtree."
+With one universal prefix, start dirtree in the current dir.
+With two universal prefixes, prompt for the dir in which to start dirtree."
   (interactive "P")
   (cond
    ((= 4 (prefix-numeric-value arg))
-    (if (sr-speedbar-exist-p)
-        (sr-speedbar-close)
-      (sr-speedbar-open)
-      (select-window sr-speedbar-window)))
-   ((= 16 (prefix-numeric-value arg))
     (my-dirtree-rootfs-cwd t))
-   ((= 64 (prefix-numeric-value arg))
+   ((= 16 (prefix-numeric-value arg))
     (let ((start-dir (read-file-name "Starting directory: "
                                      nil default-directory)))
       (dirtree "/" t)
