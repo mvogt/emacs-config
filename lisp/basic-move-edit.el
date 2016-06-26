@@ -42,7 +42,8 @@
 ;; Turn off obnoxious jump scroll.
 (setq scroll-conservatively 10)
 
-;; Configure mouse scroll wheel.  If it doesn't work, the global-set-key
+;; Configure mouse scroll wheel. Modern versions of Emacs already have
+;; this enabled by default. If it doesn't work, the global-set-key
 ;; command below it should.
 (mouse-wheel-mode 1)
 ;;(global-set-key [mouse-5] (lambda () (interactive) (scroll-up 4)))
@@ -55,9 +56,9 @@
 (global-set-key [?\M-h]   (lambda () (interactive) (move-to-window-line 0)))
 (global-set-key [C-end]   (lambda () (interactive) (move-to-window-line -1)))
 (global-set-key [?\M-l]   (lambda () (interactive) (move-to-window-line -1)))
-(global-set-key [home]    'move-beginning-of-line)
-(global-set-key [end]     'move-end-of-line)
-(global-set-key [?\M-m]   'move-to-window-line)   ; middle of window
+(global-set-key [?\M-m]   'move-to-window-line)    ; middle of window
+(global-set-key [home]    'move-beginning-of-line) ; already the default
+(global-set-key [end]     'move-end-of-line)       ; already the default
 
 ;; Set S-up/down (arrow keys) to scroll the current window up/down one line.
 ;; I used to set C-up/down for the same thing, but I found it interferes with
@@ -81,10 +82,6 @@
 ;; paragraph like C-left/C-right does.
 (global-set-key [M-left]  'backward-sentence)
 (global-set-key [M-right] 'forward-sentence)
-
-;; At one point, under Exceed or maybe Cygwin/Xming, the delete key was
-;; defaulting to backspace instead of delete-char.
-(global-set-key [delete] 'delete-char)
 
 ;; I find this to be almost useless, but it only works when mapped to a key.
 (global-set-key [?\M-?] 'repeat)

@@ -18,10 +18,7 @@
 ;;----------------------------------------------------------------------------
 ;; Version control
 ;;
-(autoload 'magit-status "magit")
-
 (defvar my-gitk-load-limit 10000)
-(setq magit-gitk-load-limit my-gitk-load-limit)
 
 (defun my-launch-gitk (arg)
   "Launch gitk showing all branches.
@@ -35,17 +32,18 @@ my-gitk-load-limit."
   )
 )
 
-(when (file-accessible-directory-p my-3rd-party-elisp-path)
-  (define-key vc-prefix-map [?x] (lambda () (interactive)
-                                   (magit-status default-directory)
-                                   (require 'magit-classic-theme)))
-  (define-key vc-prefix-map [?n] (lambda () (interactive)
-                                   (magit-status default-directory)
-                                   (require 'magit-classic-theme)
-                                   (require 'magit-svn)
-                                   (magit-svn-mode 1)
-                                   (magit-refresh)))
+;; Override magit's functions for launching gitk. I always want to run it with
+;; --all --max-count.
+(defun magit-run-gitk ()
+  (interactive)
+  (my-launch-gitk nil)
 )
+(defun magit-run-gitk-all ()
+  (interactive)
+  (my-launch-gitk nil)
+)
+
+(define-key vc-prefix-map [?x] 'magit-status)
 (define-key vc-prefix-map [?k] (lambda () (interactive)
                                  (start-process "Git GUI" nil "git" "gui")))
 (define-key vc-prefix-map [?K] 'my-launch-gitk)

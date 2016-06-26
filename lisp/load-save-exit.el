@@ -21,8 +21,8 @@
 ;; I often hit this key combination accidentally.
 (setq confirm-kill-emacs 'y-or-n-p)
 
-;; Docs say to load browse-url before ffap.  I don't care about poor startup
-;; time, and I use one ffap func that isn't declared with autoload.
+;; The ffap docs say to load browse-url before ffap. I don't care about poor
+;; startup time, and I use one ffap func that isn't declared with autoload.
 (load "browse-url")
 (load "ffap")
 ;; Activate special behavior with prefix instead of by default.

@@ -40,16 +40,10 @@
 (global-set-key [?\M-}] 'enlarge-window-horizontally)
 
 ;; Toggle various kinds of line wrap.
-(if (>= emacs-major-version 23)
-    (global-set-key [?\C-x ?W] (lambda () (interactive)
-                                 (setq line-move-visual
-                                       (if line-move-visual nil t))))
-  (when (file-accessible-directory-p my-3rd-party-elisp-path)
-    (autoload 'visible-lines-mode "visible-lines")
-    (global-set-key [?\C-x ?W] 'visible-lines-mode)
-  )
-)
-(global-set-key [?\C-x ?w]    'toggle-truncate-lines)
+(global-set-key [?\C-x ?w] 'toggle-truncate-lines)
+(global-set-key [?\C-x ?W]
+                (lambda () (interactive)
+                  (setq line-move-visual (if line-move-visual nil t))))
 (global-set-key [?\C-x ?\M-w]
                 (lambda () (interactive) ; for vert split (C-x 3)
                   (setq truncate-partial-width-windows
@@ -75,17 +69,7 @@
         (modify-frame-parameters frame my-geometry))
   )
   (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
-  ;; Only required before Emacs 23, but doesn't hurt anything in later
-  ;; versions.
-  (set-frame-font my-font)
 )
-
-(defun my-frame-images-check (frame)
-  ;; This variable is initialized by calling the same function, but somehow
-  ;; it's evaluated before a graphical frame has been created.
-  (setq tree-widget-image-enable (display-images-p))
-)
-(add-to-list 'after-make-frame-functions 'my-frame-images-check t)
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
 ;; in later versions.
@@ -108,7 +92,7 @@
 ;; (or Xming), tooltips appear even when Emacs is minimized.  (They appear
 ;; where they would if Emacs had not been minimized.)  I think this is a bug
 ;; in the Cygwin X server.
-(if (>= emacs-major-version 21) (tooltip-mode 0))
+(tooltip-mode 0)
 
 ;; The vertical scroll bars default to the left side.  (At least, an older
 ;; version of Emacs under Unix did at one point.)
@@ -120,8 +104,6 @@
 ;; Hide annoying and space-wasting button bar.  The conditional is to support
 ;; certain older versions of Emacs.
 (if (fboundp 'tool-bar-mode) (tool-bar-mode 0))
-
-(load "my-color-theme")
 
 ;; Enable context-sensitive colors and fonts.
 (global-font-lock-mode 1)

@@ -19,8 +19,8 @@
 ;; Cut/copy/paste, kill/yank
 ;;
 ;; When manipulating the kill ring, always set the X clipboard to the last
-;; entry in the kill ring.  By default, only the X primary selection is
-;; touched.
+;; entry in the kill ring. By default, only the X primary selection is
+;; touched. This is enabled by default in v24.
 ;;
 ;; Note: The following related functions only affect the clipboard and not the
 ;; primary selection: clipboard-kill-ring-save, clipboard-kill-region,

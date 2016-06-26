@@ -22,24 +22,6 @@
 (setq my-unix-p (let ((ostype (getenv "OS")))
                   (if (and ostype (string-match "Windows" ostype)) nil t)))
 
-;; For appending subdirs to my startup dir path.
-(setq my-elisp-path (and load-file-name (file-name-directory load-file-name)))
-
-;; This is where I store ELisp code that I didn't write or modify.
-;; Overrides for built-in stuff goes at the start of the path and the rest at
-;; the end.
-(setq my-3rd-party-elisp-path "~/src/emacs/")
-(when (file-accessible-directory-p my-3rd-party-elisp-path)
-  (setq load-path
-        (append
-         (list (concat my-3rd-party-elisp-path "org-mode/lisp"))
-         (list (concat my-3rd-party-elisp-path "org-mode/contrib/lisp"))
-         load-path
-         (list my-3rd-party-elisp-path)
-         (list (concat my-3rd-party-elisp-path "magit"))
-         (list (concat my-3rd-party-elisp-path "magit/contrib"))))
-)
-
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.
 ;; Under Linux, the variable gnuserv-frame is ignored.  I'm pretty sure this
 ;; needs to occur before server-start.
@@ -102,6 +84,13 @@
 ;;
 ;; The rest of startup is broken down into files by area of functionality.
 ;;
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp") t)
+
+;; Load all installed packages first
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://melpa.org/packages/"))
+(package-initialize)
 
 (load "load-save-exit")
 (load "basic-move-edit")
@@ -124,9 +113,7 @@
 ;; possible.
 (load "appearance")
 
-;; This is at the end because it evaluates protobuf-mode.el, which in turn
-;; evaluates cc-mode.el, which calls substitute-key-definition. That function
-;; will override a global key binding in cc-mode -- unless you've ALREADY
-;; bound it before cc-mode.el is evaluated. So, putting this at the end
-;; preserves all the global key bindings I've made in the files above.
+;; At one time, I needed this to load last because of quirky interactions
+;; between protobuf-mode and cc-mode. That no longer appears to be true, but
+;; it doesn't hurt for this to be last.
 (load "prg-modes")

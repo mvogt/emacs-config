@@ -236,6 +236,7 @@ own."
      ((= which-func ?u) (call-interactively 'untabify))
      ((= which-func ?c) (call-interactively 'describe-char))
      ((= which-func ?y) (my-describe-key))
+     ;; Invoke after M-x gdb. Provided by built-in gdb-ui.el.
      ((= which-func ?g) (call-interactively 'gdb-many-windows))
      ((= which-func ?s) (isearch-forward-word))
      ((= which-func ?n) (rename-uniquely))
@@ -268,7 +269,7 @@ own."
 ;; When opening a file, show it fully expanded.
 (setq org-startup-folded nil)
 
-(setq org-edit-timestamp-down-means-later t)
+(require 'org)
 
 (add-hook 'org-mode-hook
   (function (lambda ()
@@ -283,20 +284,14 @@ own."
   )
 )
 
-(add-hook 'org-read-date-minibuffer-setup-hook
-  (function (lambda ()
-              ;; These are the defaults, but for some reason they don't work
-              ;; for me until I repeat what I want here. Maybe this is a
-              ;; regression in the version of Org mode that I'm using.
-              (define-key minibuffer-local-map [(shift up)]
-                (lambda () (interactive)
-                  (org-eval-in-calendar '(calendar-backward-week 1))))
-              (define-key minibuffer-local-map [(shift down)]
-                (lambda () (interactive)
-                  (org-eval-in-calendar '(calendar-forward-week 1))))
-            )
-  )
-)
+;; Restore defaults nuked by my "disputed keys" setting above.
+;; I wish that setting didn't affect minibuffer keys, but it does.
+(define-key org-read-date-minibuffer-local-map [(shift up)]
+  (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-backward-week 1))))
+(define-key org-read-date-minibuffer-local-map [(shift down)]
+  (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-forward-week 1))))
 
 
 (add-hook 'diff-mode-hook
@@ -305,6 +300,13 @@ own."
               (local-unset-key [?\M-o])
               (local-unset-key [?\M-g]))
   )
+)
+
+(defun my-toggle-read-only ()
+  (interactive)
+  (call-interactively (if (>= emacs-major-version 24)
+			  'read-only-mode
+			'toggle-read-only))
 )
 
 ;; Even though it's correct in a fixed-width font to use two spaces after a
@@ -341,8 +343,8 @@ own."
 (global-set-key [?\C-x ?>]    'my-enclose-tag)             ; was scroll-right
 (global-set-key [?\C-x ?\]]   'my-enclose-undo)            ; was forward-page
 
-(global-set-key [?\C-x ?\M-q] 'toggle-read-only)
-(global-set-key [?\M-!]       'toggle-read-only)
+(global-set-key [?\C-x ?\M-q] 'my-toggle-read-only)
+(global-set-key [?\M-!]       'my-toggle-read-only)
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)

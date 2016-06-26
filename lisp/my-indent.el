@@ -29,7 +29,7 @@
 (setq-default sgml-basic-offset 4)
 
 ;; The definition of this func that comes with Emacs is in
-;; /usr/share/emacs/23.1/lisp/indent.el.gz.
+;; /usr/share/emacs/VERSION/lisp/indent.el.gz.
 ;; It does a whole bunch of stuff that I don't need.  I trip over one of
 ;; those: if the region is active, it indents the whole region.  So, I've
 ;; trimmed it down to the only two cases I care about.

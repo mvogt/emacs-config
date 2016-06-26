@@ -15,24 +15,25 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; This saves a tab keystroke, but I find it annoying.
+(setq electric-indent-mode nil)
+
 ;;----------------------------------------------------------------------------
 ;; C mode
 ;;
-;; Override the nominal indentation amount for all C Mode styles.  This will
-;; get reset back to a style's own value if the user manually selects a style.
-(setq c-basic-offset 4)
-
 ;; My custom style inherits from the GNU style because it's the closest to
 ;; what I want.  I call it hybrid because it's a little like the K&R style and
 ;; uses some stuff from the cc-mode style.
 (c-add-style "hybrid"
-             '("gnu" (c-offsets-alist . ((substatement-open . 0)
-                                         (statement-case-open . 0)
-                                         (brace-list-open . 0)
-                                         (case-label . +)
-                                         (arglist-intro . +)
-                                         (arglist-close . +)
-                                         (knr-argdecl-intro . +))))
+             '("gnu"
+               (c-basic-offset . 4)
+               (c-offsets-alist . ((substatement-open . 0)
+                                   (statement-case-open . 0)
+                                   (brace-list-open . 0)
+                                   (case-label . +)
+                                   (arglist-intro . +)
+                                   (arglist-close . +)
+                                   (knr-argdecl-intro . +))))
 )
 
 ;; Make my hybrid style the default.  Note that I'm replacing the full alist
@@ -61,9 +62,7 @@
               (local-set-key [?\C-c ?=] 'show-ifdef-block)
               (local-set-key [?\C-c ?+] 'show-ifdef-block)
               (local-set-key [?\C-c ?*] 'show-ifdefs)
-              (set-tab-width 4)  ; too many coworkers have inferior editors
-              ;; So I can store my snippets for all C modes in one dir.
-              (setq yas/mode-symbol 'c++-mode))
+              (set-tab-width 4))  ; too many coworkers have inferior editors
   )
 )
 
@@ -204,31 +203,28 @@ Causes an intuitive indent level matching the specific argument."
 
 ;;----------------------------------------------------------------------------
 ;; YASnippet
-;; http://code.google.com/p/yasnippet/
+;; https://www.emacswiki.org/emacs/Yasnippet
+;; https://github.com/joaotavora/yasnippet
+;; I use the one from MELPA.
+;; Note: To reload snippets, M-x yas-reload-all
 ;;
-(let ((my-yas-path (concat my-3rd-party-elisp-path "yasnippet-0.6.1c"))
-      (my-snippets-path (concat my-elisp-path "snippets")))
-  (when (and (file-accessible-directory-p my-yas-path)
-             (file-accessible-directory-p my-snippets-path))
-    (add-to-list 'load-path my-yas-path t)
-    (require 'yasnippet)
-    (yas/initialize)
-    ;; Reload with yas/reload-all
-    (yas/load-directory my-snippets-path)
+(require 'yasnippet)
+(setq yas-wrap-around-region t)
+(global-set-key [?\C-x ?\C-n] 'yas-insert-snippet)
+(global-set-key [?\C-x ?\M-n] 'yas-insert-snippet)
 
-    (setq yas/wrap-around-region t)
-    (global-set-key [?\C-x ?\C-n] 'yas/insert-snippet)
-    (global-set-key [?\C-x ?\M-n] 'yas/insert-snippet)
-  )
-)
+;; Remove built-in snippets from search path because there are too many. Use
+;; only mine.
+(setq yas-snippet-dirs '(yas--default-user-snippets-dir))
 
+(require 'dropdown-list)
+;; In a GUI window, dropdown-list doesn't render as well in v24 as it did in
+;; v23. So, I'm using it only in a text window.
+(setq yas-prompt-functions '(yas-x-prompt
+                             yas-dropdown-prompt
+                             yas-completing-prompt))
 
-;; This needs to be after yasnippet to avoid an error on startup that I don't
-;; understand.  For some reason, I see that problem with Emacs 23.1 on Ubuntu
-;; 10.04 but not Emacs 23.2 on Ubuntu 11.04.
-(require 'protobuf-mode)
-;; Not sure why the autoload for this in protobuf-mode.el doesn't work.
-(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
+(yas-global-mode 1)
 
 
 ;; JavaScript mode is the best built-in mode for JSON.
@@ -238,10 +234,3 @@ Causes an intuitive indent level matching the specific argument."
 ;; The built-in Sieve mode is broken for the flavor of the language used by my
 ;; web mail service.
 (add-to-list 'auto-mode-alist '("\\.sieve\\'" . c-mode))
-
-
-(require 'groovy-mode)
-(add-to-list 'auto-mode-alist '("\\.g\\(?:ant\\|roovy\\|radle\\)\\'" . groovy-mode))
-
-
-(require 'yaml-mode)

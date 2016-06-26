@@ -160,7 +160,7 @@ call the wrapped function with minimal coding pain."
   (query-replace-multibuf-worker 'query-replace-regexp regexp to-string)
 )
 
-(global-set-key [?\C-s]       'isearch-forward)
+(global-set-key [?\C-s]       'isearch-forward)      ; already the default
 (global-set-key [?\C-r]       'query-replace-regexp)
 (global-set-key [?\M-r]       'query-replace)
 (global-set-key [?\C-x ?\C-r] 'query-replace-regexp-multibuf)

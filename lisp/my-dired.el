@@ -18,57 +18,50 @@
 ;;----------------------------------------------------------------------------
 ;; Dired
 ;;
-;; I need to override some funcs from this dired file.  Rather than mess with
-;; autoload (which I don't think would work for one func I need), I just load
-;; this entire file at startup.  I always launch dired anyway.
-(load "dired-aux")
-
-(when (file-accessible-directory-p my-3rd-party-elisp-path)
-  (require 'dired-efap)
-  (require 'dired-details+)    ; http://www.emacswiki.org/emacs/DiredDetails
-)
-
-(setq dired-details-hide-link-targets nil)
-(setq dired-details-initially-hide t)
+(require 'dired-aux)
+(require 'dired-efap)
 
 (defun my-dired-details-message ()
   "Print the current dired entry's details in the minibuffer."
   (interactive)
   (save-excursion
-    (message (buffer-substring
-              (+ 2 (progn (beginning-of-line) (point)))
-              (progn (dired-move-to-filename) (point))))
+    (let* ((start (+ 2 (progn (beginning-of-line) (point))))
+           (end (progn (dired-move-to-filename) (point)))
+           (txt (buffer-substring start end)))
+      (set-text-properties 0 (length txt) nil txt)
+      (message txt)
+    )
   )
 )
 
 (defun my-dired-next-line (arg)
   "Wrapper for \\[dired-next-line] that afterward displays the
-current entry's details in the minibuffer if dired-details-state
-is set to 'hidden."
+current entry's details in the minibuffer if dired-hide-details-mode
+is enabled."
   (interactive "p")
   (and (dired-next-line arg)     ; returns nil when cur line isn't a dir entry
-       (eq 'hidden dired-details-state)
+       dired-hide-details-mode
        (my-dired-details-message))
 )
 
 (defun my-dired-previous-line (arg)
-  "Wrapper for \\[dired-previous-line] that afterward displays
-the current entry's details in the minibuffer if
-dired-details-state is set to 'hidden."
+  "Wrapper for \\[dired-previous-line] that afterward displays the
+current entry's details in the minibuffer if dired-hide-details-mode
+is enabled."
   (interactive "p")
   (and (dired-previous-line arg) ; returns nil when cur line isn't a dir entry
-       (eq 'hidden dired-details-state)
+       dired-hide-details-mode
        (my-dired-details-message))
 )
 
 (defun my-dired-revert (&optional arg noconfirm)
   "Wrapper for \\[dired-revert] that afterward displays the
-current entry's details in the minibuffer if dired-details-state
-is set to 'hidden."
+current entry's details in the minibuffer if dired-hide-details-mode
+is enabled."
   (interactive)
   (dired-revert arg noconfirm)
   (and (dired-move-to-filename)  ; returns nil when cur line isn't a dir entry
-       (eq 'hidden dired-details-state)
+       dired-hide-details-mode
        (my-dired-details-message))
 )
 
@@ -366,6 +359,10 @@ With a prefix argument, kills the current buffer."
 ;; copy command.
 (setq dired-keep-marker-copy nil)
 
+;; Brief listings should still show the target of symlinks and info lines.
+(setq dired-hide-details-hide-symlink-targets nil)
+(setq dired-hide-details-hide-information-lines nil)
+
 ;; The default time style doesn't seem to be the same on all Linux
 ;; distributions.  I have the same option in my "ll" alias created during bash
 ;; start-up.  The short options need to appear at the end because of the
@@ -377,7 +374,7 @@ With a prefix argument, kills the current buffer."
 ;; don't attempt to use generic regular expressions.  This is hard-coded to
 ;; match the dired-listing-switches above, so the two must stay in sync when
 ;; editing this code.
-(defun dired-sort-set-modeline ()
+(defun dired-sort-set-mode-line ()
   (when (eq major-mode 'dired-mode)
     (setq mode-name
           (let (case-fold-search)
@@ -475,6 +472,7 @@ With a prefix argument, kills the current buffer."
                                              (my-dired-find-file
                                               'other-but-stay)))
               (dired-sort-by-name-dirs-1st)
+              (dired-hide-details-mode t)
             )
   )
 )
