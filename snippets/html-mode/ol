@@ -1,7 +1,7 @@
 #contributor : Jimmy Wu <frozenthrone88@gmail.com>
 #name : <ol class="...">...</ol>
 #group : list
-#expand-env : ((yas/indent-line 'fixed))
+#expand-env : ((yas-indent-line 'fixed))
 # --
 <ol class="${1:lvl1}">
 $0
