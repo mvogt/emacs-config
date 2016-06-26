@@ -63,9 +63,9 @@ string from context, and adds my favorite find and grep options.
 First prompts for the type of files search."
   (interactive)
   (message "Search [a]ll files, for one e[x]tension,\nfor [m]ultiple extensions, or [j]ust file names?")
-  (let* ((my-xargs-grep (concat "xargs --null"
-                                " grep --line-number --ignore-case"
-                                " --no-messages --extended-regexp -e"))
+  (let* ((my-xargs-grep (concat "xargs --null grep --line-number"
+                                " --ignore-case --no-messages --color=auto"
+                                " --extended-regexp -e"))
          (find-args-ignore "-o -name .git -prune -o -name .svn -prune")
          (which-func (read-char))
          (my-initial-grep-cmd
@@ -98,7 +98,13 @@ First prompts for the type of files search."
         ;; Much easier, simpler, and better starting in ver 22.  I may want to
         ;; change my key binding to just rgrep in ver 22 instead of this
         ;; function.  However, I like my sequence of prompts better.
-        (compilation-start (concat "cd " start-dir " && " my-grep-cmd)
+        ;;
+        ;; grep has recently started printing a warning about GREP_OPTIONS
+        ;; being deprecated, but Emacs v24 still uses it unconditionally to
+        ;; set --color. My work-around is to unset it here and specify --color
+        ;; in my command.
+        (compilation-start (concat "cd " start-dir " && unset GREP_OPTIONS ; "
+                                   my-grep-cmd)
                            'grep-mode)
       (let* ((corrected-start-dir (if (string= "/" (substring start-dir -1))
                                       start-dir
