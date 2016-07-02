@@ -55,20 +55,23 @@
 ;;
 ;; Order matters on several of these statements.
 ;;
-;; Override these in ~/.emacs for each host.
-(defvar my-font     "Liberation Mono-10")
-(defvar my-geometry '((width . 90) (height . 60) (top . 0) (left . -3)))
+;; Override this in ~/.emacs for each host.
+;; FIXME-mvogt-20160702: In v24, I always get one less than the width and
+;; height specified here.
+(defvar my-geometry '((width . 181) (height . 68) (top . 0) (left . -3)))
 
 (when (and (boundp 'my-unix-p) my-unix-p)
   (defun my-frame-create-hook (frame)
     (select-frame frame)
-    (set-frame-font my-font)
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
   )
   (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
+  (set-face-attribute 'default nil
+                      :font "Liberation Mono"
+                      :height 100)
 )
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
