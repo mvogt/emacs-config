@@ -306,12 +306,18 @@ return nil."
   ))
 )
 
-;; Mainly for XML mode, but this affects HTML mode and anything else derived
-;; from SGML mode.
+(add-hook 'css-mode-hook
+  (function (lambda ()
+    (rainbow-mode)
+  ))
+)
+
+;; Affects HTML mode and anything else derived from SGML mode.
 (require 'set-tab-width "my-indent")
 (add-hook 'sgml-mode-hook
   (function (lambda ()
     (set-tab-width 4)   ; too many coworkers have inferior editors
     (local-set-key [?\C-c ?\C-i] 'set-tab-width)
+    (rainbow-mode)
   ))
 )
