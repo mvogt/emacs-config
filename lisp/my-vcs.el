@@ -48,5 +48,41 @@ my-gitk-load-limit."
                                  (start-process "Git GUI" nil "git" "gui")))
 (define-key vc-prefix-map [?K] 'my-launch-gitk)
 
+(setq magit-popup-show-common-commands nil)
+(setq magit-branch-popup-show-variables nil)
+(setq magit-log-show-margin nil)
+(setq magit-log-show-refname-after-summary nil)
+(setq magit-diff-refine-hunk t)
+(setq git-commit-summary-max-length 78)
+(add-hook 'magit-mode-hook
+  (function (lambda ()
+              ;; Unmap magit's override of my custom M-w behavior when the
+              ;; region is inactive. They want to run
+              ;; magit-copy-buffer-revision.
+              (define-key magit-mode-map [?\M-w] nil)
+              ;; Disable auto-fill in commit message editing mode. There must
+              ;; be a cleaner way to do this besides using one hook to remove
+              ;; another.
+              (remove-hook 'git-commit-setup-hook
+                           'git-commit-turn-on-auto-fill)
+            )
+  )
+  t
+)
+
+;; Careful: You can have only one call to custom-set-faces in all your startup
+;; files.
+(custom-set-faces
+   ;; I want no special background for added or removed lines.
+   ;; Background, shade of red, and shade of green copied from my customized
+   ;; theme.
+   '(magit-diff-added ((t (:background "#1d1f21" :foreground "#b5bd68"))))
+   '(magit-diff-removed ((t (:background "#1d1f21" :foreground "#cc6666"))))
+   ;; Keep foreground same as above, and copy background from
+   ;; magit-diff-context-highlight.
+   '(magit-diff-added-highlight ((t (:background "grey20" :foreground "#b5bd68"))))
+   '(magit-diff-removed-highlight ((t (:background "grey20" :foreground "#cc6666"))))
+)
+
 ;; This hook just seems to slow me down.
 (remove-hook 'find-file-hooks 'vc-find-file-hook)
