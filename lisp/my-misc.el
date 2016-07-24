@@ -255,8 +255,8 @@ own."
 ;; Move some Org mode keys to alternates that don't conflict with my preferred
 ;; global mappings.
 ;; This must be defined before initializing org-mode.
-(setq org-disputed-keys '(([(shift up)]   . [(meta p)])
-                          ([(shift down)] . [(meta n)])))
+(setq org-disputed-keys '(([(shift up)]   . [?\M-\C-p])
+                          ([(shift down)] . [?\M-\C-n])))
 (setq org-replace-disputed-keys t)
 
 ;; A little navigation help.  Set to 'reversed for opposite behavior.  Set to
@@ -277,6 +277,9 @@ own."
               (local-set-key [?\C-c ?\C-8] 'org-list-make-subtree)
               (local-set-key [?\C-c ?\C-6] 'org-up-element)
               (local-set-key [?\C-y]       'my-yank)
+              (local-set-key [?\M-h]
+                             (lambda () (interactive)
+                               (move-to-window-line 0)))
               ;; Match C-a / C-e
               (local-set-key [home]        'org-beginning-of-line)
               (local-set-key [end]         'org-end-of-line)
