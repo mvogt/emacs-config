@@ -69,6 +69,7 @@ Outlook."
                              (cons (char-to-string #x201c) "\"")
                              (cons (char-to-string #x201d) "\"")
                              (cons (char-to-string #x201f) "\"")
+                             (cons (char-to-string #x2022) "*")
                              (cons (char-to-string #x2026) "...")
                              (cons (char-to-string #x2032) "'")
                              (cons (char-to-string #x2033) "\"")
