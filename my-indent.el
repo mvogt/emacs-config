@@ -21,6 +21,11 @@
 ;; Don't use hard tabs at all when indenting.
 (setq-default indent-tabs-mode nil)
 
+(defun toggle-indent-tabs-mode ()
+  (interactive)
+  (setq indent-tabs-mode (if indent-tabs-mode nil t))
+)
+
 ;; See my-set-indent-basic-offset in this file.
 (setq-default indent-basic-offset 4)
 
