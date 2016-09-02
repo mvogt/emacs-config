@@ -55,9 +55,7 @@
 ;;
 ;; Order matters on several of these statements.
 ;;
-;; Override this in ~/.emacs for each host.
-;; FIXME-mvogt-20160702: In v24, I always get one less than the width and
-;; height specified here.
+;; Override this in ~/.emacs.local.el for each host.
 (defvar my-geometry '((width . 181) (height . 68) (top . 0) (left . -3)))
 
 (when (and (boundp 'my-unix-p) my-unix-p)
