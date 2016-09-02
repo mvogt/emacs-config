@@ -61,7 +61,7 @@
 ;;
 ;; Order matters on several of these statements.
 ;;
-;; Override these in ~/.emacs for each host.
+;; Override these in ~/.emacs.local.el for each host.
 (defvar my-font     "Liberation Mono-10")
 (defvar my-geometry '((width . 90) (height . 60) (top . 0) (left . -3)))
 

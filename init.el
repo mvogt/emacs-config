@@ -22,8 +22,7 @@
 (setq my-unix-p (let ((ostype (getenv "OS")))
                   (if (and ostype (string-match "Windows" ostype)) nil t)))
 
-;; For appending subdirs to my startup dir path.
-(setq my-elisp-path (and load-file-name (file-name-directory load-file-name)))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp") t)
 
 ;; This is where I store ELisp code that I didn't write or modify.
 ;; Overrides for built-in stuff goes at the start of the path and the rest at
@@ -38,6 +37,10 @@
          (list my-3rd-party-elisp-path)
          (list (concat my-3rd-party-elisp-path "magit"))
          (list (concat my-3rd-party-elisp-path "magit/contrib"))))
+)
+
+(let ((loc (expand-file-name "~/.emacs.local.el")))
+  (if (file-exists-p loc) (load loc))
 )
 
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.

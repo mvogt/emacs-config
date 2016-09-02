@@ -207,7 +207,7 @@ Causes an intuitive indent level matching the specific argument."
 ;; http://code.google.com/p/yasnippet/
 ;;
 (let ((my-yas-path (concat my-3rd-party-elisp-path "yasnippet-0.6.1c"))
-      (my-snippets-path (concat my-elisp-path "snippets")))
+      (my-snippets-path (expand-file-name "~/.emacs.d/snippets")))
   (when (and (file-accessible-directory-p my-yas-path)
              (file-accessible-directory-p my-snippets-path))
     (add-to-list 'load-path my-yas-path t)
