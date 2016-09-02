@@ -22,6 +22,10 @@
 (setq my-unix-p (let ((ostype (getenv "OS")))
                   (if (and ostype (string-match "Windows" ostype)) nil t)))
 
+(let ((loc (expand-file-name "~/.emacs.local.el")))
+  (if (file-exists-p loc) (load loc))
+)
+
 ;; gnuserv is like emacsclient for Windows.  It doesn't work with Emacs 23.
 ;; Under Linux, the variable gnuserv-frame is ignored.  I'm pretty sure this
 ;; needs to occur before server-start.
