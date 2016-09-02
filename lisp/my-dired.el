@@ -81,6 +81,21 @@ is enabled."
   )
 )
 
+;; I'm redefining this dired func to customize it.
+;; The only change is the use of my-shell-command.
+(require 'my-shell-command "my-shell")
+(defun dired-run-shell-command (command)
+  (let ((handler
+         (find-file-name-handler (directory-file-name default-directory)
+                                 'shell-command)))
+    (if handler
+        (apply handler 'shell-command (list command))
+      (my-shell-command command))
+  )
+  ;; Return nil for the sake of nconc in dired-bunch-files.
+  nil
+)
+
 (defun dired-abs-cur-file-new-kill ()
   "Make new entry at the head of the kill ring containing the absolute path
 to the file on the current dired line."
@@ -109,18 +124,19 @@ file names in the current dired buffer."
   )
 )
 
+(require 'my-shell-command "my-shell")
 (defun my-dired-run-file (abs-path-p)
   "Execute the current line's file name, and give the user a chance to edit
 the command line.  With optional prefix arg, use the current line's absolute
 path."
   (interactive "P")
-  (shell-command (read-shell-command
-                  "Shell command: "
-                  (if (null abs-path-p)
-                      (concat "./" (dired-get-filename 'no-dir))
-                    (dired-get-filename)
-                  )
-                 )
+  (my-shell-command (read-shell-command
+                     "Shell command: "
+                     (if (null abs-path-p)
+                         (concat "./" (dired-get-filename 'no-dir))
+                       (dired-get-filename)
+                     )
+                    )
   )
 )
 

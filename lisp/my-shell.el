@@ -35,6 +35,17 @@
 
 (setq my-shell-outbuf "*Shell Command Output*")
 
+(defun my-shell-command (command)
+  "Wrapper for shell-command that always runs the command in the background.
+We do that by appending an ampersand if the user didn't already."
+  (shell-command (if (string-equal (substring command -1) "&")
+                     command
+                   (concat command "&"))
+                 ;; Same buffer for both sync and async command outputs.
+                 my-shell-outbuf)
+)
+(provide 'my-shell-command)
+
 ;; Redefine standard func with extra stuff at the beginning to work around an
 ;; annoying bug where async command output intermittently disappears because
 ;; the last line of the buffer is shown at the first line of the window.  This
@@ -54,6 +65,18 @@
                  (substring signal 0 -1))
       )
   )
+)
+
+(require 'my-cur-word-or-region "grep-compile")
+(defun my-interactive-shell-command (prefill-p)
+  "Wrapper for shell-command with extra feature.
+With a non-nil prefix, pre-fill the minibuffer using text from
+the current buffer: the current region if active, otherwise the
+word surrounding the point."
+  (interactive "P")
+  (my-shell-command (read-shell-command
+                     "Shell command: "
+                     (if (null prefill-p) "" (my-cur-word-or-region))))
 )
 
 (defun select-shell-command-output-window (&optional buffer)
@@ -148,6 +171,6 @@ Sends one of three different signals depending on the optional prefix arg:
   )
 )
 
-(global-set-key [?\M-o]       'shell-command)
+(global-set-key [?\M-o]       'my-interactive-shell-command)
 (global-set-key [?\C-x ?O]    'select-shell-command-output-window)
 (global-set-key [?\C-x ?\M-o] 'my-subshell)
