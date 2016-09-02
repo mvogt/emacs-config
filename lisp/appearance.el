@@ -63,13 +63,13 @@
     (select-frame frame)
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
+    (set-face-attribute 'default nil
+                        :font "Liberation Mono"
+                        :height 100)
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
   )
   (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
-  (set-face-attribute 'default nil
-                      :font "Liberation Mono"
-                      :height 100)
 )
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
