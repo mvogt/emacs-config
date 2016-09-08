@@ -70,6 +70,10 @@ my-gitk-load-limit."
   t
 )
 
+;; Don't show diff in buffer next to commit message edit buffer.
+;; In gits with a symlinked .git dir, it doesn't even work correctly.
+(remove-hook 'server-switch-hook 'magit-commit-diff)
+
 ;; Careful: You can have only one call to custom-set-faces in all your startup
 ;; files.
 (custom-set-faces
