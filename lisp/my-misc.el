@@ -213,7 +213,7 @@ their own."
      ((= which-func ?i) (lisp-interaction-mode))
      ((= which-func ?w) (visual-line-mode))
      ((= which-func ?l) (linum-mode))
-     ((= which-func ?a) (whitespace-mode))
+     ((= which-func ?a) (call-interactively 'whitespace-mode))
      ((= which-func ?k) (toggle-indent-tabs-mode))
     )
   )
