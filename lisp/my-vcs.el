@@ -78,14 +78,14 @@ my-gitk-load-limit."
 ;; files.
 (custom-set-faces
    ;; I want no special background for added or removed lines.
-   ;; Background, shade of red, and shade of green copied from my customized
-   ;; theme.
+   ;; Background, shade of orange, and shade of green copied from my
+   ;; customized theme.
    '(magit-diff-added ((t (:background "#1d1f21" :foreground "#b5bd68"))))
-   '(magit-diff-removed ((t (:background "#1d1f21" :foreground "#cc6666"))))
+   '(magit-diff-removed ((t (:background "#1d1f21" :foreground "#de935f"))))
    ;; Keep foreground same as above, and copy background from
    ;; magit-diff-context-highlight.
    '(magit-diff-added-highlight ((t (:background "grey20" :foreground "#b5bd68"))))
-   '(magit-diff-removed-highlight ((t (:background "grey20" :foreground "#cc6666"))))
+   '(magit-diff-removed-highlight ((t (:background "grey20" :foreground "#de935f"))))
 )
 
 ;; This hook just seems to slow me down.

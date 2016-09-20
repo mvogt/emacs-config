@@ -252,7 +252,7 @@ names to which it refers are bound."
       (which-func (:foreground ,blue :background nil :weight bold))
 
       ;; Emacs interface
-      (cursor (:background ,red))
+      (cursor (:background "#c82829"))
       (fringe (:background ,background :foreground ,comment))
       (linum (:background ,background :foreground ,comment :italic nil :underline nil))
       (vertical-border (:foreground ,contrast-bg))
@@ -317,8 +317,8 @@ names to which it refers are bound."
       (diff-header (:foreground ,aqua :background nil))
       (diff-file-header (:foreground ,blue :background nil))
       (diff-hunk-header (:foreground ,purple))
-      (diff-refine-added (:inherit diff-added :inverse-video t))
-      (diff-refine-removed (:inherit diff-removed :inverse-video t))
+      (diff-refine-added (:inherit diff-added :weight bold :slant italic))
+      (diff-refine-removed (:inherit diff-removed :weight bold :slant italic))
 
       (diff-hl-insert (:background ,green))
       (diff-hl-change (:background ,blue))
