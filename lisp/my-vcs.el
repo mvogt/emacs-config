@@ -60,19 +60,22 @@ my-gitk-load-limit."
               ;; region is inactive. They want to run
               ;; magit-copy-buffer-revision.
               (define-key magit-mode-map [?\M-w] nil)
-              ;; Disable auto-fill in commit message editing mode. There must
-              ;; be a cleaner way to do this besides using one hook to remove
-              ;; another.
+
+              ;; There must be a cleaner way to do these besides using one
+              ;; hook to remove another.
+
+              ;; Disable auto-fill in commit message editing mode.
               (remove-hook 'git-commit-setup-hook
                            'git-commit-turn-on-auto-fill)
+
+              ;; Don't show diff in buffer next to commit message edit buffer.
+              ;; In gits with a symlinked .git dir, it doesn't even work
+              ;; correctly.
+              (remove-hook 'server-switch-hook 'magit-commit-diff)
             )
   )
   t
 )
-
-;; Don't show diff in buffer next to commit message edit buffer.
-;; In gits with a symlinked .git dir, it doesn't even work correctly.
-(remove-hook 'server-switch-hook 'magit-commit-diff)
 
 ;; Careful: You can have only one call to custom-set-faces in all your startup
 ;; files.
