@@ -85,20 +85,36 @@ We do that by appending an ampersand if the user didn't already."
   (recenter -1)
 )
 
+(defun trim-string-whitespace (str)
+  "Return copy of str with leading and trailing whitespace removed."
+  (replace-regexp-in-string "^[ \t]*" ""
+                            (replace-regexp-in-string "[ \t]*$" "" str))
+)
+
 (require 'my-cur-word-or-region "grep-compile")
-(defun my-interactive-shell-command (prefill-p)
-  "Wrapper for shell-command with extra feature.
-With one universal prefix, pre-fill the minibuffer using text from
-the current buffer: the current region if active, otherwise the
-word surrounding the point.
-With two universal prefixes, dump the shell command history in a
-temp buffer in the other window instead of running a command."
+(defun my-interactive-shell-command (&optional which-feature)
+  "Wrapper for shell-command with extra features
+based on the number of universal prefixes:
+1: Pre-fill the minibuffer with the current region if active,
+otherwise the current line.
+2: Instead of running or prompting for a command, dump the shell
+command history in a temp buffer in the other window."
   (interactive "p")
-  (if (= prefill-p 16)
+  (if (> which-feature 4)
       (my-show-shell-cmd-hist)
-    (my-shell-command (read-shell-command
-                       "Shell command: "
-                       (if (= prefill-p 1) "" (my-cur-word-or-region))))
+    (my-shell-command
+     (read-shell-command
+      "Shell command: "
+      (if (= which-feature 1) ""
+        (trim-string-whitespace
+         (if mark-active
+             (buffer-substring (point) (mark))
+           (buffer-substring (line-beginning-position)
+                             (line-end-position)))
+        )
+      )
+     )
+    )
   )
 )
 
