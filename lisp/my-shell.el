@@ -67,16 +67,39 @@ We do that by appending an ampersand if the user didn't already."
   )
 )
 
+(setq my-shell-cmd-hist-buf-name "*shell-cmd-hist*")
+(defun my-show-shell-cmd-hist ()
+  "Dump shell-command-history in a temp buffer in the other window."
+  (interactive)
+  ;; Delete buffer first to reset the current directory.
+  (if (get-buffer my-shell-cmd-hist-buf-name)
+      (kill-buffer my-shell-cmd-hist-buf-name))
+  (switch-to-buffer-other-window my-shell-cmd-hist-buf-name)
+  (text-mode)
+  (toggle-truncate-lines 1)
+  (erase-buffer)
+  (dolist (str (reverse shell-command-history))
+    (princ str (current-buffer))
+    (insert "\n")
+  )
+  (recenter -1)
+)
+
 (require 'my-cur-word-or-region "grep-compile")
 (defun my-interactive-shell-command (prefill-p)
   "Wrapper for shell-command with extra feature.
-With a non-nil prefix, pre-fill the minibuffer using text from
+With one universal prefix, pre-fill the minibuffer using text from
 the current buffer: the current region if active, otherwise the
-word surrounding the point."
-  (interactive "P")
-  (my-shell-command (read-shell-command
-                     "Shell command: "
-                     (if (null prefill-p) "" (my-cur-word-or-region))))
+word surrounding the point.
+With two universal prefixes, dump the shell command history in a
+temp buffer in the other window instead of running a command."
+  (interactive "p")
+  (if (= prefill-p 16)
+      (my-show-shell-cmd-hist)
+    (my-shell-command (read-shell-command
+                       "Shell command: "
+                       (if (= prefill-p 1) "" (my-cur-word-or-region))))
+  )
 )
 
 (defun select-shell-command-output-window (&optional buffer)
