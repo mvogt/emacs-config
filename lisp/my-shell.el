@@ -46,27 +46,6 @@ We do that by appending an ampersand if the user didn't already."
 )
 (provide 'my-shell-command)
 
-;; Redefine standard func with extra stuff at the beginning to work around an
-;; annoying bug where async command output intermittently disappears because
-;; the last line of the buffer is shown at the first line of the window.  This
-;; switches to that window (if visible), displays the last line of the buffer
-;; at the bottom of the window, and switches back to the original window.
-(defun shell-command-sentinel (process signal)
-  (if (memq (process-status process) '(exit signal))
-      (let ((cur-win (get-buffer-window))
-            (out-win (get-buffer-window my-shell-outbuf)))
-        (when out-win
-          (select-window out-win)
-          (recenter -1)
-          (select-window cur-win)
-        )
-        (message "%s: %s."
-                 (car (cdr (cdr (process-command process))))
-                 (substring signal 0 -1))
-      )
-  )
-)
-
 (setq my-shell-cmd-hist-buf-name "*shell-cmd-hist*")
 (defun my-show-shell-cmd-hist ()
   "Dump shell-command-history in a temp buffer in the other window."
