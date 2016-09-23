@@ -115,6 +115,8 @@ command history in a temp buffer in the other window."
       )
      )
     )
+    (if (get-buffer my-shell-cmd-hist-buf-name)
+        (kill-buffer my-shell-cmd-hist-buf-name))
   )
 )
 
