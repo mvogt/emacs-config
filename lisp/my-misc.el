@@ -139,6 +139,21 @@ Cleans up ANSI formatting chars."
   (Man-mode)
 )
 
+;; Written by Artur Malabarba
+;; http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
+(defun fill-paragraph-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column (if (eq last-command 'fill-paragraph-or-unfill)
+                         (progn
+                           (setq this-command nil)
+                           (point-max)
+                         )
+                       fill-column)))
+    (call-interactively #'fill-paragraph)
+  )
+)
+
 ;; insert-pair wrappers for obvious chars.  Just like insert-parentheses.
 ;; If I was smarter, I would use a macro.
 (defun my-enclose-double-quotes (&optional qty)
@@ -360,6 +375,8 @@ own."
 
 (global-set-key [?\M-g ?\M-m] 'my-prefix-menu-modes)
 (global-set-key [?\M-g ?\M-v] 'my-prefix-menu-misc)
+
+(global-set-key [remap fill-paragraph] #'fill-paragraph-or-unfill)
 
 ;; Make apropos show interactive and non-interactive functions.
 (setq apropos-do-all t)
