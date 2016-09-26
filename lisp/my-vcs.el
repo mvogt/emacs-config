@@ -18,6 +18,7 @@
 ;;----------------------------------------------------------------------------
 ;; Version control
 ;;
+(defvar my-gitk-cmd "gitk")
 (defvar my-gitk-load-limit 10000)
 
 (defun my-launch-gitk (arg)
@@ -26,8 +27,8 @@ With a prefix, don't limit the number of commits loaded to
 my-gitk-load-limit."
   (interactive "P")
   (if arg
-      (start-process "gitk" nil "gitk" "--all")
-    (start-process "gitk" nil "gitk"
+      (start-process "gitk" nil my-gitk-cmd "--all")
+    (start-process "gitk" nil my-gitk-cmd
                    (format "--max-count=%d" my-gitk-load-limit) "--all")
   )
 )
