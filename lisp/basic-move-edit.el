@@ -85,3 +85,7 @@
 
 ;; I find this to be almost useless, but it only works when mapped to a key.
 (global-set-key [?\M-?] 'repeat)
+
+;; Don't delete the region when it's active and the delete or backspace key is
+;; pressed.
+(setq delete-active-region nil)
