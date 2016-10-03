@@ -156,7 +156,7 @@ path."
 (defun dropbox-p (path)
   "If path is a file and starts with $HOME/Dropbox, return t, else nil.
 Also handles the case where path is a symlink to somewhere in the dropbox."
-  (let* ((dropbox (concat (getenv "HOME") "/Dropbox"))
+  (let* ((dropbox (file-truename (concat (getenv "HOME") "/Dropbox")))
          (dbox-len (length dropbox))
          (resolved-path (file-truename path)))
     (and (not (file-directory-p resolved-path))
