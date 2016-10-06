@@ -53,21 +53,29 @@ Does nothing if the current buffer is not in dirtree-mode."
   )
 )
 
+;; We set tree-widget-image-enable upon every entry to dirtree because the
+;; current frame could now be text instead of graphical, or vice versa.
+;; Because we load ditree unconditionally at the top of this file, this
+;; variable is set early in startup before the first frame exists, and the
+;; initial value is always nil (at least for the way I launch Emacs).
 (defun my-dirtree-rootfs-cwd (other-p)
   "Switch to the dirtree, and select the current buffer's directory in it.
 With prefix argument, create in other window.
 Assumes there's only one dirtree buffer, and it's rooted at /."
   (interactive "P")
   (let ((dest-path (expand-file-name default-directory)))
+    (setq tree-widget-image-enable (display-images-p))
     (dirtree "/" other-p)
     (my-dirtree-find-full-path dest-path)
   )
 )
 
+;; The comment about tree-widget-image-enable above also applies here.
 (defun my-dirtree-rootfs (other-p)
   "Create tree of directory '/' and select it.
 With prefix argument, create in other window."
   (interactive "P")
+  (setq tree-widget-image-enable (display-images-p))
   (dirtree "/" other-p)
 )
 

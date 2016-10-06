@@ -68,10 +68,6 @@
                         :height 100)
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
-    ;; This tree-widget.el variable is first set early in startup when
-    ;; display-images-p returns nil. We set it again here because a graphical
-    ;; frame is now rendered.
-    (setq tree-widget-image-enable (display-images-p))
   )
   (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
 )
