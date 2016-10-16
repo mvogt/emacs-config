@@ -43,6 +43,15 @@ We do that by appending an ampersand if the user didn't already."
                    (concat command "&"))
                  ;; Same buffer for both sync and async command outputs.
                  my-shell-outbuf)
+  ;; Starting in v24, Emacs has "window-local buffer lists". When
+  ;; shell-command creates my-shell-outbuf in the other window, it appears at
+  ;; the end of the current window's buffer list.
+  ;; This adjusts the current window's buffer list so that my-shell-outbuf is
+  ;; second. This is much more intuitive to me, and it matches v23 behavior.
+  (let ((cur-buffer (current-buffer)))
+    (switch-to-buffer my-shell-outbuf)
+    (switch-to-buffer cur-buffer)
+  )
 )
 (provide 'my-shell-command)
 
