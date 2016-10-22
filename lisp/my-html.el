@@ -318,6 +318,5 @@ return nil."
   (function (lambda ()
     (set-tab-width 4)   ; too many coworkers have inferior editors
     (local-set-key [?\C-c ?\C-i] 'set-tab-width)
-    (rainbow-mode)
   ))
 )
