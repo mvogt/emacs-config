@@ -55,6 +55,21 @@ We do that by appending an ampersand if the user didn't already."
 )
 (provide 'my-shell-command)
 
+;; Redefine this standard func. We add extra stuff at the beginning to remove
+;; obnoxious field properties placed in the output buffer of a shell command.
+;; Those properties break word navigation, and they have several weird
+;; side-effects when text is extracted from that buffer.
+(defun shell-command-sentinel (process signal)
+  (when (memq (process-status process) '(exit signal))
+    (let ((buf (process-buffer process)))
+      (set-text-properties 1 (1+ (buffer-size buf)) nil buf)
+      (message "%s: %s."
+               (car (cdr (cdr (process-command process))))
+               (substring signal 0 -1))
+    )
+  )
+)
+
 (setq my-shell-cmd-hist-buf-name "*shell-cmd-hist*")
 (defun my-show-shell-cmd-hist ()
   "Dump shell-command-history in a temp buffer in the other window."
