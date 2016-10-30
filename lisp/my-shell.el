@@ -38,17 +38,23 @@
 (defun my-shell-command (command)
   "Wrapper for shell-command that always runs the command in the background.
 We do that by appending an ampersand if the user didn't already."
-  (shell-command (if (string-equal (substring command -1) "&")
-                     command
-                   (concat command "&"))
-                 ;; Same buffer for both sync and async command outputs.
-                 my-shell-outbuf)
-  ;; Starting in v24, Emacs has "window-local buffer lists". When
-  ;; shell-command creates my-shell-outbuf in the other window, it appears at
-  ;; the end of the current window's buffer list.
-  ;; This adjusts the current window's buffer list so that my-shell-outbuf is
-  ;; second. This is much more intuitive to me, and it matches v23 behavior.
-  (let ((cur-buffer (current-buffer)))
+  (let ((cur-buffer (current-buffer))
+        (prev-out-buf (get-buffer my-shell-outbuf)))
+    ;; Work around intermittent bug where an existing output buffer won't get
+    ;; raised to the top of the other window's display list. My buffer
+    ;; switching at the end of this function probably provokes that bug.
+    (if prev-out-buf (kill-buffer prev-out-buf))
+    (shell-command (if (string-equal (substring command -1) "&")
+                       command
+                     (concat command "&"))
+                   ;; Same buffer for both sync and async command outputs.
+                   my-shell-outbuf)
+    ;; Starting in v24, Emacs has "window-local buffer lists". When
+    ;; shell-command creates my-shell-outbuf in the other window, it appears
+    ;; at the end of the current window's buffer list.
+    ;; This adjusts the current window's buffer list so that my-shell-outbuf
+    ;; is second. This is much more intuitive to me, and it matches v23
+    ;; behavior.
     (switch-to-buffer my-shell-outbuf)
     (switch-to-buffer cur-buffer)
   )
