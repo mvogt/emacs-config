@@ -179,6 +179,29 @@ Leave Buffer Selection Menu."
   )
 )
 
+(defun my-kill-buffer ()
+  "Wrapper for kill-buffer that conditionally buries the new buffer.
+I don't want the newly displayed buffer to be the same as any
+buffer currently displayed in another window, and I don't ever want
+to see the bs-show menu."
+  (interactive)
+  (kill-buffer)
+  (let ((cur-win-buf (window-buffer)))
+    (when (or (< 1 (length (get-buffer-window-list cur-win-buf 0)))
+              (equal (buffer-name cur-win-buf) "*buffer-selection*"))
+      (bury-buffer)
+      ;; I don't loop here because I couldn't think of an algorithm that
+      ;; covers all possible cases. There could be a window for every buffer,
+      ;; so looping until we get one that's not displayed would loop forever.
+      ;; I only handle the two most undesirable common cases: killing a buffer
+      ;; shows a new one already displayed, and then burying that one shows
+      ;; the bs-show menu buffer.
+      (if (equal (buffer-name (window-buffer)) "*buffer-selection*")
+          (bury-buffer))
+    )
+  )
+)
+
 (defun my-bury-buffer-other-window ()
   "Bury the buffer in the other window."
   (interactive)
@@ -195,5 +218,4 @@ Leave Buffer Selection Menu."
 (global-set-key [f12]         'other-window)
 (global-set-key [C-f12]       'my-bury-buffer-other-window)
 (global-set-key [?\C-x ?9]    'my-bury-buffer-other-window)
-(global-set-key [?\M-z]       (lambda () (interactive)
-                                (kill-buffer (buffer-name))))
+(global-set-key [?\M-z]       'my-kill-buffer)
