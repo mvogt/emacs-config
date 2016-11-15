@@ -179,13 +179,10 @@ Leave Buffer Selection Menu."
   )
 )
 
-(defun my-kill-buffer ()
-  "Wrapper for kill-buffer that conditionally buries the new buffer.
-I don't want the newly displayed buffer to be the same as any
-buffer currently displayed in another window, and I don't ever want
-to see the bs-show menu."
+(defun bury-buffer-if-dupe ()
+  "Bury the current buffer if it's also displayed in another window.
+Also bury if it's the bs-show menu."
   (interactive)
-  (kill-buffer)
   (let ((cur-win-buf (window-buffer)))
     (when (or (< 1 (length (get-buffer-window-list cur-win-buf 0)))
               (equal (buffer-name cur-win-buf) "*buffer-selection*"))
@@ -202,18 +199,44 @@ to see the bs-show menu."
   )
 )
 
+(defun my-bs-delete ()
+"Wrapper for bs-delete that conditionally buries the newly displayed buffer."
+  (interactive)
+  (let* ((victim (bs--current-buffer))
+         (vic-windows (get-buffer-window-list victim 0))
+         (sole-vic-window (if (= 1 (length vic-windows))
+                              (car vic-windows)
+                            nil)))
+    (call-interactively 'bs-delete)
+    (when sole-vic-window
+      (save-selected-window
+        (select-window sole-vic-window)
+        (bury-buffer-if-dupe)
+      )
+      (bs-refresh)
+    )
+  )
+)
+
+(defun my-kill-buffer ()
+  "Wrapper for kill-buffer that conditionally buries the new buffer."
+  (interactive)
+  (kill-buffer)
+  (bury-buffer-if-dupe)
+)
+
 (defun my-bury-buffer-other-window ()
   "Bury the buffer in the other window."
   (interactive)
-  (let ((window (get-buffer-window)))
+  (save-selected-window
     (other-window 1)
     (bury-buffer)
-    (select-window window)
   )
 )
 
 (substitute-key-definition 'bs-select 'my-bs-select bs-mode-map)
-(substitute-key-definition 'bs-view   'my-bs-view bs-mode-map)
+(substitute-key-definition 'bs-view   'my-bs-view   bs-mode-map)
+(substitute-key-definition 'bs-delete 'my-bs-delete bs-mode-map)
 
 (global-set-key [?\C-x ?b]    'rename-buffer)
 (global-set-key [f10]         'delete-window)
