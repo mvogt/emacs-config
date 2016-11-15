@@ -57,9 +57,9 @@ The current window remains selected."
   )
 )
 
-;; Redefine this func from bs.el so that it doesn't try to visit the buffer
-;; inside the tiny buffer selection window.
-(defun bs-view ()
+;; Alternative to bs-view in bs.el that doesn't try to visit the buffer inside
+;; the tiny buffer selection window.
+(defun my-bs-view ()
   "View current line's buffer in View mode, and leave Buffer Selection Menu."
   (interactive)
   (let ((buffer (bs--current-buffer)))
@@ -150,8 +150,8 @@ this line's buffer."
   )
 )
 
-;; Redefine this func from bs.el to add 2D tiling of windows.
-(defun bs-select ()
+;; Alternative to bs-select in bs.el that adds 2D tiling of windows.
+(defun my-bs-select ()
   "Select current line's buffer and other marked buffers.
 If there are no marked buffers the window configuration before starting
 Buffer Selection Menu will be restored.
@@ -211,6 +211,9 @@ to see the bs-show menu."
     (select-window window)
   )
 )
+
+(substitute-key-definition 'bs-select 'my-bs-select bs-mode-map)
+(substitute-key-definition 'bs-view   'my-bs-view bs-mode-map)
 
 (global-set-key [?\C-x ?b]    'rename-buffer)
 (global-set-key [f10]         'delete-window)
