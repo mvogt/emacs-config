@@ -213,7 +213,6 @@ Also bury if it's the bs-show menu."
         (select-window sole-vic-window)
         (bury-buffer-if-dupe)
       )
-      (bs-refresh)
     )
   )
 )
