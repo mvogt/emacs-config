@@ -78,6 +78,10 @@ my-gitk-load-limit."
   t
 )
 
+;; Trailing asterisk changes the name's color is bs-show.
+;; Not sure why that's not the default.
+(setq magit-buffer-name-format "*%M%v: %t*")
+
 ;; Careful: You can have only one call to custom-set-faces in all your startup
 ;; files.
 (custom-set-faces
