@@ -71,16 +71,16 @@ First prompts for the type of files search."
          (my-initial-grep-cmd
           (cond
            ((= which-func ?a)
-            (format "find . -type f -print0 %s | %s \"%s\""
+            (format "find . -type f -print0 %s \\\n| %s \"%s\""
                     find-args-ignore my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?x)
             (format (concat "find . -type f -name \"*.c\" -print0 "
-                            find-args-ignore " | %s \"%s\"")
+                            find-args-ignore " \\\n| %s \"%s\"")
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?m)
             (format (concat "find . -type f -name \"*.c\" -print0"
                             " -o -name \"*.h\" -print0 "
-                            find-args-ignore " | %s \"%s\"")
+                            find-args-ignore " \\\n| %s \"%s\"")
                     my-xargs-grep (my-cur-word-or-region)))
            ((= which-func ?j)
             (format (concat "find . -type f -name \"%s\" -print "
