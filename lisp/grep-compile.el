@@ -27,6 +27,7 @@
 (setq grep-highlight-matches (if (>= emacs-major-version 23) t nil))
 
 ;; Same highlighting within a line for ag ("The Silver Searcher") results.
+(require 'ag)
 (setq ag-highlight-search t)
 
 ;; Generate a unique buffer name for each process launched in compilation
@@ -65,7 +66,9 @@ Like grep-find, but prompts for a starting directory, guesses the search
 string from context, and adds my favorite find and grep options.
 First prompts for the type of files search."
   (interactive)
-  (message "Search [a]ll files, for one e[x]tension, for [m]ultiple extensions,\n[j]ust file names, or with a[g]?")
+  (message (concat "Search [a]ll files, for one e[x]tension,"
+                   " for [m]ultiple extensions,"
+                   "\n[j]ust file names, or with a[g]?"))
   (let* ((my-xargs-grep (concat "xargs --null grep --line-number"
                                 " --ignore-case --no-messages --color=auto"
                                 " --extended-regexp -e"))
@@ -95,7 +98,7 @@ First prompts for the type of files search."
                                   find-args-ignore " | while read x ; do"
                                   " echo ${x}${colon}1${colon} ; done")
                           (my-cur-word-or-region))))
-           ((= which-func ?g)
+           (t
             (list 'ag-mode
                   (format (concat "ag --literal --smart-case --group"
                                   " --line-number --column --color"
