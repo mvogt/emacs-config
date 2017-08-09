@@ -26,6 +26,9 @@
 ;; buffer containing the grep output.)  Seems to be fixed in Emacs 23.
 (setq grep-highlight-matches (if (>= emacs-major-version 23) t nil))
 
+;; Same highlighting within a line for ag ("The Silver Searcher") results.
+(setq ag-highlight-search t)
+
 ;; Generate a unique buffer name for each process launched in compilation
 ;; mode.  This applies to the commands compile, grep, grep-find, and
 ;; my-recursive-grep.
@@ -62,34 +65,46 @@ Like grep-find, but prompts for a starting directory, guesses the search
 string from context, and adds my favorite find and grep options.
 First prompts for the type of files search."
   (interactive)
-  (message "Search [a]ll files, for one e[x]tension,\nfor [m]ultiple extensions, or [j]ust file names?")
+  (message "Search [a]ll files, for one e[x]tension, for [m]ultiple extensions,\n[j]ust file names, or with a[g]?")
   (let* ((my-xargs-grep (concat "xargs --null grep --line-number"
                                 " --ignore-case --no-messages --color=auto"
                                 " --extended-regexp -e"))
          (find-args-ignore "-o -name .git -prune -o -name .svn -prune")
          (which-func (read-char))
-         (my-initial-grep-cmd
+         (cmd-spec
           (cond
            ((= which-func ?a)
-            (format "find . -type f -print0 %s \\\n| %s \"%s\""
-                    find-args-ignore my-xargs-grep (my-cur-word-or-region)))
+            (list 'grep-mode
+                  (format "find . -type f -print0 %s \\\n| %s \"%s\""
+                          find-args-ignore my-xargs-grep
+                          (my-cur-word-or-region))))
            ((= which-func ?x)
-            (format (concat "find . -type f -name \"*.c\" -print0 "
-                            find-args-ignore " \\\n| %s \"%s\"")
-                    my-xargs-grep (my-cur-word-or-region)))
+            (list 'grep-mode
+                  (format (concat "find . -type f -name \"*.c\" -print0 "
+                                  find-args-ignore " \\\n| %s \"%s\"")
+                          my-xargs-grep (my-cur-word-or-region))))
            ((= which-func ?m)
-            (format (concat "find . -type f -name \"*.c\" -print0"
-                            " -o -name \"*.h\" -print0 "
-                            find-args-ignore " \\\n| %s \"%s\"")
-                    my-xargs-grep (my-cur-word-or-region)))
+            (list 'grep-mode
+                  (format (concat "find . -type f -name \"*.c\" -print0"
+                                  " -o -name \"*.h\" -print0 "
+                                  find-args-ignore " \\\n| %s \"%s\"")
+                          my-xargs-grep (my-cur-word-or-region))))
            ((= which-func ?j)
-            (format (concat "find . -type f -name \"%s\" -print "
-                            find-args-ignore " | while read x ; do"
-                            " echo ${x}${colon}1${colon} ; done")
-                    (my-cur-word-or-region)))
+            (list 'grep-mode
+                  (format (concat "find . -type f -name \"%s\" -print "
+                                  find-args-ignore " | while read x ; do"
+                                  " echo ${x}${colon}1${colon} ; done")
+                          (my-cur-word-or-region))))
+           ((= which-func ?g)
+            (list 'ag-mode
+                  (format (concat "ag --literal --smart-case --group"
+                                  " --line-number --column --color"
+                                  " --color-match \"30;43\" --color-path"
+                                  " \"1;32\" -- \"%s\"")
+                          (my-cur-word-or-region))))
           )
          )
-         (my-grep-cmd (read-string "Search command: " my-initial-grep-cmd))
+         (my-grep-cmd (read-string "Search command: " (cdr cmd-spec)))
          (start-dir (read-file-name "Starting directory: "
                                     nil default-directory))
         )
@@ -105,7 +120,7 @@ First prompts for the type of files search."
         ;; in my command.
         (compilation-start (concat "cd " start-dir " && unset GREP_OPTIONS ; "
                                    my-grep-cmd)
-                           'grep-mode)
+                           (car cmd-spec))
       (let* ((corrected-start-dir (if (string= "/" (substring start-dir -1))
                                       start-dir
                                     (concat start-dir "/")))
