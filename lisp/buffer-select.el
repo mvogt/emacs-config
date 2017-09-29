@@ -239,8 +239,11 @@ Also bury if it's the bs-show menu."
 
 (global-set-key [?\C-x ?b]    'rename-buffer)
 (global-set-key [f10]         'delete-window)
+(global-set-key [?\M-\]]      'delete-window)
 (global-set-key [f11]         'delete-other-windows)
+(global-set-key [?\M-\[]      'delete-other-windows)
 (global-set-key [f12]         'other-window)
+(global-set-key [?\M-=]       'other-window)
 (global-set-key [C-f12]       'my-bury-buffer-other-window)
 (global-set-key [?\C-x ?9]    'my-bury-buffer-other-window)
 (global-set-key [?\M-z]       'my-kill-buffer)

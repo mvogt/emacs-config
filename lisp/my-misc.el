@@ -209,7 +209,9 @@ Cleans up ANSI formatting chars."
 enable functions that I don't use often enough to bind to keys of
 their own."
   (interactive)
-  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake, c[p]erl, p[y]thon,\n[r]uby, [j]avascript, [J]ava, proto[b]uf, [e]macs lisp, lisp [i]nteraction,\n[w]ord wrap, [l]ine numbers, whitesp[a]ce, [k] toggle indent w/tabs?")
+  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake, c[p]erl, p[y]thon,
+[r]uby, [j]avascript, [J]ava, proto[b]uf, [e]macs lisp, lisp [i]nteraction,
+[w]ord wrap, [l]ine numbers, whitesp[a]ce, [k] toggle indent w/tabs?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?d) (diff-mode))
@@ -240,7 +242,11 @@ their own."
 functions that I don't use often enough to bind to keys of their
 own."
   (interactive)
-  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,\n[m]an cleanup, [x] unfontify, [t]abify, [u]ntabify,\ndescribe [c]har, describe ke[y], [g]db many windows, i[s]earch fwd word,\nre[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
+  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,
+[m]an cleanup, [x] unfontify, [t]abify, [u]ntabify,
+describe [c]har, describe ke[y], [g]db many windows, i[s]earch fwd word,
+re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace,
+[4] search files, [5] select workspace, [8] GDB, [9] compile?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?e) (eval-buffer))
@@ -260,6 +266,10 @@ own."
      ((= which-func ?l) (list-colors-display))
      ((= which-func ?o) (call-interactively 'read-color))
      ((= which-func ?f) (call-interactively 'customize-face))
+     ((= which-func ?4) (my-recursive-grep))
+     ((= which-func ?5) (call-interactively 'my-dired-sandbox))
+     ((= which-func ?8) (call-interactively 'gdb))
+     ((= which-func ?9) (call-interactively 'compile))
     )
   )
 )
