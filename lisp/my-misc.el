@@ -245,8 +245,7 @@ own."
   (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,
 [m]an cleanup, [x] unfontify, [t]abify, [u]ntabify,
 describe [c]har, describe ke[y], [g]db many windows, i[s]earch fwd word,
-re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace,
-[4] search files, [5] select workspace, [8] GDB, [9] compile?")
+re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?e) (eval-buffer))
@@ -266,10 +265,6 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace,
      ((= which-func ?l) (list-colors-display))
      ((= which-func ?o) (call-interactively 'read-color))
      ((= which-func ?f) (call-interactively 'customize-face))
-     ((= which-func ?4) (my-recursive-grep))
-     ((= which-func ?5) (call-interactively 'my-dired-sandbox))
-     ((= which-func ?8) (call-interactively 'gdb))
-     ((= which-func ?9) (call-interactively 'compile))
     )
   )
 )
@@ -386,6 +381,14 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace,
 
 (global-set-key [?\M-g ?\M-m] 'my-prefix-menu-modes)
 (global-set-key [?\M-g ?\M-v] 'my-prefix-menu-misc)
+(global-set-key [?\M-g ?4]    'my-recursive-grep)
+(global-set-key [?\M-g ?\M-4] 'my-recursive-grep)
+(global-set-key [?\M-g ?5]    'my-dired-sandbox)
+(global-set-key [?\M-g ?\M-5] 'my-dired-sandbox)
+(global-set-key [?\M-g ?8]    'gdb)
+(global-set-key [?\M-g ?\M-8] 'gdb)
+(global-set-key [?\M-g ?9]    'compile)
+(global-set-key [?\M-g ?\M-9] 'compile)
 
 (global-set-key [remap fill-paragraph] #'fill-paragraph-or-unfill)
 
