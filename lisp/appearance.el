@@ -59,17 +59,24 @@
 (defvar my-geometry '((width . 181) (height . 68) (top . 0) (left . -3)))
 
 (when (and (boundp 'my-unix-p) my-unix-p)
+  ;; This has no effect in OSX, and I don't know why.
   (defun my-frame-create-hook (frame)
     (select-frame frame)
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
                         :font "Liberation Mono"
-                        :height 100)
+                        :height 120)
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
   )
   (add-to-list 'after-make-frame-functions 'my-frame-create-hook t)
+)
+
+(when (string-equal system-type "darwin")
+  (set-face-attribute 'default nil
+                      :font "Liberation Mono"
+                      :height 140)
 )
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
@@ -99,8 +106,11 @@
 ;; version of Emacs under Unix did at one point.)
 (set-scroll-bar-mode 'right)
 
-;; Hide pull-down menus.  I never use them, so they waste space.
-(menu-bar-mode 0)
+;; Hide pull-down menus. I never use them, so they waste space -- except on
+;; OSX.
+(unless (string-equal system-type "darwin")
+  (menu-bar-mode 0)
+)
 
 ;; Hide annoying and space-wasting button bar.  The conditional is to support
 ;; certain older versions of Emacs.

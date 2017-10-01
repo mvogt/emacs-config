@@ -129,4 +129,4 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ag yasnippet yaml-mode tree-mode rainbow-mode protobuf-mode org magit htmlize hexrgb groovy-mode dropdown-list dired-efap browse-kill-ring))))
+    (exec-path-from-shell ag yasnippet yaml-mode tree-mode rainbow-mode protobuf-mode org magit htmlize hexrgb groovy-mode dropdown-list dired-efap browse-kill-ring))))

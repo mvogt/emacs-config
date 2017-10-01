@@ -407,3 +407,9 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace,
 ;; acceptable inconvenience to me.
 (global-set-key [?\M-x]       'Control-X-prefix)
 (global-set-key [?\C-x ?\M-x] 'execute-extended-command)
+
+(when (string-equal system-type "darwin")
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'none)
+  ;; See also mac-option-modifier and mac-control-modifier.
+)

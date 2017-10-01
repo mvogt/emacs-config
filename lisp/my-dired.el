@@ -210,7 +210,9 @@ If it's a directory, open a new dired buffer, and kill the current one."
         ;; I don't understand the functional difference between call-process
         ;; and start-process, but when I first wrote this with gnome-open, it
         ;; only worked with call-process. I didn't recheck later.
-        (call-process "xdg-open" nil 0 nil (dired-get-filename 'no-dir))
+        (call-process
+         (if (string-equal system-type "darwin") "open" "xdg-open")
+         nil 0 nil (dired-get-filename 'no-dir))
       (setq file-name-history (cons (path-to-tilde file) file-name-history))
       (kill-buffer)
       (find-file file)
@@ -314,6 +316,14 @@ With a prefix argument, kills the current buffer."
     )
     (deactivate-mark)
   )
+)
+
+(when (string-equal system-type "darwin")
+  ;; From package exec-path-from-shell. For gls below, but also useful in
+  ;; general.
+  (exec-path-from-shell-initialize)
+  ;; Provided by coreutils package in homebrew. Needed for the --dired option.
+  (setq insert-directory-program "gls")
 )
 
 ;; Use uni-diff with my preferred options instead of the default context diff.

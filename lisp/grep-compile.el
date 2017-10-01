@@ -69,7 +69,7 @@ First prompts for the type of files search."
   (message (concat "Search [a]ll files, for one e[x]tension,"
                    " for [m]ultiple extensions,"
                    "\n[j]ust file names, or with a[g]?"))
-  (let* ((my-xargs-grep (concat "xargs --null grep --line-number"
+  (let* ((my-xargs-grep (concat "xargs -0 grep --line-number"
                                 " --ignore-case --no-messages --color=auto"
                                 " --extended-regexp -e"))
          (find-args-ignore "-o -name .git -prune -o -name .svn -prune")
