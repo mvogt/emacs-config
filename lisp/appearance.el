@@ -66,7 +66,7 @@
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
                         :font "Liberation Mono"
-                        :height 120)
+                        :height 100)
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
   )
