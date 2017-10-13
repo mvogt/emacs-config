@@ -299,6 +299,7 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
               (local-set-key [?\C-c ?\C-8] 'org-list-make-subtree)
               (local-set-key [?\C-c ?\C-6] 'org-up-element)
               (local-set-key [?\C-y]       'my-yank)
+              (local-set-key [?\C-\']      'other-window)
               (local-set-key [?\M-h]
                              (lambda () (interactive)
                                (move-to-window-line 0)))
