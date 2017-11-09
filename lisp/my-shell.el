@@ -43,7 +43,9 @@ We do that by appending an ampersand if the user didn't already."
     ;; Work around intermittent bug where an existing output buffer won't get
     ;; raised to the top of the other window's display list. My buffer
     ;; switching at the end of this function probably provokes that bug.
-    (if prev-out-buf (kill-buffer prev-out-buf))
+    (if (and prev-out-buf (not (equal prev-out-buf cur-buffer)))
+        (kill-buffer prev-out-buf)
+    )
     (shell-command (if (string-equal (substring command -1) "&")
                        command
                      (concat command "&"))
