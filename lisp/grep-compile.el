@@ -100,8 +100,8 @@ First prompts for the type of files search."
                           (my-cur-word-or-region))))
            (t
             (list 'ag-mode
-                  (format (concat "ag --literal --smart-case --group"
-                                  " --line-number --column --color"
+                  (format (concat "ag --literal --depth 50 --smart-case"
+                                  " --group --line-number --column --color"
                                   " --color-match \"30;43\" --color-path"
                                   " \"1;32\" -- \"%s\"")
                           (my-cur-word-or-region))))
