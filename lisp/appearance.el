@@ -65,7 +65,7 @@
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
-                        :font "Liberation Mono"
+                        :font "Go Mono"
                         :height 100)
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
