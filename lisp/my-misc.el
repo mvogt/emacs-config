@@ -293,6 +293,10 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 
 (require 'org)
 
+;; Enable structure template expansion. For example <s TAB to create a source
+;; code block.
+(require 'org-tempo)
+
 (add-hook 'org-mode-hook
   (function (lambda ()
               (toggle-truncate-lines 0)    ; enable line wrap
