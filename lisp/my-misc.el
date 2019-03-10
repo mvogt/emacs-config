@@ -291,6 +291,17 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 ;; When opening a file, show it fully expanded.
 (setq org-startup-folded nil)
 
+;; Add UUIDs to event entries in buffer when exporting to iCal.
+(setq org-icalendar-store-UID t)
+
+;; Don't create global index ~/.emacs.d/.org-id-locations of UUIDs generated
+;; for org entries.
+(setq org-id-track-globally nil)
+
+;; In agenda mode, show a span of 10 days centered around today.
+(setq org-agenda-start-day "-5d")
+(setq org-agenda-span 11)
+
 (require 'org)
 
 ;; Enable structure template expansion. For example <s TAB to create a source
@@ -322,6 +333,12 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 (define-key org-read-date-minibuffer-local-map [(shift down)]
   (lambda () (interactive)
     (org-eval-in-calendar '(calendar-forward-week 1))))
+
+;; Shorten the default list of holidays to ones I want.
+(setq calendar-holidays
+      (append holiday-general-holidays holiday-local-holidays
+              holiday-other-holidays holiday-christian-holidays
+              holiday-solar-holidays))
 
 
 (add-hook 'diff-mode-hook
