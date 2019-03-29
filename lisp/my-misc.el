@@ -299,7 +299,7 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 (setq org-id-track-globally nil)
 
 ;; In agenda mode, show a span of 10 days centered around today.
-(setq org-agenda-start-day "-5d")
+(setq org-agenda-start-day "-3d")
 (setq org-agenda-span 11)
 
 (require 'org)
