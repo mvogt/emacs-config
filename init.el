@@ -124,11 +124,21 @@
 ;; it doesn't hurt for this to be last.
 (load "prg-modes")
 
+;; Generated automatically by installing a package, M-x customize-variable,
+;; and others. Use git to check for actual, desirable changes afterward.
+;; Beware: Must have only one instance of this function call in the init
+;; files.
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+ ;; Restore behavior of older Emacs version when navigating history at the
+ ;; query-replace minibuffer prompt: search and replace strings get separate
+ ;; entries.
+ ;; Setting this with ordinary setq causes the default value to re-appear
+ ;; after each call to a replace function. I don't understand why.
+ '(query-replace-from-to-separator nil)
+
+ ;; Installed packages
  '(package-selected-packages
-   (quote
-    (go-mode powershell exec-path-from-shell ag yasnippet yaml-mode tree-mode rainbow-mode protobuf-mode org magit htmlize hexrgb groovy-mode dropdown-list dired-efap browse-kill-ring))))
+   (quote (ag browse-kill-ring dired-efap dropdown-list exec-path-from-shell
+           go-mode groovy-mode hexrgb htmlize magit org powershell
+           protobuf-mode rainbow-mode tree-mode yaml-mode yasnippet)))
+)

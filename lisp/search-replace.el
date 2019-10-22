@@ -18,11 +18,6 @@
 ;;----------------------------------------------------------------------------
 ;; Search and replace
 ;;
-;; Restore behavior of older Emacs version when navigating history at the
-;; query-replace minibuffer prompt: search and replace strings get separate
-;; entries.
-(setq query-replace-from-to-separator nil)
-
 (defun replace-special-chars ()
   "Replace characters that are not printable in 7-bit ASCII with something
 that is.  These obnoxious special chars typically come from MS Word or
