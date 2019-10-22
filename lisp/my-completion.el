@@ -47,7 +47,6 @@ buffer that was there before."
 (define-key completion-list-mode-map [?\C-g]   'my-toggle-completions-window)
 
 
-;; Disable Tramp's completion function. I don't use it, and it gets in the way
-;; when trying to complete local paths.
-(require 'tramp)
-(setq tramp-completion-function-alist '())
+;; Disable Tramp mode. I don't use it, and it gets in the way when trying to
+;; complete local paths.
+(setq tramp-mode nil)
