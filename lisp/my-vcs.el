@@ -21,6 +21,11 @@
 (defvar my-gitk-cmd "gitk")
 (defvar my-gitk-load-limit 10000)
 
+;; For some reason, starting in Emacs 25.2 and/or Magit 20190906.2217, my
+;; function overrides below don't take effect unless I first manually load the
+;; file where their original definitions live.
+(load "magit-extras")
+
 (defun my-launch-gitk (arg)
   "Launch gitk showing all branches.
 With a prefix, don't limit the number of commits loaded to
