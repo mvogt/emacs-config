@@ -59,6 +59,7 @@ my-gitk-load-limit."
 (setq magit-log-show-margin nil)
 (setq magit-log-show-refname-after-summary nil)
 (setq magit-diff-refine-hunk t)
+(setq magit-log-section-commit-count 0)
 (setq git-commit-summary-max-length 78)
 (add-hook 'magit-mode-hook
   (function (lambda ()
