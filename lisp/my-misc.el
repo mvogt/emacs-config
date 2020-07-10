@@ -197,6 +197,29 @@ Cleans up ANSI formatting chars."
   )
 )
 
+(defun my-get-cur-line-val ()
+  "Return everything on the current line after colon space.
+If no colon space is found, return nil."
+  (let (line-start whole-line val)
+    (save-excursion
+      (move-beginning-of-line nil)
+      (setq line-start (point))
+      (move-end-of-line nil)
+      (setq whole-line (buffer-substring line-start (point)))
+      (if (string-match ": " whole-line)
+          (setq val (substring whole-line (match-end 0))))
+    )
+    val
+  )
+)
+
+(defun my-copy-cur-line-val ()
+  "Interactive wrapper for my-get-cur-line-val that copies to the clipboard."
+  (interactive)
+  (let ((val (my-get-cur-line-val)))
+    (if val (kill-new val))
+  )
+)
 
 ;;
 ;; Actual prefix key maps are the proper Emacs solution, but I want a menu of
@@ -313,6 +336,7 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
               (toggle-truncate-lines 0)    ; enable line wrap
               (local-set-key [?\C-c ?\C-8] 'org-list-make-subtree)
               (local-set-key [?\C-c ?\C-6] 'org-up-element)
+              (local-set-key [?\C-c ?w]    'my-copy-cur-line-val)
               (local-set-key [?\C-y]       'my-yank)
               (local-set-key [?\C-\']      'other-window)
               (local-set-key [?\M-h]
