@@ -59,8 +59,7 @@ and it can be: FIXME, NOTE, HACK.
   (let ((url-suffix (replace-regexp-in-string
                      "\\s +" "+"
                      (replace-regexp-in-string "+" "%2B" terms))))
-    (list (concat "https://duckduckgo.com/?q=" url-suffix)
-          (concat "https://google.com/?q=" url-suffix))
+    (list (concat "https://duckduckgo.com/?q=" url-suffix))
   )
 )
 
