@@ -69,18 +69,21 @@ and it can be: FIXME, NOTE, HACK.
 (autoload 'browse-url "browse-url")
 (require 'my-cur-word-or-region "grep-compile")
 (defun my-browse-url ()
-  "Wrapper for browse-url.  Prompts for URL, search, or Jira issue.
+  "Wrapper for browse-url that handles various specific applications.
+Prompts for a URL or various keywords that we transform into a URL.
 Defaults to the word around the point or the active region as the default.
 Search terms are passed as a single string to func my-format-search-url,
 which should return a URL string."
   (interactive)
-  (message
-   "[U]RL, [S]earch, [D]ictionary, [J]ira, [C]ommander, [P]ython, or [T]icker?")
+  (message (concat "[U]RL, [V]LC URL, [S]earch, [D]ictionary, [J]ira,"
+                   " [C]ommander, [P]ython, or [T]icker?"))
   (let ((which-func (read-char))
         (context (my-cur-word-or-region)))
     (cond
      ((= which-func ?u)
       (call-interactively 'browse-url))
+     ((= which-func ?v)
+      (call-process "vlc" nil 0 nil (read-string "VLC URL: " context)))
      ((= which-func ?s)
       (dolist (url (my-format-search-url
                     (read-string "Search terms: " context)))
@@ -106,12 +109,12 @@ which should return a URL string."
       (browse-url (format "%s%s" my-ecommander-base-url
                           (read-string "Electric Commander job ID: "
                                        context))))
+     ((= which-func ?p)
+      (browse-url (format "http://docs.python.org/3.7/library/%s.html"
+                          (read-string "Python 3.7 library: " context))))
      ((= which-func ?t)
       (browse-url (format "http://finance.yahoo.com/q/pr?s=%s+Profile"
                           (read-string "Stock ticker symbol: " context))))
-     ((= which-func ?p)
-      (browse-url (format "http://docs.python.org/2.7/library/%s.html"
-                          (read-string "Python 2.7 library: " context))))
     )
   )
 )
