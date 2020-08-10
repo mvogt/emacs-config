@@ -67,6 +67,10 @@
     (set-face-attribute 'default nil
                         :font "Go Mono"
                         :height 100)
+    ;; For some reason, under KDE Plasma, it ignores my selection of a red
+    ;; cursor in my color theme. Also, this is the only place I've found where
+    ;; this function call has an effect.
+    (set-cursor-color "#ff0000")
     (if (<= (length (frame-list)) 2)
         (modify-frame-parameters frame my-geometry))
   )
