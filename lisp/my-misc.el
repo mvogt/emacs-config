@@ -176,7 +176,7 @@ Cleans up ANSI formatting chars."
 )
 (defun my-enclose-square-brackets (&optional qty)
   (interactive "P")
-  (insert-pair qty ?[ ?])
+  (insert-pair qty ?\[ ?\])
 )
 (defun my-enclose-angle-brackets (&optional qty)
   (interactive "P")
@@ -411,7 +411,7 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 (global-set-key [?\C-x ?']    'my-enclose-single-quotes)   ; was expand-abbrev
 (global-set-key [?\C-x ?`]    'my-enclose-back-quotes)     ; was next-error
 (global-set-key [?\C-x ?{]    'my-enclose-braces)
-(global-set-key [?\C-x ?[]    'my-enclose-square-brackets) ; was backward-page
+(global-set-key [?\C-x ?\[]   'my-enclose-square-brackets) ; was backward-page
 (global-set-key [?\C-x ?<]    'my-enclose-angle-brackets)  ; was scroll-left
 (global-set-key [?\C-x ?>]    'my-enclose-tag)             ; was scroll-right
 (global-set-key [?\C-x ?\]]   'my-enclose-undo)            ; was forward-page
