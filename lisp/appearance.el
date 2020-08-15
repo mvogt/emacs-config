@@ -123,7 +123,6 @@
 ;; Enable context-sensitive colors and fonts.
 (global-font-lock-mode 1)
 
-;; Taken from a theme package that supports lots of different ways to load it.
-;; For my purposes, this is simpler than calling load-theme.
 (require 'color-theme-sanityinc-tomorrow)
 (color-theme-sanityinc-tomorrow--define-theme night)
+(enable-theme 'sanityinc-tomorrow-night)
