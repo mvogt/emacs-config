@@ -534,6 +534,7 @@ names to which it refers are bound."
       (org-document-info-keyword (:foreground ,green))
       (org-document-title (:weight bold :foreground ,orange :height 1.4))
       (org-done (:foreground ,green))
+      (org-drawer (:foreground ,orange))
       (org-ellipsis (:foreground ,comment))
       (org-footnote (:foreground ,aqua))
       (org-formula (:foreground ,red))

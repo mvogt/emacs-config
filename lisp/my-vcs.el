@@ -54,9 +54,7 @@ my-gitk-load-limit."
                                  (start-process "Git GUI" nil "git" "gui")))
 (define-key vc-prefix-map [?K] 'my-launch-gitk)
 
-(setq magit-popup-show-common-commands nil)
-(setq magit-branch-popup-show-variables nil)
-(setq magit-log-show-margin nil)
+(setq magit-branch-direct-configure nil)
 (setq magit-log-show-refname-after-summary nil)
 (setq magit-diff-refine-hunk t)
 (setq magit-log-section-commit-count 0)
