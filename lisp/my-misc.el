@@ -382,11 +382,18 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 			'toggle-read-only))
 )
 
+;; Avoid performance issues in files with very long lines.
+(global-so-long-mode 1)
+
 ;; Even though it's correct in a fixed-width font to use two spaces after a
 ;; period at the end of a sentence, and even though I always edit in Emacs in
 ;; a fixed-width font, it causes no end of compatibility hassles with the rest
 ;; of the world.
 (setq sentence-end-double-space nil)
+
+;; When navigating to the beginning of the minibuffer, go to the beginning of
+;; the user input rather than the actual beginning of the buffer.
+(setq minibuffer-beginning-of-buffer-movement t)
 
 ;; I never use the default upcase-word binding of M-u.  It's much more useful
 ;; to me as the universal prefix because it allows me to hold down Alt for the

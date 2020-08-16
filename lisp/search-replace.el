@@ -161,6 +161,10 @@ call the wrapped function with minimal coding pain."
   (query-replace-multibuf-worker 'query-replace-regexp regexp to-string)
 )
 
+;; Show count of matches in isearch.
+(setq isearch-lazy-count t)
+(setq isearch-lazy-highlight t)
+
 (global-set-key [?\C-s]       'isearch-forward)      ; already the default
 (global-set-key [?\C-r]       'query-replace-regexp)
 (global-set-key [?\M-r]       'query-replace)
