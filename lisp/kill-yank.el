@@ -18,16 +18,6 @@
 ;;----------------------------------------------------------------------------
 ;; Cut/copy/paste, kill/yank
 ;;
-;; When manipulating the kill ring, always set the X clipboard to the last
-;; entry in the kill ring. By default, only the X primary selection is
-;; touched. This is enabled by default in v24.
-;;
-;; Note: The following related functions only affect the clipboard and not the
-;; primary selection: clipboard-kill-ring-save, clipboard-kill-region,
-;; clipboard-yank.
-;; See also: http://www.emacswiki.org/emacs/CopyAndPaste
-(setq x-select-enable-clipboard t)
-
 ;; Highlight region selected and keep region available when not highlighted.
 (transient-mark-mode t)
 (setq mark-even-if-inactive t)
