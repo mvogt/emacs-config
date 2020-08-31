@@ -522,7 +522,7 @@ names to which it refers are bound."
       (org-agenda-date (:foreground ,blue :underline nil))
       (org-agenda-done (:foreground ,green))
       (org-agenda-dimmed-todo-face (:foreground ,comment))
-      (org-block (:background ,low-contrast-bg))
+      (org-block (:foreground ,orange))
       (org-block-begin-line (:background ,background :foreground ,comment :slant italic))
       (org-block-end-line (:background ,background :foreground ,comment :slant italic))
       (org-code (:foreground ,yellow))
