@@ -60,6 +60,10 @@
 (global-set-key [home]    'move-beginning-of-line) ; already the default
 (global-set-key [end]     'move-end-of-line)       ; already the default
 
+;; Work around wrong key being detected when I press End when running Emacs
+;; inside tmux.
+(define-key function-key-map [select] [end])
+
 ;; Set S-up/down (arrow keys) to scroll the current window up/down one line.
 ;; I used to set C-up/down for the same thing, but I found it interferes with
 ;; some local modes.
