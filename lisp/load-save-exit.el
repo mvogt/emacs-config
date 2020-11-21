@@ -51,13 +51,6 @@ Only intended for interactive use."
   (save-buffers-kill-emacs)
 )
 
-;; ffap is much better than plain old find-file.
-(global-set-key [?\C-x ?\C-f]     'find-file-at-point)
-(global-set-key [?\C-x ?\M-f]     'find-file-at-point)
-(global-set-key [?\M-i]           'find-file-at-point)
-(global-set-key [?\C-x ?i]        'ffap-other-window-old)
-(global-set-key [?\C-x ?\M-i]     'ffap-other-window-old)
-
 (global-set-key [?\C-\;]          'save-buffer)
 (global-set-key [?\M-s]           'save-buffer)
 (global-set-key [?\C-x ?\M-s]     'save-buffer)

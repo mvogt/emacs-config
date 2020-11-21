@@ -18,6 +18,105 @@
 ;;----------------------------------------------------------------------------
 ;; Miscellaneous
 ;;
+(defun my-del-from-alist-by-cdr (lst victim)
+  "Delete an element from alist 'lst'
+by looking for the cdr of that matches 'victim'."
+  (delete-if (lambda (el) (eq (cdr el) victim))
+             (symbol-value lst))
+)
+
+;; Helm
+;;
+(require 'helm)
+(require 'helm-config)
+(setq helm-turn-on-recentf nil)
+(setq helm-buffers-fuzzy-matching t)
+(setq helm-recentf-fuzzy-match t)
+
+;; Prefix key that's the main entry point for Helm features. The default C-x c
+;; is very awkward.
+(global-set-key [?\M-g ?h]    'helm-command-prefix)
+(global-set-key [?\M-g ?\M-h] 'helm-command-prefix)
+(global-unset-key [?\C-x ?c])
+
+(global-set-key [?\M-g ?b]    'helm-mini)
+(global-set-key [?\M-g ?\M-b] 'helm-mini)
+(global-set-key [?\M-i]       'helm-find-files)
+(global-set-key [?\C-x ?\C-f] 'helm-find-files)
+(global-set-key [?\C-x ?\M-f] 'helm-find-files)
+(global-set-key [?\M-y]       'helm-show-kill-ring)  ; replaces yank-pop
+
+;; This function is hard to describe. It basically means do the intuitive
+;; thing. For some reason, the default for this is C-z.
+(define-key helm-map [tab]   'helm-execute-persistent-action)
+(define-key helm-map [?\C-i] 'helm-execute-persistent-action)
+;; Most helm sessions have a choice of different actions you can perform on
+;; your selected files. This toggles to a menu showing those action choices.
+(define-key helm-map [backtab] 'helm-select-action)
+
+(helm-mode 1)
+
+;; Action menu entries I never use. Declutter those menus.
+(let ((blacklist '(find-alternate-file
+                   find-file-other-frame
+                   helm-buffers-browse-project
+                   helm-ediff-marked-buffers
+                   helm-ff-browse-project
+                   helm-ff-cache-add-file
+                   helm-ff-etags-select
+                   helm-ff-fd
+                   helm-ff-gid
+                   helm-ff-locate
+                   helm-ff-mail-attach-files
+                   helm-ff-pdfgrep
+                   helm-ff-print
+                   helm-ff-query-replace-fnames-on-marked
+                   helm-ff-switch-to-shell
+                   helm-ff-touch-files
+                   helm-files-insert-as-org-link
+                   helm-find-file-as-root
+                   helm-find-files-backup
+                   helm-find-files-ediff-files
+                   helm-find-files-ediff-merge-files
+                   helm-find-files-eshell-command-on-file
+                   helm-find-files-grep
+                   helm-find-files-hardlink
+                   helm-marked-files-in-dired
+                   helm-open-file-externally
+                   hexl-find-file
+                   switch-to-buffer-other-frame
+                   switch-to-buffer-other-tab)))
+  (loop for action-menu in '(helm-find-files-actions
+                             helm-type-file-actions
+                             helm-type-buffer-actions)
+        do (mapcar (lambda (victim)
+                     (my-del-from-alist-by-cdr action-menu victim))
+                   blacklist)
+  )
+)
+;; These are replaced below
+(mapcar
+ (lambda (victim) (my-del-from-alist-by-cdr 'helm-find-files-actions victim))
+ '(helm-ff-find-sh-command helm-find-files-other-window))
+
+;; To search paths below the current location, C-s is much more intuitive
+;; than the default "C-c /". The original function on C-s is still
+;; available on "M-g s".
+(add-to-list
+ 'helm-find-files-actions
+ '("Search subtree paths `C-s'" . helm-ff-find-sh-command) t)
+(define-key helm-find-files-map [?\C-s] 'helm-ff-run-find-sh-command)
+
+;; To open the selection in the other window, C-o is much easier to type
+;; than the default "C-c o".
+(add-to-list
+ 'helm-find-files-actions
+ '("Open file other window `C-o'" . helm-find-files-other-window) t)
+(define-key helm-find-files-map    [?\C-o] 'helm-ff-run-switch-other-window)
+(define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
+(define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
+
+
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
 ;; It's useful for aliasing prefixes other than C-x.  (The method I used for
 ;; aliasing C-x doesn't work for C-c.  It's probably because C-c is treated
@@ -267,28 +366,26 @@ their own."
 functions that I don't use often enough to bind to keys of their
 own."
   (interactive)
-  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, browse [k]ill ring,
-[m]an cleanup, [x] unfontify, [t]abify, [u]ntabify,
-describe [c]har, describe ke[y], [g]db many windows, i[s]earch fwd word,
-re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
+  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, [m]an cleanup,
+[t]abify, [u]ntabify, [x] unfontify, describe [c]har, describe ke[y],
+[g]db many windows, i[s]earch fwd word, re[n]ame uniquely, [l]ist colors,
+customize [f]ace?")
   (let ((which-func (read-char)))
     (cond
      ((= which-func ?e) (eval-buffer))
      ((= which-func ?r) (eval-region (point) (mark)))
      ((= which-func ?h) (describe-variable 'command-history))
-     ((= which-func ?k) (browse-kill-ring))
      ((= which-func ?m) (my-man-cleanup))
-     ((= which-func ?x) (my-unfontify))
      ((= which-func ?t) (call-interactively 'tabify))
      ((= which-func ?u) (call-interactively 'untabify))
+     ((= which-func ?x) (my-unfontify))
      ((= which-func ?c) (call-interactively 'describe-char))
      ((= which-func ?y) (my-describe-key))
      ;; Invoke after M-x gdb. Provided by built-in gdb-ui.el.
      ((= which-func ?g) (call-interactively 'gdb-many-windows))
      ((= which-func ?s) (isearch-forward-word))
      ((= which-func ?n) (rename-uniquely))
-     ((= which-func ?l) (list-colors-display))
-     ((= which-func ?o) (call-interactively 'read-color))
+     ((= which-func ?l) (helm-colors))
      ((= which-func ?f) (call-interactively 'customize-face))
     )
   )
@@ -432,9 +529,6 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 (global-set-key [?\C-x ?\M-u] 'my-browse-url)
 (global-set-key [f8]          'gdb)
 
-;; Dangerously similar to C-x C-c, but I set confirm-kill-emacs.
-(global-set-key [?\C-x ?c]    'calc)
-
 (global-set-key [?\M-g ?\M-m] 'my-prefix-menu-modes)
 (global-set-key [?\M-g ?\M-v] 'my-prefix-menu-misc)
 (global-set-key [?\M-g ?4]    'my-recursive-grep)
@@ -465,7 +559,7 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 ;; don't involve the Ctrl key.  Moving the traditional M-x to double M-x is an
 ;; acceptable inconvenience to me.
 (global-set-key [?\M-x]       'Control-X-prefix)
-(global-set-key [?\C-x ?\M-x] 'execute-extended-command)
+(global-set-key [?\C-x ?\M-x] 'helm-M-x)
 
 (when (string-equal system-type "darwin")
   (setq mac-command-modifier 'meta)
