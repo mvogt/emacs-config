@@ -112,32 +112,13 @@ First prompts for the type of files search."
                                     nil default-directory))
         )
     (setenv "colon" ":")
-    (if (>= emacs-major-version 22)
-        ;; Much easier, simpler, and better starting in ver 22.  I may want to
-        ;; change my key binding to just rgrep in ver 22 instead of this
-        ;; function.  However, I like my sequence of prompts better.
-        ;;
-        ;; grep has recently started printing a warning about GREP_OPTIONS
-        ;; being deprecated, but Emacs v24 still uses it unconditionally to
-        ;; set --color. My work-around is to unset it here and specify --color
-        ;; in my command.
-        (compilation-start (concat "cd " start-dir " && unset GREP_OPTIONS ; "
-                                   my-grep-cmd)
-                           (car cmd-spec))
-      (let* ((corrected-start-dir (if (string= "/" (substring start-dir -1))
-                                      start-dir
-                                    (concat start-dir "/")))
-                                        ; must have trailing slash
-             ;; We're not supposed to set default-directory directly, but
-             ;; that's the only way to influence the starting point of
-             ;; compile-internal.  This may break in a future version of
-             ;; Emacs.
-             (default-directory corrected-start-dir)
-             (compilation-process-setup-function 'grep-process-setup))
-        (compile-internal my-grep-cmd "No more grep hits" "grep" nil
-                          grep-regexp-alist)
-      )
-    )
+    ;; grep has recently started printing a warning about GREP_OPTIONS
+    ;; being deprecated, but Emacs v24 still uses it unconditionally to
+    ;; set --color. My work-around is to unset it here and specify --color
+    ;; in my command.
+    (compilation-start (concat "cd " start-dir " && unset GREP_OPTIONS ; "
+                               my-grep-cmd)
+                       (car cmd-spec))
   )
 )
 
