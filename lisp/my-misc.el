@@ -383,7 +383,8 @@ re[n]ame uniquely, [l]ist colors, read col[o]r, customize [f]ace?")
 )
 
 ;; Avoid performance issues in files with very long lines.
-(global-so-long-mode 1)
+(if (fboundp 'global-so-long-mode)
+    (global-so-long-mode 1))
 
 ;; Even though it's correct in a fixed-width font to use two spaces after a
 ;; period at the end of a sentence, and even though I always edit in Emacs in
