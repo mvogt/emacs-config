@@ -29,6 +29,7 @@ by looking for the cdr of that matches 'victim'."
 ;;
 (require 'helm)
 (require 'helm-config)
+(require 'helm-find)
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-recentf-fuzzy-match t)
 (setq helm-ff-file-name-history-use-recentf t)
@@ -101,7 +102,11 @@ by looking for the cdr of that matches 'victim'."
 ;; These are replaced below
 (mapcar
  (lambda (victim) (my-del-from-alist-by-cdr 'helm-find-files-actions victim))
- '(helm-ff-find-sh-command helm-find-files-other-window))
+ '(helm-ff-find-sh-command
+   helm-find-files-other-window
+   helm-open-file-with-default-tool))
+(my-del-from-alist-by-cdr 'helm-type-file-actions
+                          'helm-open-file-with-default-tool)
 
 ;; To search paths below the current location, C-s is much more intuitive
 ;; than the default "C-c /". The original function on C-s is still
@@ -120,15 +125,70 @@ by looking for the cdr of that matches 'victim'."
 (define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
 
+;; The default for M-D in the buffer menu is to quit the menu after deleting.
+;; I never want to do that. This stays in the menu. The original mapping for
+;; this was C-c d, and I left it also on that key.
+(define-key helm-buffer-map [?\M-D] 'helm-buffer-run-kill-persistent)
+
+;; The default mapping for C-/ is helm-ff-run-fd, but I don't use the fd
+;; command.
+(define-key helm-find-files-map [?\C-/] 'helm-ff-undo)
+
+;; The default mapping is C-c X. I haven't overwritten that.
+(add-to-list
+ 'helm-find-files-actions
+ '("Open file with default tool `C-c C-j'" . helm-open-file-with-default-tool)
+ t)
+(add-to-list
+ 'helm-type-file-actions
+ '("Open file with default tool `C-c C-j'" . helm-open-file-with-default-tool)
+ t)
+(define-key helm-find-files-map    [?\C-c ?\C-j]
+  'helm-ff-run-open-file-with-default-tool)
+(define-key helm-generic-files-map [?\C-c ?\C-j]
+  'helm-ff-run-open-file-with-default-tool)
+
+;; The default mapping is C-x r b. I haven't overwritten that. It doesn't
+;; appear in the action menu by default.
+(add-to-list
+ 'helm-find-files-actions
+ '("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
+   . (lambda (x) (require 'helm-bookmark) (helm-ff-bookmark))) t)
+(define-key helm-find-files-map [?\C-c ?\C-b]
+  'helm-find-files-switch-to-bookmark)
+
+;; The default mapping is C-x r m. I haven't overwritten that. It doesn't
+;; appear in the action menu by default, and I haven't figured out a good way
+;; to add it. So, I put a keyboard hint in the bookmark action created above.
+(define-key helm-find-files-map [?\C-c ?\C-m] 'helm-ff-bookmark-set)
+
+;; The default mapping is C-c h. I haven't overwritten that.
+;; The default for M-r is rotate a viewed image file right. (M-l rotates
+;; left.) I don't have that rotation feature working, and I'd never use it.
+(define-key helm-find-files-map [?\M-r] 'helm-ff-file-name-history)
+
+;; Helm doesn't provide any key mapping or action menu for toggling this
+;; boolean. I create a key mapping and a hydra entry.
+(defun my-helm-toggle-full-path-search ()
+  "Toggle boolean helm-findutils-search-full-path"
+  (interactive)
+  (setq helm-findutils-search-full-path
+        (if helm-findutils-search-full-path nil t))
+)
+(define-key helm-generic-files-map
+  [?\C-c ?\C-a] 'my-helm-toggle-full-path-search)
+
 ;; https://github.com/abo-abo/hydra
 (defhydra my-helm-main (:color blue)
   "
 Helm:
-_m_ Local and global mark rings     _o_ Search current buffer with helm-occur
+^ ^                                 _o_ Search current buffer with helm-occur
+_m_ Local and global mark rings     _x_ Regexp builder/tester
 _b_ Bookmarks                       _i_ Imenu current buffer
 _r_ Recent files                    _I_ Imenu all buffers
 _f_ Menu of buffers, recent files, bookmarks, and current dir
 _R_ Resume last Helm (with prefix, first select from multiple)
+_a_ Toggle searching in paths as well as files names (%`helm-findutils-search-full-path)
 
 _w_ Emacs registers                 _M_ Manual pages (using WOman)
 _c_ Colors                          _X_ Helm docs
@@ -144,6 +204,7 @@ _P_ Emacs processes
   ("X" helm-documentation nil)
   ("Y" helm-info-at-point nil)
   ("Z" helm-info-emacs nil)
+  ("a" my-helm-toggle-full-path-search nil :color red)
   ("b" helm-filtered-bookmarks nil)
   ("c" helm-colors nil)
   ("f" helm-multi-files nil)
@@ -153,6 +214,7 @@ _P_ Emacs processes
   ("p" helm-list-elisp-packages nil)
   ("r" helm-recentf nil)
   ("w" helm-register nil)
+  ("x" helm-regexp nil)
 )
 
 (global-set-key [?\C-h ?a]    'helm-apropos)
