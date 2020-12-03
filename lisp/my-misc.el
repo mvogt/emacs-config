@@ -33,14 +33,8 @@ by looking for the cdr of that matches 'victim'."
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-recentf-fuzzy-match t)
 
-;; Prefix key that's the main entry point for Helm features. The default C-x c
-;; is very awkward.
-(global-set-key [?\M-g ?h]    'helm-command-prefix)
-(global-set-key [?\M-g ?\M-h] 'helm-command-prefix)
-(global-unset-key [?\C-x ?c])
-
-(global-set-key [?\M-g ?b]    'helm-mini)
-(global-set-key [?\M-g ?\M-b] 'helm-mini)
+(global-set-key [?\M-g ?b]    'helm-multi-files)
+(global-set-key [?\M-g ?\M-b] 'helm-multi-files)
 (global-set-key [?\M-i]       'helm-find-files)
 (global-set-key [?\C-x ?\C-f] 'helm-find-files)
 (global-set-key [?\C-x ?\M-f] 'helm-find-files)
@@ -55,6 +49,16 @@ by looking for the cdr of that matches 'victim'."
 (define-key helm-map [backtab] 'helm-select-action)
 
 (helm-mode 1)
+
+;; Prevents helm from activating on any of these actions.
+(loop for trigger in '((dired-do-rename)
+                       (dired-do-copy)
+                       (dired-do-symlink)
+                       (dired-do-relsymlink)
+                       (dired-do-hardlink)
+                       (write-file)
+                       (basic-save-buffer))
+      do (add-to-list 'helm-completing-read-handlers-alist trigger))
 
 ;; Action menu entries I never use. Declutter those menus.
 (let ((blacklist '(find-alternate-file
@@ -115,6 +119,47 @@ by looking for the cdr of that matches 'victim'."
 (define-key helm-find-files-map    [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
+
+;; https://github.com/abo-abo/hydra
+(defhydra my-helm-main (:color blue)
+  "
+Helm:
+_m_ Local and global mark rings     _o_ Search current buffer with helm-occur
+_b_ Bookmarks                       _i_ Imenu current buffer
+_r_ Recent files                    _I_ Imenu all buffers
+_f_ Menu of buffers, recent files, bookmarks, and current dir
+_R_ Resume last Helm (with prefix, first select from multiple)
+
+_w_ Emacs registers                 _M_ Manual pages (using WOman)
+_c_ Colors                          _X_ Helm docs
+_C_ Complete Emacs Lisp symbol      _Y_ GNU Info
+_p_ Emacs packages                  _Z_ GNU Info for Emacs topics only
+_P_ Emacs processes
+"
+  ("C" helm-lisp-completion-at-point nil)
+  ("I" helm-imenu-in-all-buffers nil)
+  ("M" helm-man-woman nil)
+  ("P" helm-list-emacs-process nil)
+  ("R" helm-resume nil)
+  ("X" helm-documentation nil)
+  ("Y" helm-info-at-point nil)
+  ("Z" helm-info-emacs nil)
+  ("b" helm-filtered-bookmarks nil)
+  ("c" helm-colors nil)
+  ("f" helm-multi-files nil)
+  ("i" helm-imenu nil)
+  ("m" helm-all-mark-rings nil)
+  ("o" helm-occur nil)
+  ("p" helm-list-elisp-packages nil)
+  ("r" helm-recentf nil)
+  ("w" helm-register nil)
+)
+
+(global-set-key [?\C-h ?a]    'helm-apropos)
+;; I never use the default prefix (C-x c). Instead, I use a hydra with a
+;; subset of the helm functions available through the prefix key.
+(global-set-key [?\M-g ?h]    'my-helm-main/body)
+(global-set-key [?\M-g ?\M-h] 'my-helm-main/body)
 
 
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
@@ -296,17 +341,15 @@ _k_ Indent with tabs (toggle)
 (defhydra my-misc-menu (:color blue)
   "
 Call:
-_v_ Open in VLC
-_e_ eval-buffer    _f_ customize-face            _s_ isearch-forward-word
-_t_ tabify         _c_ describe-char             _n_ rename-uniquely
-_u_ untabify       _y_ single-key-description    _l_ List colors
+_e_ eval-buffer    _f_ customize-face            _v_ Open in VLC
+_t_ tabify         _c_ describe-char             _s_ isearch-forward-word
+_u_ untabify       _y_ single-key-description    _n_ rename-uniquely
 _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 "
   ("c" describe-char nil)
   ("e" eval-buffer nil)
   ("f" customize-face nil)
   ("h" (describe-variable 'command-history) nil)
-  ("l" helm-colors nil)
   ("m" my-man-cleanup nil)
   ("n" rename-uniquely nil)
   ("s" isearch-forward-word nil)
