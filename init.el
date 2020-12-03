@@ -139,7 +139,7 @@
  ;; Installed packages
  '(package-selected-packages
    (quote (ag async browse-kill-ring dired-efap dropdown-list
-           exec-path-from-shell go-mode groovy-mode helm hexrgb htmlize magit
-           org powershell protobuf-mode rainbow-mode tree-mode yaml-mode
+           exec-path-from-shell go-mode groovy-mode helm hexrgb htmlize hydra
+           magit org powershell protobuf-mode rainbow-mode tree-mode yaml-mode
            yasnippet)))
 )

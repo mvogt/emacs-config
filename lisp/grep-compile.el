@@ -60,39 +60,35 @@
 (provide 'my-cur-word-or-region)
 
 (autoload 'compile-internal "compile")
-(defun my-recursive-grep ()
+(defun my-recursive-grep-worker (which-func)
   "Search all files recursively.
 Like grep-find, but prompts for a starting directory, guesses the search
 string from context, and adds my favorite find and grep options.
-First prompts for the type of files search."
+Intended to be called from a hydra with the type of search."
   (interactive)
-  (message (concat "Search [a]ll files, for one e[x]tension,"
-                   " for [m]ultiple extensions,"
-                   "\n[j]ust file names, or with a[g]?"))
   (let* ((my-xargs-grep (concat "xargs -0 grep --line-number"
                                 " --ignore-case --no-messages --color=auto"
                                 " --extended-regexp -e"))
          (find-args-ignore "-o -name .git -prune -o -name .svn -prune")
-         (which-func (read-char))
          (cmd-spec
           (cond
-           ((= which-func ?a)
+           ((eq which-func 'all)
             (list 'grep-mode
                   (format "find . -type f -print0 %s \\\n| %s \"%s\""
                           find-args-ignore my-xargs-grep
                           (my-cur-word-or-region))))
-           ((= which-func ?x)
+           ((eq which-func 'ext)
             (list 'grep-mode
                   (format (concat "find . -type f -name \"*.c\" -print0 "
                                   find-args-ignore " \\\n| %s \"%s\"")
                           my-xargs-grep (my-cur-word-or-region))))
-           ((= which-func ?m)
+           ((eq which-func 'multi)
             (list 'grep-mode
                   (format (concat "find . -type f -name \"*.c\" -print0"
                                   " -o -name \"*.h\" -print0 "
                                   find-args-ignore " \\\n| %s \"%s\"")
                           my-xargs-grep (my-cur-word-or-region))))
-           ((= which-func ?j)
+           ((eq which-func 'fnames)
             (list 'grep-mode
                   (format (concat "find . -type f -name \"%s\" -print "
                                   find-args-ignore " | while read x ; do"
@@ -122,10 +118,26 @@ First prompts for the type of files search."
   )
 )
 
+;; https://github.com/abo-abo/hydra
+(defhydra my-recursive-grep (:color blue)
+  "
+Recursive file search:
+_x_ one extension                       _g_ ag (Silver Searcher)
+_m_ multiple extensions                 _j_ just file names
+_a_ all files with find | xargs grep
+"
+  ("x" (my-recursive-grep-worker 'ext) nil)
+  ("m" (my-recursive-grep-worker 'multi) nil)
+  ("a" (my-recursive-grep-worker 'all) nil)
+  ("g" (my-recursive-grep-worker 'ag) nil)
+  ("j" (my-recursive-grep-worker 'fnames) nil)
+)
+
 (global-set-key [f9]          'compile)
 (global-set-key [?\C-x ?7]    'compile)
-(global-set-key [f4]          'my-recursive-grep)
-(global-set-key [?\M-g ?\M-s] 'my-recursive-grep)
+(global-set-key [f4]          'my-recursive-grep/body)
+;; Extra binding for MacOS because of the infernal touch bar.
+(global-set-key [?\M-g ?\M-s] 'my-recursive-grep/body)
 ;; For find-tag, must do visit-tags-table first (once per session).
 (global-set-key [C-f4] 'find-tag)
 ;; For grep and compile buffers (or anything in compilation-mode).

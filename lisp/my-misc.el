@@ -154,70 +154,6 @@ and it can be: FIXME, NOTE, HACK.
                   (format-time-string "%Y%m%d" (current-time))))
 )
 
-(defun my-format-search-url (terms)
-  (let ((url-suffix (replace-regexp-in-string
-                     "\\s +" "+"
-                     (replace-regexp-in-string "+" "%2B" terms))))
-    (list (concat "https://duckduckgo.com/?q=" url-suffix))
-  )
-)
-
-(defvar my-jira-base-url "https://jira.atlassian.com/browse/")
-(defvar my-jira-default-prefix "JRA-")
-
-(autoload 'browse-url "browse-url")
-(require 'my-cur-word-or-region "grep-compile")
-(defun my-browse-url ()
-  "Wrapper for browse-url that handles various specific applications.
-Prompts for a URL or various keywords that we transform into a URL.
-Defaults to the word around the point or the active region as the default.
-Search terms are passed as a single string to func my-format-search-url,
-which should return a URL string."
-  (interactive)
-  (message (concat "[U]RL, [V]LC URL, [S]earch, [D]ictionary, [J]ira,"
-                   " [C]ommander, [P]ython, or [T]icker?"))
-  (let ((which-func (read-char))
-        (context (my-cur-word-or-region)))
-    (cond
-     ((= which-func ?u)
-      (call-interactively 'browse-url))
-     ((= which-func ?v)
-      (call-process "vlc" nil 0 nil (read-string "VLC URL: " context)))
-     ((= which-func ?s)
-      (dolist (url (my-format-search-url
-                    (read-string "Search terms: " context)))
-        ;; I set the "generic" browser to Chrome in my ~/.emacs.local.el file.
-        ;; Using it here works around an unexplained delay with Firefox when
-        ;; calling browse-url twice in a row.
-        (if browse-url-generic-program
-            (browse-url-generic url)
-          (browse-url url))
-      ))
-     ((= which-func ?d)
-      (browse-url (format "http://www.onelook.com/?w=%s"
-                          (read-string "OneLook.com dictionary search: "
-                                       context))))
-     ((= which-func ?j)
-      (browse-url
-       (concat my-jira-base-url
-               (read-string "Jira issue: "
-                            (if (string-match "^[A-Za-z]*-[0-9]*$" context)
-                                context
-                              (concat my-jira-default-prefix context))))))
-     ((= which-func ?c)
-      (browse-url (format "%s%s" my-ecommander-base-url
-                          (read-string "Electric Commander job ID: "
-                                       context))))
-     ((= which-func ?p)
-      (browse-url (format "http://docs.python.org/3.7/library/%s.html"
-                          (read-string "Python 3.7 library: " context))))
-     ((= which-func ?t)
-      (browse-url (format "http://finance.yahoo.com/q/pr?s=%s+Profile"
-                          (read-string "Stock ticker symbol: " context))))
-    )
-  )
-)
-
 ;; (format "%c" val) is adequate but not as fancy as (single-key-description).
 (require 'my-cur-word-or-region "grep-compile")
 (defun my-describe-key ()
@@ -322,73 +258,65 @@ If no colon space is found, return nil."
   )
 )
 
-;;
-;; Actual prefix key maps are the proper Emacs solution, but I want a menu of
-;; all my choices.  I guess I could customize the pull-down menus, but those
-;; waste screen real estate, and I've had them disabled for years.
-;;
-
-(defun my-prefix-menu-modes ()
-  "Display a shortcut menu in the minibuffer of my favorite mode
-enable functions that I don't use often enough to bind to keys of
-their own."
-  (interactive)
-  (message "Mode [d]iff, [t]ext, [h]tml, [x]ml, [s]hell, [c]++, [m]ake, c[p]erl, p[y]thon,
-[r]uby, [j]avascript, [J]ava, proto[b]uf, [e]macs lisp, lisp [i]nteraction,
-[w]ord wrap, [l]ine numbers, whitesp[a]ce, [k] toggle indent w/tabs?")
-  (let ((which-func (read-char)))
-    (cond
-     ((= which-func ?d) (diff-mode))
-     ((= which-func ?t) (text-mode))
-     ((= which-func ?h) (html-mode))
-     ((= which-func ?x) (xml-mode))
-     ((= which-func ?s) (sh-mode))
-     ((= which-func ?c) (c++-mode))
-     ((= which-func ?m) (makefile-mode))
-     ((= which-func ?p) (cperl-mode))
-     ((= which-func ?y) (python-mode))
-     ((= which-func ?r) (ruby-mode))
-     ((= which-func ?j) (js-mode))
-     ((= which-func ?J) (java-mode))
-     ((= which-func ?b) (protobuf-mode))
-     ((= which-func ?e) (emacs-lisp-mode))
-     ((= which-func ?i) (lisp-interaction-mode))
-     ((= which-func ?w) (visual-line-mode))
-     ((= which-func ?l) (linum-mode))
-     ((= which-func ?a) (call-interactively 'whitespace-mode))
-     ((= which-func ?k) (toggle-indent-tabs-mode))
-    )
-  )
+;; https://github.com/abo-abo/hydra
+(defhydra my-mode-menu (:color blue)
+  "
+Switch mode:
+_d_ Diff       _s_ Bash          _y_ Python
+_t_ Text       _c_ C++           _r_ Ruby
+_h_ HTML       _m_ Makefile      _j_ Javascript
+_x_ XML        _p_ CPerl         _J_ Java
+_v_ Visual lines (toggle)    ^^  _b_ Protobuf
+_l_ Line numbers (toggle)    ^^  _e_ Emacs Lisp
+_a_ Show whitespace (toggle) ^^  _i_ Emacs Lisp interactive
+_k_ Indent with tabs (toggle)
+"
+  ("J" java-mode nil)
+  ("a" whitespace-mode nil)
+  ("b" protobuf-mode nil)
+  ("c" c++-mode nil)
+  ("d" diff-mode nil)
+  ("e" emacs-lisp-mode nil)
+  ("h" html-mode nil)
+  ("i" lisp-interaction-mode nil)
+  ("j" js-mode nil)
+  ("k" toggle-indent-tabs-mode nil)
+  ("l" linum-mode nil)
+  ("m" makefile-mode nil)
+  ("p" cperl-mode nil)
+  ("r" ruby-mode nil)
+  ("s" sh-mode nil)
+  ("t" text-mode nil)
+  ("v" visual-line-mode nil)
+  ("x" xml-mode nil)
+  ("y" python-mode nil)
 )
 
-(defun my-prefix-menu-misc ()
-  "Display a shortcut menu in the minibuffer of miscellaneous
-functions that I don't use often enough to bind to keys of their
-own."
-  (interactive)
-  (message "Call [e]val buf, eval [r]egion, cmd [h]ist, [m]an cleanup,
-[t]abify, [u]ntabify, [x] unfontify, describe [c]har, describe ke[y],
-[g]db many windows, i[s]earch fwd word, re[n]ame uniquely, [l]ist colors,
-customize [f]ace?")
-  (let ((which-func (read-char)))
-    (cond
-     ((= which-func ?e) (eval-buffer))
-     ((= which-func ?r) (eval-region (point) (mark)))
-     ((= which-func ?h) (describe-variable 'command-history))
-     ((= which-func ?m) (my-man-cleanup))
-     ((= which-func ?t) (call-interactively 'tabify))
-     ((= which-func ?u) (call-interactively 'untabify))
-     ((= which-func ?x) (my-unfontify))
-     ((= which-func ?c) (call-interactively 'describe-char))
-     ((= which-func ?y) (my-describe-key))
-     ;; Invoke after M-x gdb. Provided by built-in gdb-ui.el.
-     ((= which-func ?g) (call-interactively 'gdb-many-windows))
-     ((= which-func ?s) (isearch-forward-word))
-     ((= which-func ?n) (rename-uniquely))
-     ((= which-func ?l) (helm-colors))
-     ((= which-func ?f) (call-interactively 'customize-face))
-    )
-  )
+;; https://github.com/abo-abo/hydra
+(defhydra my-misc-menu (:color blue)
+  "
+Call:
+_v_ Open in VLC
+_e_ eval-buffer    _f_ customize-face            _s_ isearch-forward-word
+_t_ tabify         _c_ describe-char             _n_ rename-uniquely
+_u_ untabify       _y_ single-key-description    _l_ List colors
+_x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
+"
+  ("c" describe-char nil)
+  ("e" eval-buffer nil)
+  ("f" customize-face nil)
+  ("h" (describe-variable 'command-history) nil)
+  ("l" helm-colors nil)
+  ("m" my-man-cleanup nil)
+  ("n" rename-uniquely nil)
+  ("s" isearch-forward-word nil)
+  ("t" tabify nil)
+  ("u" untabify nil)
+  ("v" (call-process "vlc" nil 0 nil
+                     (read-string "VLC URL: " (my-cur-word-or-region)))
+       nil)
+  ("x" my-unfontify nil)
+  ("y" my-describe-key nil)
 )
 
 
@@ -526,11 +454,10 @@ customize [f]ace?")
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
-(global-set-key [?\C-x ?\M-u] 'my-browse-url)
 (global-set-key [f8]          'gdb)
 
-(global-set-key [?\M-g ?\M-m] 'my-prefix-menu-modes)
-(global-set-key [?\M-g ?\M-v] 'my-prefix-menu-misc)
+(global-set-key [?\M-g ?\M-m] 'my-mode-menu/body)
+(global-set-key [?\M-g ?\M-v] 'my-misc-menu/body)
 (global-set-key [?\M-g ?4]    'my-recursive-grep)
 (global-set-key [?\M-g ?\M-4] 'my-recursive-grep)
 (global-set-key [?\M-g ?5]    'my-dired-sandbox)
