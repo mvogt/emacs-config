@@ -29,9 +29,9 @@ by looking for the cdr of that matches 'victim'."
 ;;
 (require 'helm)
 (require 'helm-config)
-(setq helm-turn-on-recentf nil)
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-recentf-fuzzy-match t)
+(setq helm-ff-file-name-history-use-recentf t)
 
 (global-set-key [?\M-g ?b]    'helm-multi-files)
 (global-set-key [?\M-g ?\M-b] 'helm-multi-files)

@@ -51,6 +51,13 @@ Only intended for interactive use."
   (save-buffers-kill-emacs)
 )
 
+(recentf-mode 1)
+;; I never want to save my recent files to disk. The only way I see to do that
+;; is override the internal recentf.el save function to a nop.
+(defun recentf-save-list ()
+  (interactive)
+)
+
 (global-set-key [?\C-\;]          'save-buffer)
 (global-set-key [?\M-s]           'save-buffer)
 (global-set-key [?\C-x ?\M-s]     'save-buffer)
