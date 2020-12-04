@@ -209,7 +209,7 @@ _P_ Emacs processes
   ("b" helm-filtered-bookmarks nil)
   ("c" helm-colors nil)
   ("f" helm-multi-files nil)
-  ("i" helm-imenu nil)
+  ("i" helm-semantic-or-imenu nil)
   ("j" helm-mini nil)
   ("m" helm-all-mark-rings nil)
   ("o" helm-occur nil)
