@@ -217,9 +217,6 @@ Causes an intuitive indent level matching the specific argument."
 ;; only mine.
 (setq yas-snippet-dirs '(yas--default-user-snippets-dir))
 
-(require 'dropdown-list)
-;; In a GUI window, dropdown-list doesn't render as well in v24 as it did in
-;; v23. So, I'm using it only in a text window.
 (setq yas-prompt-functions '(yas-x-prompt
                              yas-dropdown-prompt
                              yas-completing-prompt))
