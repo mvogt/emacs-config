@@ -259,14 +259,6 @@ With a prefix argument, kills the current buffer."
                      nil (0 dired-executable-face)))
              t)
 
-(defhydra my-dired-sandbox (:color blue)
-  "
-Open directory in dired:
-_t_ ~/tmp
-"
-  ("t" (progn (dired "~/tmp") (rename-buffer "tmp")) nil)
-)
-
 (defun my-dired-diff (gui-p)
   "Same as dired-diff, but prefix arg now means run meld instead."
   (interactive "P")
@@ -447,5 +439,16 @@ _t_ ~/tmp
   )
 )
 
+(defhydra my-dired-sandbox (:color blue)
+  "
+Open directory in dired:
+_t_ ~/tmp
+"
+  ("t" (progn (dired "~/tmp") (rename-buffer "tmp")) nil)
+)
+
 (global-set-key [f5]          'my-dired-sandbox/body)
+;; Extra bindings for MacOS because of the infernal touch bar.
+(global-set-key [?\M-g ?5]    'my-dired-sandbox/body)
+(global-set-key [?\M-g ?\M-5] 'my-dired-sandbox/body)
 (global-set-key [?\M-g ?\M-w] 'my-dired-sandbox/body)

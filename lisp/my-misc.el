@@ -39,11 +39,6 @@ by looking for the cdr of that matches 'victim'."
 (setq helm-lisp-fuzzy-completion t)
 (setq helm-ff-file-name-history-use-recentf t)
 
-(global-set-key [?\M-i]       'helm-find-files)
-(global-set-key [?\C-x ?\C-f] 'helm-find-files)
-(global-set-key [?\C-x ?\M-f] 'helm-find-files)
-(global-set-key [?\M-y]       'helm-show-kill-ring)  ; replaces yank-pop
-
 ;; This function is hard to describe. It basically means do the intuitive
 ;; thing. For some reason, the default for this is C-z.
 (define-key helm-map [tab]   'helm-execute-persistent-action)
@@ -222,12 +217,6 @@ _P_ Emacs processes
   ("x" helm-regexp nil)
 )
 
-(global-set-key [?\C-h ?a]    'helm-apropos)
-;; I never use the default prefix (C-x c). Instead, I use a hydra with a
-;; subset of the helm functions available through the prefix key.
-(global-set-key [?\M-g ?h]    'my-helm-main/body)
-(global-set-key [?\M-g ?\M-h] 'my-helm-main/body)
-
 (defun my-buf-menu-wrapper (arg)
   "Entry point for buffer menu.
 Without a prefix, run bs-show.
@@ -243,8 +232,6 @@ With two universal prefixes, run helm-mini."
     (call-interactively 'bs-show))
   )
 )
-(global-set-key [?\M-j] 'my-buf-menu-wrapper)
-(global-set-key [?\C-`] 'my-buf-menu-wrapper)
 
 
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
@@ -584,18 +571,21 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
-(global-set-key [f8]          'gdb)
+
+(global-set-key [?\M-i]       'helm-find-files)
+(global-set-key [?\C-x ?\C-f] 'helm-find-files)
+(global-set-key [?\C-x ?\M-f] 'helm-find-files)
+(global-set-key [?\M-y]       'helm-show-kill-ring)  ; replaces yank-pop
+(global-set-key [?\C-h ?a]    'helm-apropos)
+;; I never use the default prefix (C-x c). Instead, I use a hydra with a
+;; subset of the helm functions available through the prefix key.
+(global-set-key [?\M-g ?\M-h] 'my-helm-main/body)
+
+(global-set-key [?\M-j]       'my-buf-menu-wrapper)
+(global-set-key [?\C-`]       'my-buf-menu-wrapper)
 
 (global-set-key [?\M-g ?\M-m] 'my-mode-menu/body)
 (global-set-key [?\M-g ?\M-v] 'my-misc-menu/body)
-(global-set-key [?\M-g ?4]    'my-recursive-grep)
-(global-set-key [?\M-g ?\M-4] 'my-recursive-grep)
-(global-set-key [?\M-g ?5]    'my-dired-sandbox)
-(global-set-key [?\M-g ?\M-5] 'my-dired-sandbox)
-(global-set-key [?\M-g ?8]    'gdb)
-(global-set-key [?\M-g ?\M-8] 'gdb)
-(global-set-key [?\M-g ?9]    'compile)
-(global-set-key [?\M-g ?\M-9] 'compile)
 
 (global-set-key [remap fill-paragraph] #'fill-paragraph-or-unfill)
 

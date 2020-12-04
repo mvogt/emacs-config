@@ -133,15 +133,21 @@ _a_ all files with find | xargs grep
   ("j" (my-recursive-grep-worker 'fnames) nil)
 )
 
-(global-set-key [f9]          'compile)
-(global-set-key [?\C-x ?7]    'compile)
+;; The extra bindings are for MacOS because of the infernal touch bar.
 (global-set-key [f4]          'my-recursive-grep/body)
-;; Extra binding for MacOS because of the infernal touch bar.
+(global-set-key [?\M-g ?4]    'my-recursive-grep/body)
+(global-set-key [?\M-g ?\M-4] 'my-recursive-grep/body)
 (global-set-key [?\M-g ?\M-s] 'my-recursive-grep/body)
 ;; For find-tag, must do visit-tags-table first (once per session).
-(global-set-key [C-f4] 'find-tag)
+(global-set-key [C-f4]        'find-tag)
 ;; For grep and compile buffers (or anything in compilation-mode).
-(global-set-key [f6] 'next-error)
+(global-set-key [f6]          'next-error)
+(global-set-key [f8]          'gdb)
+(global-set-key [?\M-g ?8]    'gdb)
+(global-set-key [?\M-g ?\M-8] 'gdb)
+(global-set-key [f9]          'compile)
+(global-set-key [?\M-g ?9]    'compile)
+(global-set-key [?\M-g ?\M-9] 'compile)
 
 (add-hook 'compilation-mode-hook
   (function (lambda ()
