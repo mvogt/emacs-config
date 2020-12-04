@@ -31,7 +31,10 @@ by looking for the cdr of that matches 'victim'."
 (require 'helm-config)
 (require 'helm-find)
 (setq helm-buffers-fuzzy-matching t)
+(setq helm-imenu-fuzzy-match t)
+(setq helm-apropos-fuzzy-match t)
 (setq helm-recentf-fuzzy-match t)
+(setq helm-lisp-fuzzy-completion t)
 (setq helm-ff-file-name-history-use-recentf t)
 
 (global-set-key [?\M-g ?b]    'helm-multi-files)
