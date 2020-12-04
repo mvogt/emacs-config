@@ -37,8 +37,6 @@ by looking for the cdr of that matches 'victim'."
 (setq helm-lisp-fuzzy-completion t)
 (setq helm-ff-file-name-history-use-recentf t)
 
-(global-set-key [?\M-g ?b]    'helm-multi-files)
-(global-set-key [?\M-g ?\M-b] 'helm-multi-files)
 (global-set-key [?\M-i]       'helm-find-files)
 (global-set-key [?\C-x ?\C-f] 'helm-find-files)
 (global-set-key [?\C-x ?\M-f] 'helm-find-files)
@@ -185,11 +183,11 @@ by looking for the cdr of that matches 'victim'."
 (defhydra my-helm-main (:color blue)
   "
 Helm:
-^ ^                                 _o_ Search current buffer with helm-occur
-_m_ Local and global mark rings     _x_ Regexp builder/tester
-_b_ Bookmarks                       _i_ Imenu current buffer
-_r_ Recent files                    _I_ Imenu all buffers
-_f_ Menu of buffers, recent files, bookmarks, and current dir
+_m_ Local and global mark rings     _o_ Search current buffer with helm-occur
+_b_ Bookmarks                       _x_ Regexp builder/tester
+_r_ Recent files                    _i_ Imenu current buffer
+_j_ Buffer menu                     _I_ Imenu all buffers
+_f_ Multi-menu: buffers, recent files, bookmarks, and current dir
 _R_ Resume last Helm (with prefix, first select from multiple)
 _a_ Toggle searching in paths as well as files names (%`helm-findutils-search-full-path)
 
@@ -212,6 +210,7 @@ _P_ Emacs processes
   ("c" helm-colors nil)
   ("f" helm-multi-files nil)
   ("i" helm-imenu nil)
+  ("j" helm-mini nil)
   ("m" helm-all-mark-rings nil)
   ("o" helm-occur nil)
   ("p" helm-list-elisp-packages nil)
@@ -225,6 +224,24 @@ _P_ Emacs processes
 ;; subset of the helm functions available through the prefix key.
 (global-set-key [?\M-g ?h]    'my-helm-main/body)
 (global-set-key [?\M-g ?\M-h] 'my-helm-main/body)
+
+(defun my-buf-menu-wrapper (arg)
+  "Entry point for buffer menu.
+Without a prefix, run bs-show.
+With one universal prefix, run helm-multi-files
+With two universal prefixes, run helm-mini."
+  (interactive "P")
+  (cond
+   ((= 4 (prefix-numeric-value arg))
+    (helm-multi-files))
+   ((= 16 (prefix-numeric-value arg))
+    (helm-mini))
+   (t
+    (call-interactively 'bs-show))
+  )
+)
+(global-set-key [?\M-j] 'my-buf-menu-wrapper)
+(global-set-key [?\C-`] 'my-buf-menu-wrapper)
 
 
 ;; I found this trick in cua-base.el:cua--prefix-override-replay.
@@ -410,11 +427,13 @@ _e_ eval-buffer    _f_ customize-face            _v_ Open in VLC
 _t_ tabify         _c_ describe-char             _s_ isearch-forward-word
 _u_ untabify       _y_ single-key-description    _n_ rename-uniquely
 _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
+^ ^                _j_ Directory tree (C-u to prompt for start dir)
 "
   ("c" describe-char nil)
   ("e" eval-buffer nil)
   ("f" customize-face nil)
   ("h" (describe-variable 'command-history) nil)
+  ("j" my-dirtree-wrapper nil)
   ("m" my-man-cleanup nil)
   ("n" rename-uniquely nil)
   ("s" isearch-forward-word nil)

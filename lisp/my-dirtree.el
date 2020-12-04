@@ -198,27 +198,23 @@ If it's already collapsed or a file, goto the parent."
 (define-key dirtree-mode-map [?\C-c ?\C-w] 'my-dirtree-copy-file)
 (define-key dirtree-mode-map [?\C-c ?\M-w] 'my-dirtree-copy-full-path)
 
-(defun my-bs-dirtree-wrapper (arg)
-  "Wraps bs-show and dirtree.
-Without a prefix, run bs-show.
-With one universal prefix, start dirtree in the current dir.
-With two universal prefixes, prompt for the dir in which to start dirtree."
+(defun my-dirtree-wrapper (arg)
+  "Wraps dirtree.
+Without a prefix, start dirtree in the current dir.
+With one universal prefix, prompt for the dir in which to start dirtree."
   (interactive "P")
   (cond
    ((= 4 (prefix-numeric-value arg))
-    (my-dirtree-rootfs-cwd t))
-   ((= 16 (prefix-numeric-value arg))
     (let ((start-dir (read-file-name "Starting directory: "
                                      nil default-directory)))
       (dirtree "/" t)
       (my-dirtree-find-full-path (expand-file-name start-dir))
     ))
    (t
-    (call-interactively 'bs-show))
+    (my-dirtree-rootfs-cwd t))
   )
 )
-(global-set-key [?\M-j] 'my-bs-dirtree-wrapper)
-(global-set-key [?\C-`] 'my-bs-dirtree-wrapper)
+
 (global-set-key [?\C-~] 'my-dirtree-rootfs-cwd)
 
 (define-key dirtree-mode-map [up]        'tree-mode-previous-node)
