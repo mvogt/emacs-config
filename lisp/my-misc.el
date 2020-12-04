@@ -30,6 +30,8 @@ by looking for the cdr of that matches 'victim'."
 (require 'helm)
 (require 'helm-config)
 (require 'helm-find)
+(require 'helm-bookmark)
+(setq bookmark-save-flag 1)
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-imenu-fuzzy-match t)
 (setq helm-apropos-fuzzy-match t)
@@ -125,6 +127,7 @@ by looking for the cdr of that matches 'victim'."
 (define-key helm-find-files-map    [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
+(define-key helm-bookmark-map      [?\C-o] 'helm-bookmark-run-jump-other-window)
 
 ;; The default for M-D in the buffer menu is to quit the menu after deleting.
 ;; I never want to do that. This stays in the menu. The original mapping for
@@ -154,7 +157,7 @@ by looking for the cdr of that matches 'victim'."
 (add-to-list
  'helm-find-files-actions
  '("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
-   . (lambda (x) (require 'helm-bookmark) (helm-ff-bookmark))) t)
+   . (lambda (x) (helm-ff-bookmark))) t)
 (define-key helm-find-files-map [?\C-c ?\C-b]
   'helm-find-files-switch-to-bookmark)
 
