@@ -259,33 +259,12 @@ With a prefix argument, kills the current buffer."
                      nil (0 dired-executable-face)))
              t)
 
-(defun my-dired-sandbox (which-sandbox)
-  "Launch dired in one of several pre-defined paths."
-  (interactive "cNumber of sandbox directory to open: ")
-  (let ((sandbox (cond
-                  ((= which-sandbox ?1)  '("~/ws/nconapp1/src" "conapp1-src"))
-                  ((= which-sandbox ?2)  '("~/ws/nconapp2/src" "conapp2-src"))
-                  ((= which-sandbox ?3)  '("~/ws/nconapp3/src" "conapp3-src"))
-                  ((= which-sandbox ?4)  '("~/ws/nconapp4/src" "conapp4-src"))
-                  ((= which-sandbox ?5)  '("~/ws/nconapp5/src" "conapp5-src"))
-                  ((= which-sandbox ?6)  '("~/ws/nconapp6/src" "conapp6-src"))
-                  ((= which-sandbox ?7)  '("~/ws/nconapp7/src" "conapp7-src"))
-                  ((= which-sandbox ?8)  '("~/ws/nconapp8/src" "conapp8-src"))
-                  ((= which-sandbox ?9)  '("~/ws/nconapp9/src" "conapp9-src"))
-                  ((= which-sandbox ?!)  '("~/ws/nconapp1/bld" "conapp1-bld"))
-                  ((= which-sandbox ?@)  '("~/ws/nconapp2/bld" "conapp2-bld"))
-                  ((= which-sandbox ?#)  '("~/ws/nconapp3/bld" "conapp3-bld"))
-                  ((= which-sandbox ?$)  '("~/ws/nconapp4/bld" "conapp4-bld"))
-                  ((= which-sandbox ?%)  '("~/ws/nconapp5/bld" "conapp5-bld"))
-                  ((= which-sandbox ?^)  '("~/ws/nconapp6/bld" "conapp6-bld"))
-                  ((= which-sandbox ?&)  '("~/ws/nconapp7/bld" "conapp7-bld"))
-                  ((= which-sandbox ?*)  '("~/ws/nconapp8/bld" "conapp8-bld"))
-                  ((= which-sandbox ?\() '("~/ws/nconapp9/bld" "conapp9-bld"))
-                  ((= which-sandbox ?t)  '("~/tmp"             "tmp"))
-                 )))
-    (dired (car sandbox))
-    (rename-buffer (cadr sandbox))
-  )
+(defhydra my-dired-sandbox (:color blue)
+  "
+Open directory in dired:
+_t_ ~/tmp
+"
+  ("t" (progn (dired "~/tmp") (rename-buffer "tmp")) nil)
 )
 
 (defun my-dired-diff (gui-p)
@@ -468,5 +447,5 @@ With a prefix argument, kills the current buffer."
   )
 )
 
-(global-set-key [f5]          'my-dired-sandbox)
-(global-set-key [?\M-g ?\M-w] 'my-dired-sandbox)
+(global-set-key [f5]          'my-dired-sandbox/body)
+(global-set-key [?\M-g ?\M-w] 'my-dired-sandbox/body)
