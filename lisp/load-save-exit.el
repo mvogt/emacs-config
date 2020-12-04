@@ -22,27 +22,11 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 
 ;; The ffap docs say to load browse-url before ffap. I don't care about poor
-;; startup time, and I use one ffap func that isn't declared with autoload.
+;; startup time.
 (load "browse-url")
 (load "ffap")
 ;; Activate special behavior with prefix instead of by default.
 (setq ffap-require-prefix t)
-
-;; From a previous version of Emacs because the new version in 27.1 ignores
-;; the prefix arg that specifies whether to prefill the minibuffer prompt with
-;; the file at the point.
-(defun ffap-other-window-old ()
-  "Like `ffap', but put buffer in another window.
-Only intended for interactive use."
-  (interactive)
-  (let (value)
-    (switch-to-buffer-other-window
-     (save-window-excursion
-       (setq value (call-interactively 'find-file-at-point))
-       (unless (or (bufferp value) (bufferp (car-safe value)))
-	 (setq value (current-buffer)))
-       (current-buffer)))
-    value))
 
 (defun my-save-all-kill-emacs ()
   "Unconditionally save all buffers and exit Emacs."
@@ -57,6 +41,10 @@ Only intended for interactive use."
 (defun recentf-save-list ()
   (interactive)
 )
+
+;; Keeping this around for the times when I don't want Helm's file opener.
+(global-set-key [?\C-x ?i]        'find-file-at-point)
+(global-set-key [?\C-x ?\M-i]     'find-file-at-point)
 
 (global-set-key [?\C-\;]          'save-buffer)
 (global-set-key [?\M-s]           'save-buffer)
