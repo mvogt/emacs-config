@@ -166,6 +166,34 @@ by looking for the cdr of that matches 'victim'."
 ;; left.) I don't have that rotation feature working, and I'd never use it.
 (define-key helm-find-files-map [?\M-r] 'helm-ff-file-name-history)
 
+;; I didn't know about helm-kill-selection-and-quit when I wrote this.
+;; Since mine loops over the marked files and supports abbreviating with
+;; tilde, I'm keeping it.
+(defun my-helm-ff-copy-name (_candidate)
+  "Copy names of marked files to kill ring.
+With one universal prefix, use the full path names.
+With two universal prefixes, abbreviate the full paths with ~ where possible."
+  (with-helm-current-buffer
+    (kill-new (mapconcat '(lambda (cur)
+                            (helm-acase helm-current-prefix-arg
+                              ('(4)  (expand-file-name cur))
+                              ('(16) (abbreviate-file-name cur))
+                              (t     (helm-basename cur))))
+                         (helm-marked-candidates)
+                         " "))
+  )
+)
+(defun my-helm-ff-run-copy-name ()
+  (interactive)
+  (with-helm-alive-p (helm-exit-and-execute-action 'my-helm-ff-copy-name))
+)
+(define-key helm-find-files-map [?\C-c ?\C-w] 'my-helm-ff-run-copy-name)
+(add-to-list
+ 'helm-find-files-actions
+ '("Marked file names to kill ring `C-c C-w' (C-u full path)"
+   . my-helm-ff-copy-name)
+ t)
+
 ;; Helm doesn't provide any key mapping or action menu for toggling this
 ;; boolean. I create a key mapping and a hydra entry.
 (defun my-helm-toggle-full-path-search ()
