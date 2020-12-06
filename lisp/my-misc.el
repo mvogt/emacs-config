@@ -50,14 +50,14 @@ by looking for the cdr of that matches 'victim'."
 (helm-mode 1)
 
 ;; Prevents helm from activating on any of these actions.
-(loop for trigger in '((dired-do-rename)
-                       (dired-do-copy)
-                       (dired-do-symlink)
-                       (dired-do-relsymlink)
-                       (dired-do-hardlink)
-                       (write-file)
-                       (basic-save-buffer))
-      do (add-to-list 'helm-completing-read-handlers-alist trigger))
+(cl-loop for trigger in '((dired-do-rename)
+                          (dired-do-copy)
+                          (dired-do-symlink)
+                          (dired-do-relsymlink)
+                          (dired-do-hardlink)
+                          (write-file)
+                          (basic-save-buffer))
+         do (add-to-list 'helm-completing-read-handlers-alist trigger))
 
 ;; Action menu entries I never use. Declutter those menus.
 (let ((blacklist '(find-alternate-file
@@ -89,12 +89,12 @@ by looking for the cdr of that matches 'victim'."
                    hexl-find-file
                    switch-to-buffer-other-frame
                    switch-to-buffer-other-tab)))
-  (loop for action-menu in '(helm-find-files-actions
-                             helm-type-file-actions
-                             helm-type-buffer-actions)
-        do (mapcar (lambda (victim)
-                     (my-del-from-alist-by-cdr action-menu victim))
-                   blacklist)
+  (cl-loop for action-menu in '(helm-find-files-actions
+                                helm-type-file-actions
+                                helm-type-buffer-actions)
+           do (mapcar (lambda (victim)
+                        (my-del-from-alist-by-cdr action-menu victim))
+                      blacklist)
   )
 )
 ;; These are replaced below
