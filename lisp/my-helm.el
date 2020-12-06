@@ -192,6 +192,20 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
    . my-helm-ff-copy-name)
  t)
 
+(defun my-helm-ff-magit-status ()
+  "Run magit-status at the path being listed by helm-find-files."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action
+     (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory))))
+)
+(add-to-list
+ 'helm-find-files-actions
+ '("Launch magit on dir listing `C-c g'"
+   . (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory)))
+ t)
+(define-key helm-find-files-map [?\C-c ?g] 'my-helm-ff-magit-status)
+
 ;; Helm doesn't provide any key mapping or action menu for toggling this
 ;; boolean. I create a key mapping and a hydra entry.
 (defun my-helm-toggle-full-path-search ()
