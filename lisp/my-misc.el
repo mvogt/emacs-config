@@ -174,11 +174,11 @@ by looking for the cdr of that matches 'victim'."
 With one universal prefix, use the full path names.
 With two universal prefixes, abbreviate the full paths with ~ where possible."
   (with-helm-current-buffer
-    (kill-new (mapconcat '(lambda (cur)
-                            (helm-acase helm-current-prefix-arg
-                              ('(4)  (expand-file-name cur))
-                              ('(16) (abbreviate-file-name cur))
-                              (t     (helm-basename cur))))
+    (kill-new (mapconcat (lambda (cur)
+                           (helm-acase helm-current-prefix-arg
+                             ('(4)  (expand-file-name cur))
+                             ('(16) (abbreviate-file-name cur))
+                             (t     (helm-basename cur))))
                          (helm-marked-candidates)
                          " "))
   )
