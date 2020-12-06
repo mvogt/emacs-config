@@ -110,6 +110,8 @@
 (load "my-completion")
 (load "my-vcs")
 (load "my-dirtree")
+(load "my-org")
+(load "my-helm")
 (load "my-misc")
 (load "my-html")
 
