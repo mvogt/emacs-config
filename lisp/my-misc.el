@@ -240,6 +240,27 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
   )
 )
 
+(defun my-helm-explore-list (list-var)
+  "Search list LIST-VAR with helm, and return the value selected."
+  (cl-assert (listp (symbol-value list-var)) nil
+             "Error: Attempt to explore variable that is not a list")
+  (helm-comp-read "Next element matching (regexp): "
+                  (cl-loop for i in
+                           (symbol-value list-var)
+                           unless (equal "" i) collect i into history
+                           finally return
+                           (if (consp (car history))
+                               (mapcar 'prin1-to-string history)
+                             history))
+                  :header-name (lambda (name)
+                                 (format "%s (%s)" name list-var))
+                  :buffer "*helm list explorer*"
+                  :must-match t
+                  :multiline t
+                  :keymap helm-minibuffer-history-map
+                  :allow-nest nil)
+)
+
 ;; https://github.com/abo-abo/hydra
 (defhydra my-helm-main (:color blue)
   "
