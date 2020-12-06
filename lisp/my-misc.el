@@ -205,6 +205,41 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
 (define-key helm-generic-files-map
   [?\C-c ?\C-a] 'my-helm-toggle-full-path-search)
 
+;; Copied and modified original helm-occur. The symbol at point is actually
+;; entered into the minibuffer. This allows more search terms to be added
+;; without retyping the original.
+;; Also, I removed the feature that limits the search to the selected region.
+(defun my-helm-occur ()
+  "Search lines matching pattern in current buffer like original occur."
+  (interactive)
+  (setq helm-source-occur
+        (car (helm-occur-build-sources (list (current-buffer)) "Helm occur")))
+  (helm-set-local-variable 'helm-occur--buffer-list (list (current-buffer))
+                           'helm-occur--buffer-tick
+                           (list (buffer-chars-modified-tick (current-buffer))))
+  (save-restriction
+    (let ((helm-sources-using-default-as-input
+           (unless (> (buffer-size) 2000000)
+             helm-sources-using-default-as-input))
+          def pos)
+      (unwind-protect
+           (helm :sources 'helm-source-occur
+                 :buffer "*helm occur*"
+                 :history 'helm-occur-history
+                 ;; Changed from :default
+                 :input (or def (helm-aif (thing-at-point 'symbol)
+                                    (regexp-quote it)))
+                 :preselect (and (memq 'helm-source-occur
+                                       helm-sources-using-default-as-input)
+                                 (format "^%d:" (line-number-at-pos
+                                                 (or pos (point)))))
+                 :truncate-lines helm-occur-truncate-lines)
+        (deactivate-mark t)
+      )
+    )
+  )
+)
+
 ;; https://github.com/abo-abo/hydra
 (defhydra my-helm-main (:color blue)
   "
@@ -238,7 +273,7 @@ _P_ Emacs processes
   ("i" helm-semantic-or-imenu nil)
   ("j" helm-mini nil)
   ("m" helm-all-mark-rings nil)
-  ("o" helm-occur nil)
+  ("o" my-helm-occur nil)
   ("p" helm-list-elisp-packages nil)
   ("r" helm-recentf nil)
   ("w" helm-register nil)
