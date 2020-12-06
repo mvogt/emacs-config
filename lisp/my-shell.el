@@ -78,57 +78,25 @@ We do that by appending an ampersand if the user didn't already."
   )
 )
 
-(setq my-shell-cmd-hist-buf-name "*shell-cmd-hist*")
-(defun my-show-shell-cmd-hist ()
-  "Dump shell-command-history in a temp buffer in the other window."
-  (interactive)
-  ;; Delete buffer first to reset the current directory.
-  (if (get-buffer my-shell-cmd-hist-buf-name)
-      (kill-buffer my-shell-cmd-hist-buf-name))
-  (switch-to-buffer-other-window my-shell-cmd-hist-buf-name)
-  (text-mode)
-  (toggle-truncate-lines 1)
-  (erase-buffer)
-  (dolist (str (reverse shell-command-history))
-    (princ str (current-buffer))
-    (insert "\n")
-  )
-  (recenter -1)
-)
-
 (defun trim-string-whitespace (str)
   "Return copy of str with leading and trailing whitespace removed."
   (replace-regexp-in-string "^[ \t]*" ""
                             (replace-regexp-in-string "[ \t]*$" "" str))
 )
 
-(require 'my-cur-word-or-region "grep-compile")
 (defun my-interactive-shell-command (&optional which-feature)
-  "Wrapper for shell-command with extra features
-based on the number of universal prefixes:
-1: Pre-fill the minibuffer with the current region if active,
-otherwise the current line.
-2: Instead of running or prompting for a command, dump the shell
-command history in a temp buffer in the other window."
+  "Wrapper for shell-command.
+With one universal prefix, pre-fill the minibuffer with the current region
+if active, otherwise the current line."
   (interactive "p")
-  (if (> which-feature 4)
-      (my-show-shell-cmd-hist)
-    (my-shell-command
-     (read-shell-command
-      "Shell command: "
-      (if (= which-feature 1) ""
-        (trim-string-whitespace
-         (if mark-active
-             (buffer-substring (point) (mark))
-           (buffer-substring (line-beginning-position)
-                             (line-end-position)))
-        )
-      )
-     )
-    )
-    (if (get-buffer my-shell-cmd-hist-buf-name)
-        (kill-buffer my-shell-cmd-hist-buf-name))
-  )
+  (my-shell-command
+   (read-shell-command "Shell command: "
+                       (if (= which-feature 1) ""
+                         (trim-string-whitespace
+                          (if mark-active
+                              (buffer-substring (point) (mark))
+                            (buffer-substring (line-beginning-position)
+                                              (line-end-position)))))))
 )
 
 (defun select-shell-command-output-window (&optional buffer)
