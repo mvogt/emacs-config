@@ -45,6 +45,11 @@ by looking for the cdr of that matches 'victim'."
 ;; your selected files. This toggles to a menu showing those action choices.
 (define-key helm-map [backtab] 'helm-select-action)
 
+;; I don't like the default C-o and M-o for this, and I override C-o in
+;; several places to mean open in other window.
+(define-key helm-map [?\M-N] 'helm-next-source)
+(define-key helm-map [?\M-P] 'helm-previous-source)
+
 (helm-mode 1)
 
 ;; Prevents helm from activating on any of these actions.
@@ -151,8 +156,10 @@ by looking for the cdr of that matches 'victim'."
  'helm-find-files-actions
  '("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
    . (lambda (x) (helm-ff-bookmark))) t)
-(define-key helm-find-files-map [?\C-c ?\C-b]
-  'helm-find-files-switch-to-bookmark)
+(define-key helm-find-files-map
+  [?\C-c ?\C-b] 'helm-find-files-switch-to-bookmark)
+(define-key helm-find-files-map
+  [M-f3]        'helm-find-files-switch-to-bookmark)
 
 ;; The default mapping is C-x r m. I haven't overwritten that. It doesn't
 ;; appear in the action menu by default, and I haven't figured out a good way
@@ -163,6 +170,11 @@ by looking for the cdr of that matches 'victim'."
 ;; The default for M-r is rotate a viewed image file right. (M-l rotates
 ;; left.) I don't have that rotation feature working, and I'd never use it.
 (define-key helm-find-files-map [?\M-r] 'helm-ff-file-name-history)
+(define-key helm-find-files-map [M-f1]  'helm-ff-file-name-history)
+
+;; I'm using M-F1,F2,F3 as an additional way to access the different kinds of
+;; history available from the file finder. That's easier for me to remember.
+(define-key helm-find-files-map [M-f2]  'helm-find-files-history)
 
 ;; I didn't know about helm-kill-selection-and-quit when I wrote this.
 ;; Since mine loops over the marked files and supports abbreviating with
