@@ -18,13 +18,6 @@
 ;;----------------------------------------------------------------------------
 ;; Helm
 ;;
-(defun my-del-from-alist-by-cdr (lst victim)
-  "Delete an element from alist 'lst'
-by looking for the cdr of that matches 'victim'."
-  (delete-if (lambda (el) (eq (cdr el) victim))
-             (symbol-value lst))
-)
-
 (require 'helm)
 (require 'helm-config)
 (require 'helm-find)
@@ -52,7 +45,7 @@ by looking for the cdr of that matches 'victim'."
 
 (helm-mode 1)
 
-;; Prevents helm from activating on any of these actions.
+;; Prevent helm from activating on any of these actions.
 (cl-loop for trigger in '((dired-do-rename)
                           (dired-do-copy)
                           (dired-do-symlink)
@@ -62,104 +55,38 @@ by looking for the cdr of that matches 'victim'."
                           (basic-save-buffer))
          do (add-to-list 'helm-completing-read-handlers-alist trigger))
 
-;; Action menu entries I never use. Declutter those menus.
-(let ((blacklist '(find-alternate-file
-                   find-file-other-frame
-                   helm-buffers-browse-project
-                   helm-ediff-marked-buffers
-                   helm-ff-browse-project
-                   helm-ff-cache-add-file
-                   helm-ff-etags-select
-                   helm-ff-fd
-                   helm-ff-gid
-                   helm-ff-locate
-                   helm-ff-mail-attach-files
-                   helm-ff-pdfgrep
-                   helm-ff-print
-                   helm-ff-query-replace-fnames-on-marked
-                   helm-ff-switch-to-shell
-                   helm-ff-touch-files
-                   helm-files-insert-as-org-link
-                   helm-find-file-as-root
-                   helm-find-files-backup
-                   helm-find-files-ediff-files
-                   helm-find-files-ediff-merge-files
-                   helm-find-files-eshell-command-on-file
-                   helm-find-files-grep
-                   helm-find-files-hardlink
-                   helm-marked-files-in-dired
-                   helm-open-file-externally
-                   hexl-find-file
-                   switch-to-buffer-other-frame
-                   switch-to-buffer-other-tab)))
-  (cl-loop for action-menu in '(helm-find-files-actions
-                                helm-type-file-actions
-                                helm-type-buffer-actions)
-           do (mapcar (lambda (victim)
-                        (my-del-from-alist-by-cdr action-menu victim))
-                      blacklist)
-  )
-)
-;; These are replaced below
-(mapcar
- (lambda (victim) (my-del-from-alist-by-cdr 'helm-find-files-actions victim))
- '(helm-ff-find-sh-command
-   helm-find-files-other-window
-   helm-open-file-with-default-tool))
-(my-del-from-alist-by-cdr 'helm-type-file-actions
-                          'helm-open-file-with-default-tool)
-
-;; To search paths below the current location, C-s is much more intuitive
-;; than the default "C-c /". The original function on C-s is still
-;; available on "M-g s".
-(add-to-list
- 'helm-find-files-actions
- '("Search subtree paths `C-s'" . helm-ff-find-sh-command) t)
-(define-key helm-find-files-map [?\C-s] 'helm-ff-run-find-sh-command)
-
-;; I don't like having to type 3 characters before helm starts a search of
-;; subtree paths. This makes it immediate.
-(helm-attrset 'requires-pattern 0 helm-source-findutils)
+;;
+;; Key assignments common to multiple helm session types
+;;
 
 ;; To open the selection in the other window, C-o is much easier to type
-;; than the default "C-c o".
-(add-to-list
- 'helm-find-files-actions
- '("Open file other window `C-o'" . helm-find-files-other-window) t)
+;; than the default "C-c o". I left the default in place.
 (define-key helm-find-files-map    [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
 (define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
 (define-key helm-bookmark-map      [?\C-o] 'helm-bookmark-run-jump-other-window)
 
-;; The default for M-D in the buffer menu is to quit the menu after deleting.
-;; I never want to do that. This stays in the menu. The original mapping for
-;; this was C-c d, and I left it also on that key.
-(define-key helm-buffer-map [?\M-D] 'helm-buffer-run-kill-persistent)
-
-;; The default mapping for C-/ is helm-ff-run-fd, but I don't use the fd
-;; command.
-(define-key helm-find-files-map [?\C-/] 'helm-ff-undo)
-
 ;; The default mapping is C-c X. I haven't overwritten that.
-(add-to-list
- 'helm-find-files-actions
- '("Open file with default tool `C-c C-j'" . helm-open-file-with-default-tool)
- t)
-(add-to-list
- 'helm-type-file-actions
- '("Open file with default tool `C-c C-j'" . helm-open-file-with-default-tool)
- t)
 (define-key helm-find-files-map    [?\C-c ?\C-j]
   'helm-ff-run-open-file-with-default-tool)
 (define-key helm-generic-files-map [?\C-c ?\C-j]
   'helm-ff-run-open-file-with-default-tool)
 
+;;
+;; helm-find-files config
+;;
+
+;; To search paths below the current location, C-s is much more intuitive than
+;; the default "C-c /". The original function that was on C-s is still
+;; available on "M-g s".
+(define-key helm-find-files-map [?\C-s] 'helm-ff-run-find-sh-command)
+
+;; The default mapping for C-/ is helm-ff-run-fd, but I don't use the fd
+;; command. I want the standard undo key to work as expected.
+(define-key helm-find-files-map [?\C-/] 'helm-ff-undo)
+
 ;; The default mapping is C-x r b. I haven't overwritten that. It doesn't
 ;; appear in the action menu by default.
-(add-to-list
- 'helm-find-files-actions
- '("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
-   . (lambda (x) (helm-ff-bookmark))) t)
 (define-key helm-find-files-map
   [?\C-c ?\C-b] 'helm-find-files-switch-to-bookmark)
 (define-key helm-find-files-map
@@ -202,11 +129,6 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
   (with-helm-alive-p (helm-exit-and-execute-action 'my-helm-ff-copy-name))
 )
 (define-key helm-find-files-map [?\C-c ?\C-w] 'my-helm-ff-run-copy-name)
-(add-to-list
- 'helm-find-files-actions
- '("Marked file names to kill ring `C-c C-w' (C-u full path)"
-   . my-helm-ff-copy-name)
- t)
 
 (defun my-helm-ff-magit-status ()
   "Run magit-status at the path being listed by helm-find-files."
@@ -215,12 +137,54 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
     (helm-exit-and-execute-action
      (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory))))
 )
-(add-to-list
- 'helm-find-files-actions
- '("Launch magit on dir listing `C-c g'"
-   . (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory)))
- t)
 (define-key helm-find-files-map [?\C-c ?g] 'my-helm-ff-magit-status)
+
+;; Custom action menu for helm-find-files. There are so many default entries I
+;; don't want or prefer different text labels that it's simpler to replace the
+;; whole thing.
+(setq helm-find-files-actions
+      '(("Edit file" . helm-find-file-or-marked)
+        ("Launch dired on cwd pointing at file"
+         . helm-point-file-in-dired)
+        ("View file" . view-file)
+        ("Edit file other window `C-o'" . helm-find-files-other-window)
+        ("Open file with default tool `C-c C-j'"
+         . helm-open-file-with-default-tool)
+        ("Launch magit on cwd `C-c g'"
+         . (lambda (_ign)
+             (magit-status-setup-buffer helm-ff-default-directory)))
+        ("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
+         . (lambda (_ign) (helm-ff-bookmark)))
+        ("Serial rename files" . helm-ff-serial-rename)
+        ("Serial rename by symlinking files"
+         . helm-ff-serial-rename-by-symlink)
+        ("Serial rename by copying files" . helm-ff-serial-rename-by-copying)
+        ("Search subtree paths `C-s'" . helm-ff-find-sh-command)
+        ("Grep cwd with AG `M-g a' (C-u select type)" . helm-find-files-ag)
+        ("Git grep cwd `M-g g'" . helm-ff-git-grep)
+        ("Zgrep marked files `M-g z' (C-u recurse)" . helm-ff-zgrep)
+        ("Query replace contents on marked files `M-%'"
+         . helm-ff-query-replace)
+        ("Query replace regexp contents on marked files `C-M-%'"
+         . helm-ff-query-replace-regexp)
+        ("Delete `M-D' (C-u opposite of trash setting)" . helm-ff-delete-files)
+        ("Copy `M-C' (C-u to follow)" . helm-find-files-copy)
+        ("Rsync marked files `M-V' (C-u edit command)" . helm-find-files-rsync)
+        ("Move `M-R' (C-u to follow)" . helm-find-files-rename)
+        ("Symlink `M-S' (C-u to follow)" . helm-find-files-symlink)
+        ("Relsymlink `M-Y' (C-u to follow)" . helm-find-files-relsymlink)
+        ("Insert selection full path into buffer `C-c i' (C-u basename)"
+         . helm-insert-file-name-completion-at-point)
+        ("Marked file names to kill-ring `C-c C-w' (C-u full path)"
+         . my-helm-ff-copy-name)))
+
+;;
+;; Subtree path search config
+;;
+
+;; I don't like having to type 3 characters before helm starts a search of
+;; subtree paths. This makes it immediate.
+(helm-attrset 'requires-pattern 0 helm-source-findutils)
 
 ;; Helm doesn't provide any key mapping or action menu for toggling this
 ;; boolean. I create a key mapping and a hydra entry.
@@ -232,6 +196,54 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
 )
 (define-key helm-generic-files-map
   [?\C-c ?\C-a] 'my-helm-toggle-full-path-search)
+
+;; Custom action menu for subtree path search. Same reason as for
+;; helm-find-files.
+(setq helm-type-file-actions
+      '(("Edit file" . helm-find-many-files)
+        ("Launch dired in file's directory" . helm-open-dired)
+        ("View file" . view-file)
+        ("Edit file other window" . helm-find-files-other-window)
+        ("Open file with default tool `C-c C-j'"
+         . helm-open-file-with-default-tool)
+        ("Zgrep marked files (C-u recurse)" . helm-ff-zgrep)
+        ("Delete" . helm-ff-delete-files)
+        ("Copy `M-C' (C-u to follow)" . helm-find-files-copy)
+        ("Move `M-R' (C-u to follow)" . helm-find-files-rename)
+        ("Symlink `M-S' (C-u to follow)" . helm-find-files-symlink)
+        ("Relsymlink (C-u to follow)" . helm-find-files-relsymlink)
+        ("Checksum file" . helm-ff-checksum)))
+
+;;
+;; Buffer menu config
+;;
+
+;; The default for M-D in the buffer menu is to quit the menu after deleting.
+;; I never want to do that. This stays in the menu. The original mapping for
+;; this was C-c d, and I left it in place.
+(define-key helm-buffer-map [?\M-D] 'helm-buffer-run-kill-persistent)
+
+;; Custom action menu for helm-mini and helm-multi-files. Same reason as for
+;; helm-find-files.
+(setq helm-type-buffer-actions
+      '(("Switch to buffer(s)" . helm-buffer-switch-buffers)
+        ("Switch to selected buffer in view mode" . view-buffer)
+        ("Switch to buffer(s) in other window `C-o'"
+         . helm-buffer-switch-buffers-other-window)
+        ("Display buffer in other window, but don't switch to it"
+         . display-buffer)
+        ("Kill buffer(s) `M-D'" . helm-kill-marked-buffers)
+        ("Revert buffer(s) `M-G'" . helm-revert-marked-buffers)
+        ("Rename buffer `M-R'" . helm-buffers-rename-buffer)
+        ("Query replace `M-%'" . helm-buffer-query-replace)
+        ("Query replace regexp `C-M-%'" . helm-buffer-query-replace-regexp)
+        ("Grep buffer(s) `M-g s' (C-u grep all buffers)" . helm-zgrep-buffers)
+        ("Launch occur on buffer(s) `C-s' (C-u also search current)"
+         . helm-multi-occur-as-action)))
+
+;;
+;; Occur config
+;;
 
 ;; Copied and modified original helm-occur. The symbol at point is actually
 ;; entered into the minibuffer. This allows more search terms to be added
@@ -268,6 +280,7 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
   )
 )
 
+
 (defun my-helm-explore-list (list-var)
   "Search list LIST-VAR with helm, and return the value selected."
   (cl-assert (listp (symbol-value list-var)) nil
@@ -288,6 +301,7 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
                   :keymap helm-minibuffer-history-map
                   :allow-nest nil)
 )
+
 
 ;; https://github.com/abo-abo/hydra
 (defhydra my-helm-main (:color blue)
@@ -344,6 +358,9 @@ With two universal prefixes, run helm-mini."
     (call-interactively 'bs-show))
   )
 )
+
+(global-set-key [?\M-j]       'my-buf-menu-wrapper)
+(global-set-key [?\C-`]       'my-buf-menu-wrapper)
 
 (global-set-key [?\M-i]       'helm-find-files)
 (global-set-key [?\C-x ?\C-f] 'helm-find-files)

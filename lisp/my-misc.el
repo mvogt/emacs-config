@@ -289,9 +289,6 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 (global-set-key [?\C-c ?\;]   'insert-timestamp)
 (global-set-key [?\C-c ?']    'insert-fixme)
 
-(global-set-key [?\M-j]       'my-buf-menu-wrapper)
-(global-set-key [?\C-`]       'my-buf-menu-wrapper)
-
 (global-set-key [?\M-g ?\M-m] 'my-mode-menu/body)
 (global-set-key [?\M-g ?\M-v] 'my-misc-menu/body)
 
