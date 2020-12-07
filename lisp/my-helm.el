@@ -137,7 +137,7 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
     (helm-exit-and-execute-action
      (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory))))
 )
-(define-key helm-find-files-map [?\C-c ?g] 'my-helm-ff-magit-status)
+(define-key helm-find-files-map [?\C-c ?\C-m] 'my-helm-ff-magit-status)
 
 ;; Custom action menu for helm-find-files. There are so many default entries I
 ;; don't want or prefer different text labels that it's simpler to replace the
@@ -150,7 +150,7 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
         ("Edit file other window `C-o'" . helm-find-files-other-window)
         ("Open file with default tool `C-c C-j'"
          . helm-open-file-with-default-tool)
-        ("Launch magit on cwd `C-c g'"
+        ("Launch magit on cwd `C-c C-m'"
          . (lambda (_ign)
              (magit-status-setup-buffer helm-ff-default-directory)))
         ("Bookmarks (just helm find files) `C-c C-b' (`C-c C-m' to set)"
