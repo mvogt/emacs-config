@@ -117,6 +117,10 @@ by looking for the cdr of that matches 'victim'."
  '("Search subtree paths `C-s'" . helm-ff-find-sh-command) t)
 (define-key helm-find-files-map [?\C-s] 'helm-ff-run-find-sh-command)
 
+;; I don't like having to type 3 characters before helm starts a search of
+;; subtree paths. This makes it immediate.
+(helm-attrset 'requires-pattern 0 helm-source-findutils)
+
 ;; To open the selection in the other window, C-o is much easier to type
 ;; than the default "C-c o".
 (add-to-list
