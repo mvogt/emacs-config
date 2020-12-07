@@ -31,18 +31,6 @@
 ;; than 20 buffers open and want to see them all.
 (setq bs-max-window-height 40)
 
-;; Add another, more familiar key to bs-show mode.
-(define-key bs-mode-map [?1]       'bs-select-in-one-window)
-
-;; Additional mappings for easier alternate hand operation.
-(define-key bs-mode-map [C-return] 'bs-select-other-window)
-(define-key bs-mode-map [?\C-j]    'bs-select-other-window)
-(define-key bs-mode-map [?\M-o]    'bs-tmp-select-other-window)
-
-;; Additional custom funcs.
-(define-key bs-mode-map [?i]       'my-bs-vert-select-other-window)
-(define-key bs-mode-map [?l]       'my-bs-horiz-select-other-window)
-
 ;; Redefine this func from bs.el so that the other window doesn't disappear
 ;; when exiting bs-show mode.
 (defun bs-tmp-select-other-window ()
@@ -217,6 +205,23 @@ Also bury if it's the bs-show menu."
   )
 )
 
+(defun my-buf-unwanted-p (name)
+  (or (member name '("*Shell Command Output*" "*Help*"
+                     "*Backtrace*" "*scratch*"))
+      (string-match-p "^*magit-process:" name)
+      (string-match-p "^*magit-log:" name)
+      (string-match-p "^*helm[ -]" name))
+)
+
+(defun my-cleanup-buffers ()
+  "Delete all unwanted buffers based on their names."
+  (interactive)
+  (dolist (cand (buffer-list))
+    (if (my-buf-unwanted-p (buffer-name cand))
+        (kill-buffer cand))
+  )
+)
+
 (defun my-kill-buffer ()
   "Wrapper for kill-buffer that conditionally buries the new buffer."
   (interactive)
@@ -232,6 +237,21 @@ Also bury if it's the bs-show menu."
     (bury-buffer)
   )
 )
+
+;; Add another, more familiar key to bs-show mode.
+(define-key bs-mode-map [?1]       'bs-select-in-one-window)
+
+;; Additional mappings for easier alternate hand operation.
+(define-key bs-mode-map [C-return] 'bs-select-other-window)
+(define-key bs-mode-map [?\C-j]    'bs-select-other-window)
+(define-key bs-mode-map [?\M-o]    'bs-tmp-select-other-window)
+
+;; Additional custom funcs.
+(define-key bs-mode-map [?i]       'my-bs-vert-select-other-window)
+(define-key bs-mode-map [?l]       'my-bs-horiz-select-other-window)
+
+(define-key bs-mode-map [?X]
+  (lambda () (interactive) (my-cleanup-buffers) (bs--redisplay t)))
 
 (substitute-key-definition 'bs-select 'my-bs-select bs-mode-map)
 (substitute-key-definition 'bs-view   'my-bs-view   bs-mode-map)
