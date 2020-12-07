@@ -60,6 +60,7 @@
 (provide 'my-cur-word-or-region)
 
 (autoload 'compile-internal "compile")
+(defvar my-recursive-grep-cmd-hist '())
 (defun my-recursive-grep-worker (which-func)
   "Search all files recursively.
 Like grep-find, but prompts for a starting directory, guesses the search
@@ -103,7 +104,8 @@ Intended to be called from a hydra with the type of search."
                           (my-cur-word-or-region))))
           )
          )
-         (my-grep-cmd (read-string "Search command: " (cdr cmd-spec)))
+         (my-grep-cmd (read-string "Search command: " (cdr cmd-spec)
+                                   'my-recursive-grep-cmd-hist))
          (start-dir (read-file-name "Starting directory: "
                                     nil default-directory))
         )

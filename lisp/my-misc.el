@@ -118,9 +118,11 @@ Cleans up ANSI formatting chars."
   (interactive "P")
   (insert-pair qty ?< ?>)
 )
+(defvar my-tag-wrap-hist '())
 (defun my-enclose-tag (&optional qty)
   (interactive "P")
-  (let* ((tag-open (read-string "Tag (with optional args): "))
+  (let* ((tag-open (read-string "Tag (with optional args): "
+                                nil 'my-tag-wrap-hist))
          (tag-name (car (split-string tag-open))))
     (insert-pair qty (format "<%s>" tag-open) (format "</%s>" tag-name))
   )
@@ -193,6 +195,8 @@ _k_ Indent with tabs (toggle)
   ("y" python-mode nil)
 )
 
+(defvar my-vlc-url-hist '())
+
 ;; https://github.com/abo-abo/hydra
 (defhydra my-misc-menu (:color blue)
   "
@@ -214,7 +218,8 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
   ("t" tabify nil)
   ("u" untabify nil)
   ("v" (call-process "vlc" nil 0 nil
-                     (read-string "VLC URL: " (my-cur-word-or-region)))
+                     (read-string "VLC URL: " (my-cur-word-or-region)
+                                  'my-vlc-url-hist))
        nil)
   ("x" my-unfontify nil)
   ("y" my-describe-key nil)
