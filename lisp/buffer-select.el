@@ -210,6 +210,7 @@ Also bury if it's the bs-show menu."
                      "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
                      "*Completions*"))
       (string-match-p "^*magit-process:" name)
+      (string-match-p "^*magit-refs:" name)
       (string-match-p "^*magit-log:" name)
       (string-match-p "^*helm[ -]" name))
 )
