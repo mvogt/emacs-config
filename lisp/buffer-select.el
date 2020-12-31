@@ -206,7 +206,7 @@ Also bury if it's the bs-show menu."
 )
 
 (defun my-buf-unwanted-p (name)
-  (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*"
+  (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*" "*vc*"
                      "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
                      "*Completions*"))
       (string-match-p "^*magit-process:" name)
