@@ -226,6 +226,90 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 )
 
 
+;;
+;; tmux
+;;
+
+;; Same as turnip-yank-from-buffer, but update to work with latest tmux. The
+;; format variable "line" doesn't work with the command tmux list-buffers, and
+;; the command "tmux show-buffer -b foo" requires foo to be the buffer name
+;; rather than its index.
+(defun my-turnip-yank-from-buffer (&optional buffer)
+  "Yank from tmux buffer with index BUFFER.
+If no argument is provided the paste-buffer is used."
+  (interactive
+   (let* ((buffers (turnip:call->lines
+                    "list-buffers" "-F" "#{buffer_name}: #{buffer_sample}"))
+          (choice (completing-read "Buffer: " buffers nil 'confirm)))
+     (list (when (string-match "^buffer[0-9]+" choice)
+             (match-string-no-properties 0 choice)))
+   )
+  )
+  (insert (apply #'turnip:call "show-buffer"
+                 (when buffer (list "-b" buffer))))
+)
+
+(require 'my-region-or-line "kill-yank")
+(defvar my-turnip-send-hist '())
+(defun my-turnip-send-text (&optional region-p)
+  "Prompt for text, and send it to a tmux pane.
+With a universal prefix, the prompt is pre-filled with the active region.
+If no region is active, use the current line.
+In either case, trim leading and trailing whitespace."
+  (interactive "P")
+  (let ((cmd (read-string "Send text: " (if region-p (my-region-or-line) "")
+                          'my-turnip-send-hist))
+        (target (call-interactively #'turnip-choose-pane)))
+    (unless (called-interactively-p 'any)
+      (setq target (turnip:normalize-and-check-target-pane target)))
+    (turnip:send-keys target cmd)
+  )
+)
+
+(defvar my-turnip-hostname-hist '())
+(defun my-turnip-connect (cmd &optional region-p)
+  "Open new tmux window with specified connection command. Prompt for hostname
+to connect to. Use the hostname as the name of the new window.
+With a universal prefix, pre-fill the hostname prompt with the active region
+or current line."
+  (interactive "P")
+  (let ((host (read-string (format "%s: " cmd)
+                           (if region-p (my-region-or-line) "")
+                           'my-turnip-hostname-hist)))
+    (turnip:call "new-window" "-n" host (format "%s %s" cmd host))
+  )
+)
+
+;; https://github.com/abo-abo/hydra
+(defhydra my-tmux-menu (:color blue)
+  "
+tmux:
+_y_ Yank from tmux buffer         _S_ SSH in new tmux window
+_t_ Send text to tmux pane        _R_ SSH with Ansible key in new tmux window
+_r_ Send region to tmux pane      _T_ Telnet in new tmux window
+_b_ Send region to tmux buffer
+
+_p_ Select tmux pane for future commands
+_c_ tmux command builder (C-RET to finalize)
+"
+  ("R" (my-turnip-connect "tmux-ssh-ansible" current-prefix-arg) nil)
+  ("S" (my-turnip-connect "tmux-ssh" current-prefix-arg) nil)
+  ("T" (my-turnip-connect "tmux-telnet" current-prefix-arg) nil)
+
+  ;; FIXME-mvogt-20210502: The prompt for destination buffer is unintuitive.
+  ;; It's asking for a name to create, and it gives a useless list of index
+  ;; numbers for existing buffers. Replace this function with my own that
+  ;; prompts in a different way.
+  ("b" turnip-send-region-to-buffer nil)
+
+  ("c" turnip-command nil)
+  ("p" turnip-choose-pane nil)
+  ("r" turnip-send-region nil)
+  ("t" my-turnip-send-text nil)
+  ("y" my-turnip-yank-from-buffer nil)
+)
+
+
 (add-hook 'diff-mode-hook
   (function (lambda ()
               (whitespace-mode 1)
@@ -291,6 +375,7 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 
 (global-set-key [?\M-g ?\M-m] 'my-mode-menu/body)
 (global-set-key [?\M-g ?\M-v] 'my-misc-menu/body)
+(global-set-key [?\M-g ?\M-t] 'my-tmux-menu/body)
 
 (global-set-key [remap fill-paragraph] #'fill-paragraph-or-unfill)
 

@@ -142,5 +142,5 @@
  '(package-selected-packages
    '(ag async dired-efap exec-path-from-shell go-mode groovy-mode helm
      htmlize hydra magit org powershell protobuf-mode rainbow-mode tree-mode
-     yaml-mode yasnippet))
+     turnip yaml-mode yasnippet))
 )

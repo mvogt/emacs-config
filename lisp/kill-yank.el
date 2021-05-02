@@ -101,6 +101,17 @@ Also, if the universal argument is given, don't yank anything."
   (or (consp register) (my-yank register))
 )
 
+(defun my-region-or-line ()
+  "Return text in the active region, or if no active region, the current line.
+In both cases, trim leading and trailing whitespace."
+  (trim-string-whitespace
+   (if mark-active
+       (buffer-substring (point) (mark))
+     (buffer-substring (line-beginning-position) (line-end-position)))
+  )
+)
+(provide 'my-region-or-line)
+
 ;; For setting the mark, Meta-space feels more natural to me, and F3 is
 ;; much more convenient.
 (global-set-key [f3]          'set-mark-command)

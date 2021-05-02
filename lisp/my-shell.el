@@ -84,6 +84,7 @@ We do that by appending an ampersand if the user didn't already."
                             (replace-regexp-in-string "[ \t]*$" "" str))
 )
 
+(require 'my-region-or-line "kill-yank")
 (defun my-interactive-shell-command (&optional which-feature)
   "Wrapper for shell-command.
 With one universal prefix, pre-fill the minibuffer with the current region
@@ -91,12 +92,7 @@ if active, otherwise the current line."
   (interactive "p")
   (my-shell-command
    (read-shell-command "Shell command: "
-                       (if (= which-feature 1) ""
-                         (trim-string-whitespace
-                          (if mark-active
-                              (buffer-substring (point) (mark))
-                            (buffer-substring (line-beginning-position)
-                                              (line-end-position)))))))
+                       (if (= which-feature 1) "" (my-region-or-line))))
 )
 
 (defun select-shell-command-output-window (&optional buffer)
