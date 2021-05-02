@@ -227,8 +227,9 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 
 
 ;;
-;; tmux
+;; tmux, using the turnip package
 ;;
+(require 'turnip)
 
 ;; Same as turnip-yank-from-buffer, but update to work with latest tmux. The
 ;; format variable "line" doesn't work with the command tmux list-buffers, and
