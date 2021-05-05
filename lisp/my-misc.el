@@ -252,13 +252,26 @@ If no argument is provided the paste-buffer is used."
 
 (require 'my-region-or-line "kill-yank")
 (defvar my-turnip-send-hist '())
-(defun my-turnip-send-text (&optional region-p)
+(defun my-turnip-send-text ()
   "Prompt for text, and send it to a tmux pane.
-With a universal prefix, the prompt is pre-filled with the active region.
+Pre-fill the prompt with the active region.
 If no region is active, use the current line.
-In either case, trim leading and trailing whitespace."
-  (interactive "P")
-  (let ((cmd (read-string "Send text: " (if region-p (my-region-or-line) "")
+In both cases, trim leading and trailing whitespace."
+  (interactive)
+  (let ((cmd (read-string "Send text: " (my-region-or-line)
+                          'my-turnip-send-hist))
+        (target (call-interactively #'turnip-choose-pane)))
+    (unless (called-interactively-p 'any)
+      (setq target (turnip:normalize-and-check-target-pane target)))
+    (turnip:send-keys target cmd)
+  )
+)
+
+(defun my-turnip-send-cwd ()
+  "After prompting, send cd command to a tmux pane.
+Pre-fill the prompt with the directory of the current buffer."
+  (interactive)
+  (let ((cmd (read-string "Send text: " (format "cd %s" default-directory)
                           'my-turnip-send-hist))
         (target (call-interactively #'turnip-choose-pane)))
     (unless (called-interactively-p 'any)
@@ -268,14 +281,13 @@ In either case, trim leading and trailing whitespace."
 )
 
 (defvar my-turnip-hostname-hist '())
-(defun my-turnip-connect (cmd &optional region-p)
+(defun my-turnip-connect (cmd)
   "Open new tmux window with specified connection command. Prompt for hostname
 to connect to. Use the hostname as the name of the new window.
-With a universal prefix, pre-fill the hostname prompt with the active region
-or current line."
-  (interactive "P")
-  (let ((host (read-string (format "%s: " cmd)
-                           (if region-p (my-region-or-line) "")
+Pre-fill the hostname prompt with the active region. If no region is active,
+use the word currently at the point."
+  (interactive)
+  (let ((host (read-string (format "%s: " cmd) (my-cur-word-or-region)
                            'my-turnip-hostname-hist)))
     (turnip:call "new-window" "-n" host (format "%s %s" cmd host))
   )
@@ -287,15 +299,13 @@ or current line."
 tmux:
 _y_ Yank from tmux buffer         _S_ SSH in new tmux window
 _t_ Send text to tmux pane        _R_ SSH with Ansible key in new tmux window
-_r_ Send region to tmux pane      _T_ Telnet in new tmux window
-_b_ Send region to tmux buffer
-
-_p_ Select tmux pane for future commands
-_c_ tmux command builder (C-RET to finalize)
+_d_ Send cd $PWD to tmux pane     _T_ Telnet in new tmux window
+_r_ Send region to tmux pane      _p_ Select tmux pane for future commands
+_b_ Send region to tmux buffer    _c_ tmux command builder (C-RET to finalize)
 "
-  ("R" (my-turnip-connect "tmux-ssh-ansible" current-prefix-arg) nil)
-  ("S" (my-turnip-connect "tmux-ssh" current-prefix-arg) nil)
-  ("T" (my-turnip-connect "tmux-telnet" current-prefix-arg) nil)
+  ("R" (my-turnip-connect "tmux-ssh-ansible") nil)
+  ("S" (my-turnip-connect "tmux-ssh") nil)
+  ("T" (my-turnip-connect "tmux-telnet") nil)
 
   ;; FIXME-mvogt-20210502: The prompt for destination buffer is unintuitive.
   ;; It's asking for a name to create, and it gives a useless list of index
@@ -304,6 +314,7 @@ _c_ tmux command builder (C-RET to finalize)
   ("b" turnip-send-region-to-buffer nil)
 
   ("c" turnip-command nil)
+  ("d" my-turnip-send-cwd nil)
   ("p" turnip-choose-pane nil)
   ("r" turnip-send-region nil)
   ("t" my-turnip-send-text nil)
