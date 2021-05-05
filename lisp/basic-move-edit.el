@@ -81,6 +81,9 @@
 (global-set-key [M-left]  'backward-sentence)
 (global-set-key [M-right] 'forward-sentence)
 
+(global-set-key [?\M-F] 'forward-symbol)
+(global-set-key [?\M-B] (lambda () (interactive) (forward-symbol -1)))
+
 ;; I find this to be almost useless, but it only works when mapped to a key.
 (global-set-key [?\M-?] 'repeat)
 
