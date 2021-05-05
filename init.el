@@ -112,6 +112,7 @@
 (load "my-dirtree")
 (load "my-org")
 (load "my-helm")
+(load "my-tmux")
 (load "my-misc")
 (load "my-html")
 
