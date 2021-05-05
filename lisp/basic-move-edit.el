@@ -76,12 +76,6 @@
 (global-set-key [?\M-n] 'forward-paragraph)
 (global-set-key [?\M-p] 'backward-paragraph)
 
-;; Inverted "T" arrow keys on M-S-jkli.
-(global-set-key [?\M-J] 'backward-char)
-(global-set-key [?\M-L] 'forward-char)
-(global-set-key [?\M-I] 'previous-line)
-(global-set-key [?\M-K] 'next-line)
-
 ;; This is more useful than the default of duplicating backward/forward
 ;; paragraph like C-left/C-right does.
 (global-set-key [M-left]  'backward-sentence)
