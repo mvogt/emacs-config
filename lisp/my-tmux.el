@@ -89,13 +89,15 @@ use the word currently at the point."
 tmux:
 _y_ Yank from tmux buffer         _S_ SSH in new tmux window
 _t_ Send text to tmux pane        _R_ SSH with Ansible key in new tmux window
-_d_ Send cd $PWD to tmux pane     _T_ Telnet in new tmux window
-_r_ Send region to tmux pane      _p_ Select tmux pane for future commands
-_b_ Send region to tmux buffer    _c_ tmux command builder (C-RET to finalize)
+_d_ Send cd $PWD to tmux pane     _V_ SSH with vbldadm key in new tmux window
+_r_ Send region to tmux pane      _T_ Telnet in new tmux window
+_b_ Send region to tmux buffer    _p_ Select tmux pane for future commands
+^ ^                               _c_ tmux command builder (C-RET to finalize)
 "
   ("R" (my-turnip-connect "tmux-ssh-ansible") nil)
   ("S" (my-turnip-connect "tmux-ssh") nil)
   ("T" (my-turnip-connect "tmux-telnet") nil)
+  ("V" (my-turnip-connect "tmux-ssh-vbldadm") nil)
 
   ;; FIXME-mvogt-20210502: The prompt for destination buffer is unintuitive.
   ;; It's asking for a name to create, and it gives a useless list of index
