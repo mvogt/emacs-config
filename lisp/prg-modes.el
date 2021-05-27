@@ -224,8 +224,9 @@ Causes an intuitive indent level matching the specific argument."
 (yas-global-mode 1)
 
 
-;; JavaScript mode is the best built-in mode for JSON.
+;; JavaScript mode is the best built-in mode for JSON and Android.bp files.
 (add-to-list 'auto-mode-alist '("\\.json\\'" . js-mode))
+(add-to-list 'auto-mode-alist '("Android\\.bp\\'" . js-mode))
 
 
 ;; The built-in Sieve mode is broken for the flavor of the language used by my
