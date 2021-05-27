@@ -68,13 +68,13 @@
 (define-skeleton my-html-anchor-simple
   "HTML anchor tag."
   "URL: "
-  '(setq input "http://www..com/")
+  '(setq input "https://www..com/")
   "<a href=\"" str "\">" _ "</a>"
 )
 (define-skeleton my-html-anchor-standard
   "HTML anchor tag with URL also in visible text."
   "URL: "
-  '(setq input "http://www..com/")
+  '(setq input "https://www..com/")
   "<a href=\"" str "\">" str "</a>"
 )
 (define-skeleton my-html-paragraph
