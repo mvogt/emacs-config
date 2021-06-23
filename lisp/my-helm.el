@@ -55,16 +55,32 @@
                           (basic-save-buffer))
          do (add-to-list 'helm-completing-read-handlers-alist trigger))
 
+(defun my-call-with-prefix (pfx func)
+  (let ((current-prefix-arg pfx))
+    (call-interactively func)
+  )
+)
+
 ;;
 ;; Key assignments common to multiple helm session types
 ;;
 
-;; To open the selection in the other window, C-o is much easier to type
-;; than the default "C-c o". I left the default in place.
-(define-key helm-find-files-map    [?\C-o] 'helm-ff-run-switch-other-window)
-(define-key helm-generic-files-map [?\C-o] 'helm-ff-run-switch-other-window)
-(define-key helm-buffer-map        [?\C-o] 'helm-buffer-switch-other-window)
-(define-key helm-bookmark-map      [?\C-o] 'helm-bookmark-run-jump-other-window)
+;; To open the selection in the other window, C-o is much easier to type than
+;; the default "C-c o". I left the default in place. Also, I always want to
+;; call these functions with the universal prefix to cause a vertical split
+;; rather than a horizontal one.
+(define-key helm-find-files-map    [?\C-o]
+  (lambda () (interactive)
+    (my-call-with-prefix '(4) 'helm-ff-run-switch-other-window)))
+(define-key helm-generic-files-map [?\C-o]
+  (lambda () (interactive)
+    (my-call-with-prefix '(4) 'helm-ff-run-switch-other-window)))
+(define-key helm-buffer-map        [?\C-o]
+  (lambda () (interactive)
+    (my-call-with-prefix '(4) 'helm-buffer-switch-other-window)))
+(define-key helm-bookmark-map      [?\C-o]
+  (lambda () (interactive)
+    (my-call-with-prefix '(4) 'helm-bookmark-run-jump-other-window)))
 
 ;; The default mapping is C-c X. I haven't overwritten that.
 (define-key helm-find-files-map    [?\C-c ?\C-j]
