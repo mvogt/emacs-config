@@ -562,6 +562,7 @@ With a prefix argument, kills the current buffer."
                                               'other-but-stay)))
               (dired-sort-by-name-dirs-1st)
               (dired-hide-details-mode t)
+              (recentf-push default-directory)
             )
   )
 )
