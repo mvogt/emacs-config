@@ -149,6 +149,7 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
 (defun my-helm-ff-magit-status ()
   "Run magit-status at the path being listed by helm-find-files."
   (interactive)
+  (recentf-push helm-ff-default-directory)
   (with-helm-alive-p
     (helm-exit-and-execute-action
      (lambda (_ign) (magit-status-setup-buffer helm-ff-default-directory))))
