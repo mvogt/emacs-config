@@ -114,6 +114,7 @@ Intended to be called from a hydra with the type of search."
     ;; being deprecated, but Emacs v24 still uses it unconditionally to
     ;; set --color. My work-around is to unset it here and specify --color
     ;; in my command.
+    (recentf-push start-dir)
     (compilation-start (concat "cd " start-dir " && unset GREP_OPTIONS ; "
                                my-grep-cmd)
                        (car cmd-spec))
