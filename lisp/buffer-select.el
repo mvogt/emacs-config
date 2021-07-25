@@ -255,6 +255,11 @@ Also bury if it's the bs-show menu."
 (define-key bs-mode-map [?X]
   (lambda () (interactive) (my-cleanup-buffers) (bs--redisplay t)))
 
+;; I never use these, and they are obnoxious when I trigger them accidentally.
+(define-key bs-mode-map [?a] nil)
+(define-key bs-mode-map [?c] nil)
+(define-key bs-mode-map [?S] nil)
+
 (substitute-key-definition 'bs-select 'my-bs-select bs-mode-map)
 (substitute-key-definition 'bs-view   'my-bs-view   bs-mode-map)
 (substitute-key-definition 'bs-delete 'my-bs-delete bs-mode-map)
