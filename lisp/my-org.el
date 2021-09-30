@@ -37,6 +37,10 @@
 ;; When opening a file, show it fully expanded.
 (setq org-startup-folded nil)
 
+;; Cause tab to indent to the level of the headline, and promoting/demoting a
+;; headline level changes the indentation of the whole section.
+(setq org-adapt-indentation t)
+
 ;; Add UUIDs to event entries in buffer when exporting to iCal.
 (setq org-icalendar-store-UID t)
 
@@ -53,6 +57,9 @@
 ;; Enable structure template expansion. For example <s TAB to create a source
 ;; code block.
 (require 'org-tempo)
+
+;; Export to Confluence markup with M-x org-confluence-export-as-confluence.
+(require 'ox-confluence)
 
 (add-hook 'org-mode-hook
   (function (lambda ()

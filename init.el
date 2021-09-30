@@ -93,9 +93,9 @@
 ;; Load all installed packages first
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa-stable" . "https://melpa.org/packages/"))
+             '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 (add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/"))
+             '("melpa-stable" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (load "load-save-exit")
@@ -142,6 +142,6 @@
  ;; Installed packages
  '(package-selected-packages
    '(ag async dired-efap exec-path-from-shell go-mode groovy-mode helm
-     htmlize hydra magit org powershell protobuf-mode rainbow-mode tree-mode
-     turnip yaml-mode yasnippet))
+     htmlize hydra magit org org-contrib powershell protobuf-mode rainbow-mode
+     tree-mode turnip yaml-mode yasnippet))
 )
