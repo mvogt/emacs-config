@@ -126,13 +126,14 @@ Intended to be called from a hydra with the type of search."
   "
 Recursive file search:
 _x_ one extension                       _g_ ag (Silver Searcher)
-_m_ multiple extensions                 _j_ just file names
-_a_ all files with find | xargs grep
+_m_ multiple extensions                 _r_ rg (ripgrep)
+_a_ all files with find | xargs grep    _j_ just file names
 "
   ("x" (my-recursive-grep-worker 'ext) nil)
   ("m" (my-recursive-grep-worker 'multi) nil)
   ("a" (my-recursive-grep-worker 'all) nil)
   ("g" (my-recursive-grep-worker 'ag) nil)
+  ("r" (rg-menu) nil)
   ("j" (my-recursive-grep-worker 'fnames) nil)
 )
 
