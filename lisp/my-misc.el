@@ -297,6 +297,12 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 ;; Make apropos show interactive and non-interactive functions.
 (setq apropos-do-all t)
 
+;; More and better info in help buffers. From package helpful:
+;; https://github.com/Wilfred/helpful
+(global-set-key [?\C-h ?f]    'helpful-callable)
+(global-set-key [?\C-h ?v]    'helpful-variable)
+(global-set-key [?\C-h ?k]    'helpful-key)
+
 ;; Separate apropos command to search variables names.
 (global-set-key [?\C-h ?A]    'apropos-variable)
 
