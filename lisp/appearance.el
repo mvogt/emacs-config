@@ -65,7 +65,7 @@
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
-                        :font "Go Mono"
+                        :font "GoMono Nerd Font" ;; https://www.nerdfonts.com/
                         :height 100)
     ;; For some reason, under KDE Plasma, it ignores my selection of a red
     ;; cursor in my color theme. Also, this is the only place I've found where
