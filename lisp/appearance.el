@@ -87,6 +87,11 @@
 ;; in later versions.
 (setq default-frame-alist my-geometry)
 
+;; Use pre-Emacs 28 text in frame title bar so my desktop GUI helper scripts
+;; can correctly find the Emacs window the same way they always have.
+(setq frame-title-format '(multiple-frames
+                           "%b" ("" invocation-name "@" system-name)))
+
 ;; This func is helpful when I encounter an unreadable font face in the color
 ;; theme.
 (defun my-unfontify ()
