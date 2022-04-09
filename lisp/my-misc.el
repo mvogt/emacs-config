@@ -297,6 +297,9 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 ;; Make apropos show interactive and non-interactive functions.
 (setq apropos-do-all t)
 
+;; In the output of describe-bindings (F1 b), group by mode.
+(setq describe-bindings-outline t)
+
 ;; More and better info in help buffers. From package helpful:
 ;; https://github.com/Wilfred/helpful
 (global-set-key [?\C-h ?f]    'helpful-callable)
