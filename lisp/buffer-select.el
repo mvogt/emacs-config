@@ -209,6 +209,7 @@ Also bury if it's the bs-show menu."
   (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*" "*vc*"
                      "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
                      "*Completions*" "*Dired file preview*"))
+      (string-match-p "^*helpful " name)
       (string-match-p "^*magit-process:" name)
       (string-match-p "^*magit-refs:" name)
       (string-match-p "^*magit-log:" name)
