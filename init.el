@@ -61,6 +61,10 @@
 ;; religiously, anyway.
 (setq auto-save-default nil)
 
+;; Disable obnoxious .#foo.txt files. I have never needed this lock
+;; protection.
+(setq create-lockfiles nil)
+
 ;; Disable obnoxious prompt when following symlinks to RCS or CVS files.
 (setq vc-follow-symlinks nil)
 
