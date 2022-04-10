@@ -278,51 +278,32 @@ path."
   )
 )
 
-(defun dropbox-p (path)
-  "If path is a file and starts with $HOME/Dropbox, return t, else nil.
-Also handles the case where path is a symlink to somewhere in the dropbox."
-  (let* ((dropbox (file-truename (concat (getenv "HOME") "/Dropbox")))
-         (dbox-len (length dropbox))
-         (resolved-path (file-truename path)))
-    (and (not (file-directory-p resolved-path))
-         (> (length resolved-path) dbox-len)
-         (string= dropbox (substring resolved-path 0 dbox-len)))
-  )
-)
-
 (defun my-dired-find-file (which-window)
   "My implementation of dired-find-file with extra features.
 First prepends current file to file-name-history.
 Arg which-window must be one of the following three symbols:
   'cur:            current window
   'other:          other window
-  'other-but-stay: other window, but leave current window selected
-If the path to edit is a file and under ~/Dropbox, use wrapper
-script edit-dbox instead of opening the file directly. This skips
-modifying file-name-history because the whole point of the
-wrapper is to never accidentally open the original file.
-Unfortunately for now, because the file gets opened through a
-child process call to emacsclient, this overrides which-window to
-'cur."
+  'other-but-stay: other window, but leave current window selected"
   ;; Set find-file-run-dired so that the command works on directories too,
   ;; independent of the user's setting.
   (let ((find-file-run-dired t)
         (tgt (dired-get-file-for-visit)))
-    (if (dropbox-p tgt)
-        (start-process "edit-dbox" nil "edit-dbox" tgt)
-      (setq file-name-history (cons (path-to-tilde tgt) file-name-history))
-      (cond
-       ((eq which-window 'cur)
-        (find-file tgt))
-       ((eq which-window 'other)
-        (find-file-other-window tgt))
-       ((eq which-window 'other-but-stay)
-        (display-buffer (find-file-noselect tgt)))
-      )
+    (setq file-name-history (cons (path-to-tilde tgt) file-name-history))
+    (cond
+     ((eq which-window 'cur)
+      (find-file tgt))
+     ((eq which-window 'other)
+      (find-file-other-window tgt))
+     ((eq which-window 'other-but-stay)
+      (display-buffer (find-file-noselect tgt)))
     )
   )
 )
 
+;; Beware: New option dired-kill-when-opening-new-dired-buffer in v28 is
+;; similar to my feature for replacing the current dired buffer with the new
+;; one.
 (defun my-dired-xdg-open ()
   "Call xdg-open on the current line's file name.
 If it's a directory, open a new dired buffer, and kill the current one."
