@@ -27,6 +27,11 @@
 ;; supply a prefix for immediate subsequent set-mark commands.
 (setq set-mark-command-repeat-pop t)
 
+;; If a copy or kill command is about to write to the OS clipboard, save the
+;; existing clipboard text into the kill ring, but only if it's smaller than
+;; the number of bytes specified here.
+(setq save-interprogram-paste-before-kill 4096)
+
 
 (defun my-cut-or-copy (cut-p user-register)
   "Worker function for my-kill-region and my-kill-ring-save.
