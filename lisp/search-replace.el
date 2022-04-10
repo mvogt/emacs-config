@@ -161,6 +161,20 @@ call the wrapped function with minimal coding pain."
   (query-replace-multibuf-worker 'query-replace-regexp regexp to-string)
 )
 
+(defun my-isearch-yank-thing-at-point ()
+  (interactive) 
+  (let ((bounds (find-tag-default-bounds)))
+    (when bounds
+      (when (< (car bounds) (point))
+        (goto-char (car bounds)))
+      (isearch-yank-string
+       (buffer-substring-no-properties (car bounds) (cdr bounds)))
+    )
+  )
+)
+
+(define-key isearch-mode-map [?\C-t] 'my-isearch-yank-thing-at-point)
+
 ;; Show count of matches in isearch.
 (setq isearch-lazy-count t)
 (setq isearch-lazy-highlight t)
