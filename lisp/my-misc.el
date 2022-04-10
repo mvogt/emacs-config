@@ -312,6 +312,10 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 (setq Man-width (/ split-width-threshold 2))  ; default is frame width (wrong)
 (global-set-key [?\C-h ?M]    'manual-entry)
 
+;; Show a nice, readable dump of a keymap symbol name. This is much easier
+;; than finding it in the source code.
+(global-set-key [?\C-h ?y]    'describe-keymap)
+
 (global-set-key [?\C-x ?r ?z] 'delete-whitespace-rectangle)
 
 (global-set-key [?\M-+]       'sort-lines)
