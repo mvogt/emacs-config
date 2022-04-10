@@ -300,6 +300,10 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 ;; In the output of describe-bindings (F1 b), group by mode.
 (setq describe-bindings-outline t)
 
+;; When querying help for an autoload function that hasn't loaded yet, this
+;; loads it before retrieving the help text.
+(setq help-enable-symbol-autoload t)
+
 ;; More and better info in help buffers. From package helpful:
 ;; https://github.com/Wilfred/helpful
 (global-set-key [?\C-h ?f]    'helpful-callable)
