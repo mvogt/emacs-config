@@ -347,6 +347,16 @@ With a prefix argument, kills the current buffer."
   )
 )
 
+(defun my-dired-jump (oth-window-p)
+  "Wrapper for dired-jump that uses an optional prefix to call
+dired-jump-other-window instead."
+  (interactive "P")
+  (if (null oth-window-p)
+      (dired-jump)
+    (dired-jump-other-window)
+  )
+)
+
 (setq dired-re-exec (concat dired-re-maybe-mark
                             dired-re-inode-size
                             "-[-r][-w]x"))
@@ -555,6 +565,9 @@ _t_ ~/tmp
 "
   ("t" (progn (dired "~/tmp") (rename-buffer "tmp")) nil)
 )
+
+(global-set-key [?\C-x ?\C-j] 'my-dired-jump)
+(global-set-key [?\C-x ?\M-j] 'my-dired-jump)
 
 (global-set-key [f5]          'my-dired-sandbox/body)
 ;; Extra bindings for MacOS because of the infernal touch bar.
