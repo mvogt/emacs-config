@@ -175,6 +175,11 @@ call the wrapped function with minimal coding pain."
 
 (define-key isearch-mode-map [?\C-t] 'my-isearch-yank-thing-at-point)
 
+;; Restore pre-v28 value here so that loose matching of whitespace spans
+;; newlines. At least in some buffer modes, the new default isn't working for
+;; me.
+(setq search-whitespace-regexp "\\s-+")
+
 ;; Show count of matches in isearch.
 (setq isearch-lazy-count t)
 (setq isearch-lazy-highlight t)
