@@ -525,6 +525,8 @@ dired-jump-other-window instead."
               (local-set-key [?\M-x ?\M-q] 'dired-toggle-read-only)
               (local-set-key [C-backspace] (lambda () (interactive)
                                              (my-dired-up-directory t)))
+              (local-set-key [?\M-^]       (lambda () (interactive)
+                                             (my-dired-up-directory t)))
               (local-set-key [?^]          'my-dired-up-directory)
               (local-set-key [C-return]    'my-dired-xdg-open)
               (local-set-key [?\C-j]       'my-dired-xdg-open)
