@@ -102,3 +102,50 @@ my-gitk-load-limit."
 
 ;; This hook just seems to slow me down.
 (remove-hook 'find-file-hooks 'vc-find-file-hook)
+
+
+;;
+;; Helper functions for quickly selecting and grabbing the text of a git or
+;; svn branch
+;;
+
+(defvar my-vcs-branch-hist nil
+  "History list for the prompt in `my-get-branch'")
+(defvar my-vcs-branches nil
+  "List of string names for branches used by `my-get-branch'.
+On every call to that function, it runs a script that regenerates
+the value of this variable.")
+(defvar my-svn-branch-lister "~/.emacs.d/ls-svn-branches.sh"
+  "Script to generate ELisp code defining my-vcs-branches for svn.")
+(defvar my-git-branch-lister "~/.emacs.d/ls-git-branches.sh"
+  "Script to generate ELisp code defining my-vcs-branches for git.")
+
+(defun my-get-branch (type-name lister-scr)
+  "Get branch name string with completion, and return it."
+  (let ((buf (generate-new-buffer "*my-branch-lister*")))
+    (if (not (= 0 (call-process lister-scr nil buf)))
+        (message "%s failed" lister-scr)
+      (eval-buffer buf)
+      (kill-buffer buf)
+      (completing-read (format "%s branch: " type-name)
+                       my-vcs-branches nil nil nil 'my-vcs-branch-hist)
+    )
+  )
+)
+
+(defhydra my-branch-hydra (:color blue)
+  "
+Get VCS branch:
+_g_ git, add to kill ring   _s_ Subversion, add to kill ring
+_G_ git, insert in buffer   _S_ Subversion, insert in buffer
+"
+  ("g" (kill-new (my-get-branch "git" my-git-branch-lister)) nil)
+  ("G" (insert (my-get-branch "git" my-git-branch-lister)) nil)
+  ("s" (kill-new (my-get-branch "Subversion" my-svn-branch-lister)) nil)
+  ("S" (insert (my-get-branch "Subversion" my-svn-branch-lister)) nil)
+)
+
+(global-set-key (kbd "M-<f5>")    'my-branch-hydra/body)
+(global-set-key (kbd "<ESC><f5>") 'my-branch-hydra/body) ; for text console
+;; Extra binding for MacOS because of the infernal touch bar.
+(global-set-key [?\M-g ?\M-5]     'my-branch-hydra/body)

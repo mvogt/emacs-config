@@ -574,5 +574,4 @@ _t_ ~/tmp
 (global-set-key [f5]          'my-dired-sandbox/body)
 ;; Extra bindings for MacOS because of the infernal touch bar.
 (global-set-key [?\M-g ?5]    'my-dired-sandbox/body)
-(global-set-key [?\M-g ?\M-5] 'my-dired-sandbox/body)
 (global-set-key [?\M-g ?\M-w] 'my-dired-sandbox/body)
