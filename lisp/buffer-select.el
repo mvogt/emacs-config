@@ -253,6 +253,11 @@ Also bury if it's the bs-show menu."
 (define-key bs-mode-map [?i]       'my-bs-vert-select-other-window)
 (define-key bs-mode-map [?l]       'my-bs-horiz-select-other-window)
 
+(define-key bs-mode-map [?O]
+            (lambda () (interactive)
+              (bs--restore-window-config)
+              (select-shell-command-output-window)))
+
 (define-key bs-mode-map [?X]
   (lambda () (interactive) (my-cleanup-buffers) (bs--redisplay t)))
 
