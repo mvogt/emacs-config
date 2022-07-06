@@ -22,6 +22,7 @@
 (require 'helm-config)
 (require 'helm-find)
 (require 'helm-bookmark)
+(require 'helm-org)
 (setq bookmark-save-flag 1)
 (setq helm-buffers-fuzzy-matching t)
 (setq helm-imenu-fuzzy-match t)
@@ -266,8 +267,11 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
 ;; entered into the minibuffer. This allows more search terms to be added
 ;; without retyping the original.
 ;; Also, I removed the feature that limits the search to the selected region.
-(defun my-helm-occur ()
-  "Search lines matching pattern in current buffer like original occur."
+(defun my-helm-occur (&optional start-pattern)
+  "Search lines matching pattern in current buffer like original occur
+
+If optional arg start-pattern is given, pre-fill the search input with that.
+Otherwise,pre-fill the input with the word at the point."
   (interactive)
   (setq helm-source-occur
         (car (helm-occur-build-sources (list (current-buffer)) "Helm occur")))
@@ -278,18 +282,18 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
     (let ((helm-sources-using-default-as-input
            (unless (> (buffer-size) 2000000)
              helm-sources-using-default-as-input))
-          def pos)
+          (init-input (if (null start-pattern)
+                          (helm-aif (thing-at-point 'symbol) (regexp-quote it))
+                        start-pattern)))
       (unwind-protect
            (helm :sources 'helm-source-occur
                  :buffer "*helm occur*"
                  :history 'helm-occur-history
-                 ;; Changed from :default
-                 :input (or def (helm-aif (thing-at-point 'symbol)
-                                    (regexp-quote it)))
+                 :input init-input            ; changed from :default
                  :preselect (and (memq 'helm-source-occur
                                        helm-sources-using-default-as-input)
                                  (format "^%d:" (line-number-at-pos
-                                                 (or pos (point)))))
+                                                  (point))))
                  :truncate-lines helm-occur-truncate-lines)
         (deactivate-mark t)
       )
@@ -324,23 +328,24 @@ With two universal prefixes, abbreviate the full paths with ~ where possible."
 (defhydra my-helm-main (:color blue)
   "
 Helm:
-_m_ Local and global mark rings     _o_ Search current buffer with helm-occur
-_b_ Bookmarks                       _x_ Regexp builder/tester
-_r_ Recent files                    _i_ Imenu current buffer
-_j_ Buffer menu                     _I_ Imenu all buffers
+_m_ Local and global mark rings     _o_ Helm occur on current buffer
+_b_ Bookmarks                       _O_ Helm occur on org mode headings
+_r_ Recent files                    _I_ Org mode headings
+_j_ Buffer menu                     _i_ Imenu current buffer
 _f_ Multi-menu: buffers, recent files, bookmarks, and current dir
 _R_ Resume last Helm (with prefix, first select from multiple)
 _a_ Toggle searching in paths as well as files names (%`helm-findutils-search-full-path)
 
-_w_ Emacs registers                 _M_ Manual pages (using WOman)
-_c_ Colors                          _X_ Helm docs
-_C_ Complete Emacs Lisp symbol      _Y_ GNU Info
-_p_ Emacs packages                  _Z_ GNU Info for Emacs topics only
-_P_ Emacs processes
+_w_ Emacs registers                 _x_ Regexp builder/tester
+_c_ Colors                          _M_ Manual pages (using WOman)
+_C_ Complete Emacs Lisp symbol      _X_ Helm docs
+_p_ Emacs packages                  _Y_ GNU Info
+_P_ Emacs processes                 _Z_ GNU Info for Emacs topics only
 "
   ("C" helm-lisp-completion-at-point nil)
-  ("I" helm-imenu-in-all-buffers nil)
+  ("I" helm-org-in-buffer-headings nil)
   ("M" helm-man-woman nil)
+  ("O" (my-helm-occur "^\\*\\** ") nil)
   ("P" helm-list-emacs-process nil)
   ("R" helm-resume nil)
   ("X" helm-documentation nil)
