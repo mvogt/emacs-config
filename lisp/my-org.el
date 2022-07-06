@@ -52,6 +52,11 @@
 (setq org-agenda-start-day "-3d")
 (setq org-agenda-span 11)
 
+;; In the org-goto command (C-c C-j), show just the headlines.
+(setq org-goto-interface 'outline-path-completion)
+;; Show all the headlines at once.
+(setq org-outline-path-complete-in-steps nil)
+
 (require 'org)
 
 ;; Enable structure template expansion. For example <s TAB to create a source
