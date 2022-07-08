@@ -71,6 +71,7 @@
               (toggle-truncate-lines 0)    ; enable line wrap
               (local-set-key [?\C-c ?\C-8] 'org-list-make-subtree)
               (local-set-key [?\C-c ?\C-6] 'org-up-element)
+              (local-set-key [?\C-c ?\C-j] 'helm-org-in-buffer-headings)
               (local-set-key [?\C-c ?w]    'my-copy-cur-line-val)
               (local-set-key [?\C-y]       'my-yank)
               (local-set-key [?\C-\']      'other-window)
