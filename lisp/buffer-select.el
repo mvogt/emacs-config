@@ -271,6 +271,7 @@ Also bury if it's the bs-show menu."
 (substitute-key-definition 'bs-delete 'my-bs-delete bs-mode-map)
 
 (global-set-key [?\C-x ?b]    'rename-buffer)
+(global-set-key [?\C-x ?\M-b] 'rename-buffer)
 (global-set-key [f10]         'delete-window)
 (global-set-key [?\M-\"]      'delete-window)
 (global-set-key [?\C-\"]      'delete-window)
