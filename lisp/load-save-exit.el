@@ -46,7 +46,6 @@
 (global-set-key [?\C-x ?i]        'find-file-at-point)
 (global-set-key [?\C-x ?\M-i]     'find-file-at-point)
 
-(global-set-key [?\C-\;]          'save-buffer)
 (global-set-key [?\M-s]           'save-buffer)
 (global-set-key [?\C-x ?\M-s]     'save-buffer)
 (global-set-key [f2]              'save-buffer)

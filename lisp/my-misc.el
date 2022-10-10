@@ -226,6 +226,33 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 )
 
 
+;; Avy
+;; https://github.com/abo-abo/avy
+;; https://karthinks.com/software/avy-can-do-anything/
+(global-set-key [?\C-\;] 'avy-goto-char-timer)
+(define-key isearch-mode-map [?\C-\;] 'avy-isearch)
+(defun avy-action-mark-to-char (pt)
+  (activate-mark)
+  (goto-char pt)
+)
+;; On Avy's action menu, map SPC to the custom function above.
+(setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
+
+;; https://github.com/abo-abo/hydra
+(defhydra my-avy-menu (:color blue)
+  "
+Avy goto:
+_c_ char-timer    _s_ subword-1    _l_ line
+_w_ word-1        _y_ symbol-1     _w_ whitespace-end-1
+"
+  ("c" avy-goto-char-timer nil)
+  ("l" avy-goto-line nil)
+  ("s" avy-goto-subword-1 nil)
+  ("w" avy-goto-whitespace-end nil)
+  ("w" avy-goto-word-1 nil)
+  ("y" avy-goto-symbol-1 nil)
+)
+
 (add-hook 'diff-mode-hook
   (function (lambda ()
               (whitespace-mode 1)
@@ -291,6 +318,7 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 
 (global-set-key [?\M-g ?\M-m] 'my-mode-menu/body)
 (global-set-key [?\M-g ?\M-v] 'my-misc-menu/body)
+(global-set-key [?\M-g ?\M-f] 'my-avy-menu/body)
 
 (global-set-key [remap fill-paragraph] #'fill-paragraph-or-unfill)
 
