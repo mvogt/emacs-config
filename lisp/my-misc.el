@@ -235,8 +235,8 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 ;; is some strange behavior at Emacs startup. Modifying avy-dispatch-alist
 ;; causes my-frame-create-hook not to execute.
 (require 'avy)
-(global-set-key [?\C-\;] 'avy-goto-char-timer)
-(define-key isearch-mode-map [?\C-\;] 'avy-isearch)
+(global-set-key [?\M-\=] 'avy-goto-char-timer)
+(define-key isearch-mode-map [?\M-\=] 'avy-isearch)
 (defun avy-action-mark-to-char (pt)
   (activate-mark)
   (goto-char pt)
