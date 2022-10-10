@@ -229,6 +229,12 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
 ;; Avy
 ;; https://github.com/abo-abo/avy
 ;; https://karthinks.com/software/avy-can-do-anything/
+;;
+;; We import the whole file with require even though it has proper autoloads
+;; and even though all the symbols we reference should be defined. The reason
+;; is some strange behavior at Emacs startup. Modifying avy-dispatch-alist
+;; causes my-frame-create-hook not to execute.
+(require 'avy)
 (global-set-key [?\C-\;] 'avy-goto-char-timer)
 (define-key isearch-mode-map [?\C-\;] 'avy-isearch)
 (defun avy-action-mark-to-char (pt)
@@ -236,7 +242,7 @@ _x_ Unfontify      _h_ Show command-history      _m_ Manual page cleanup
   (goto-char pt)
 )
 ;; On Avy's action menu, map SPC to the custom function above.
-(setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
+(add-to-list 'avy-dispatch-alist '(?  . avy-action-mark-to-char))
 
 ;; https://github.com/abo-abo/hydra
 (defhydra my-avy-menu (:color blue)
@@ -252,6 +258,7 @@ _w_ word-1        _y_ symbol-1     _w_ whitespace-end-1
   ("w" avy-goto-word-1 nil)
   ("y" avy-goto-symbol-1 nil)
 )
+
 
 (add-hook 'diff-mode-hook
   (function (lambda ()
