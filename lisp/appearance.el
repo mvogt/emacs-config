@@ -57,6 +57,7 @@
 ;;
 ;; Override this in ~/.emacs.local.el for each host.
 (defvar my-geometry '((width . 181) (height . 68) (top . 0) (left . -3)))
+(defvar my-font-height 100)
 
 (when (and (boundp 'my-unix-p) my-unix-p)
   ;; This has no effect in OSX, and I don't know why.
@@ -66,7 +67,7 @@
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
                         :font "GoMono Nerd Font" ;; https://www.nerdfonts.com/
-                        :height 100)
+                        :height my-font-height)
     ;; For some reason, under KDE Plasma, it ignores my selection of a red
     ;; cursor in my color theme. Also, this is the only place I've found where
     ;; this function call has an effect.
