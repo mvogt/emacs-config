@@ -57,7 +57,8 @@
 ;;
 ;; Override this in ~/.emacs.local.el for each host.
 (defvar my-geometry '((width . 181) (height . 68) (top . 0) (left . -3)))
-(defvar my-font-height 100)
+(defvar my-font-name "Liberation Mono")
+(defvar my-font-height (if (string-equal system-type "darwin") 140 100))
 
 (when (and (boundp 'my-unix-p) my-unix-p)
   ;; This has no effect in OSX, and I don't know why.
@@ -66,7 +67,7 @@
     ;; Only set geometry on the first frame.  The length of frame-list is
     ;; always one more than the number of frames.
     (set-face-attribute 'default nil
-                        :font "GoMono Nerd Font" ;; https://www.nerdfonts.com/
+                        :font my-font-name
                         :height my-font-height)
     ;; For some reason, under KDE Plasma, it ignores my selection of a red
     ;; cursor in my color theme. Also, this is the only place I've found where
@@ -80,8 +81,8 @@
 
 (when (string-equal system-type "darwin")
   (set-face-attribute 'default nil
-                      :font "Liberation Mono"
-                      :height 140)
+                      :font my-font-name
+                      :height my-font-height)
 )
 
 ;; Only required under Windows or before Emacs 23, but doesn't hurt anything
