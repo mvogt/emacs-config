@@ -19,7 +19,7 @@
 ;; Helm
 ;;
 (require 'helm)
-(require 'helm-config)
+(load "helm-autoloads")
 (require 'helm-find)
 (require 'helm-bookmark)
 (require 'helm-org)
