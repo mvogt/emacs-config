@@ -25,8 +25,6 @@
 
 ;; Use space to complete file names.
 (define-key minibuffer-local-filename-completion-map " " 'minibuffer-complete-word)
-;; Obsolete in v24
-(define-key minibuffer-local-filename-must-match-map " " 'minibuffer-complete-word)
 
 ;; Makes default completion tolerable until I learn ido or icicles.
 (defun my-toggle-completions-window ()
