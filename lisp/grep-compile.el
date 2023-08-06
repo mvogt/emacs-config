@@ -30,6 +30,9 @@
 (require 'ag)
 (setq ag-highlight-search t)
 
+;; Ripgrep. Need this for rg-menu
+(require 'rg)
+
 ;; Generate a unique buffer name for each process launched in compilation
 ;; mode.  This applies to the commands compile, grep, grep-find, and
 ;; my-recursive-grep.
