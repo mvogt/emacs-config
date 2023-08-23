@@ -206,14 +206,19 @@ Also bury if it's the bs-show menu."
 )
 
 (defun my-buf-unwanted-p (name)
-  (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*" "*vc*"
-                     "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
-                     "*Completions*" "*Dired file preview*"))
-      (string-match-p "^*helpful " name)
-      (string-match-p "^*magit-process:" name)
-      (string-match-p "^*magit-refs:" name)
-      (string-match-p "^*magit-log:" name)
-      (string-match-p "^*helm[ -]" name))
+  ;; Starting in Emacs 29, name is sometimes nil because our caller is
+  ;; querying a buffer that has already been killed. Don't understand how
+  ;; that's possible when iterating once over a fixed list.
+  (if (null name) nil
+    (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*" "*vc*"
+                       "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
+                       "*Completions*" "*Dired file preview*"))
+        (string-match-p "^*helpful " name)
+        (string-match-p "^*magit-process:" name)
+        (string-match-p "^*magit-refs:" name)
+        (string-match-p "^*magit-log:" name)
+        (string-match-p "^*helm[ -]" name))
+  )
 )
 
 (defun my-cleanup-buffers ()
