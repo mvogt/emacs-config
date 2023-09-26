@@ -83,6 +83,29 @@ use the word currently at the point."
   )
 )
 
+;; OneDrive rather than turnip, but I'm implementing it here because it's so
+;; similar.
+(defvar my-onedrive-clipboard-file (expand-file-name "~/tmp/xfer.txt"))
+(defvar my-onedrive-sync-cmd "onedrive --synchronize")
+(require 'my-shell-command "my-shell")
+(defun my-onedrive-send-clipboard ()
+  "Prompt for text, and save it in a scratchpad file we sync to OneDrive.
+Pre-fill the prompt with the active region.
+If no region is active, use the current line.
+In both cases, trim leading and trailing whitespace."
+  (interactive)
+  (let ((txt (read-string "Send text: " (my-region-or-line)
+                          'my-turnip-send-hist)))
+    (switch-to-buffer (generate-new-buffer "wip"))
+    (text-mode)
+    (insert txt)
+    (write-file my-onedrive-clipboard-file nil)
+    (kill-buffer)
+    (bury-buffer-if-dupe)
+    (my-shell-command my-onedrive-sync-cmd)
+  )
+)
+
 ;; https://github.com/abo-abo/hydra
 (defhydra my-tmux-menu (:color blue)
   "
@@ -92,7 +115,7 @@ _t_ Send text to tmux pane        _R_ SSH with Ansible key in new tmux window
 _d_ Send cd $PWD to tmux pane     _V_ SSH with vbldadm key in new tmux window
 _r_ Send region to tmux pane      _T_ Telnet in new tmux window
 _b_ Send region to tmux buffer    _p_ Select tmux pane for future commands
-^ ^                               _c_ tmux command builder (C-RET to finalize)
+_o_ Send text to OneDrive xfer    _c_ tmux command builder (C-RET to finalize)
 "
   ("R" (my-turnip-connect "tmux-ssh-ansible") nil)
   ("S" (my-turnip-connect "tmux-ssh") nil)
@@ -107,6 +130,7 @@ _b_ Send region to tmux buffer    _p_ Select tmux pane for future commands
 
   ("c" turnip-command nil)
   ("d" my-turnip-send-cwd nil)
+  ("o" my-onedrive-send-clipboard nil)
   ("p" turnip-choose-pane nil)
   ("r" turnip-send-region nil)
   ("t" my-turnip-send-text nil)
