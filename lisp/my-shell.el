@@ -31,7 +31,7 @@
 )
 
 ;; Default command history is too short (30).
-(setq history-length 100)
+(setq history-length 200)
 
 (setq my-shell-outbuf "*Shell Command Output*")
 
