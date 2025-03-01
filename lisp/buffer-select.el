@@ -31,6 +31,15 @@
 ;; than 20 buffers open and want to see them all.
 (setq bs-max-window-height 40)
 
+(defun my-bs-restore-window-config ()
+  "Helper for exiting bs-show buffer selection."
+  (if (fboundp 'bs--restore-window-config)
+      (bs--restore-window-config)     ; old version of Emacs and bs.el
+    (bury-buffer (current-buffer))
+    (quit-window)
+  )
+)
+
 ;; Redefine this func from bs.el so that the other window doesn't disappear
 ;; when exiting bs-show mode.
 (defun bs-tmp-select-other-window ()
@@ -39,7 +48,7 @@ The current window remains selected."
   (interactive)
   (let ((buffer (bs--current-buffer)))
     (bury-buffer (current-buffer))
-    (bs--restore-window-config)
+    (my-bs-restore-window-config)
     (display-buffer buffer t)
     (bs--show-with-configuration bs-current-configuration)
   )
@@ -52,7 +61,7 @@ The current window remains selected."
   (interactive)
   (let ((buffer (bs--current-buffer)))
     (bury-buffer (current-buffer))
-    (bs--restore-window-config)
+    (my-bs-restore-window-config)
     (view-buffer buffer)
   )
 )
@@ -63,7 +72,7 @@ line's buffer."
   (interactive)
   (let ((buffer (bs--current-buffer)))
     (bury-buffer (current-buffer))
-    (bs--restore-window-config)
+    (my-bs-restore-window-config)
     ;; Similar hack to my-equal-window-split-vert
     (split-window nil (+ 2 (/ (window-width) 2)) t)
     (other-window 1)
@@ -77,7 +86,7 @@ this line's buffer."
   (interactive)
   (let ((buffer (bs--current-buffer)))
     (bury-buffer (current-buffer))
-    (bs--restore-window-config)
+    (my-bs-restore-window-config)
     (split-window nil (/ (window-height) 2))
     (other-window 1)
     (switch-to-buffer buffer)
@@ -149,7 +158,7 @@ Leave Buffer Selection Menu."
   (interactive)
   (let ((buffer (bs--current-buffer)))
     (bury-buffer (current-buffer))
-    (bs--restore-window-config)
+    (my-bs-restore-window-config)
     (switch-to-buffer buffer)
     (when bs--marked-buffers
       ;; More than one buffer has been selected.  Tile them.
@@ -261,7 +270,7 @@ Also bury if it's the bs-show menu."
 
 (define-key bs-mode-map [?O]
             (lambda () (interactive)
-              (bs--restore-window-config)
+              (my-bs-restore-window-config)
               (select-shell-command-output-window)))
 
 (define-key bs-mode-map [?X]
