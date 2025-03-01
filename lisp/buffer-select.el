@@ -212,7 +212,8 @@ Also bury if it's the bs-show menu."
   (if (null name) nil
     (or (member name '("*Shell Command Output*" "*Help*" "*Calendar*" "*vc*"
                        "*Backtrace*" "*Dired log*" "*Compile-Log*" "*scratch*"
-                       "*Completions*" "*Dired file preview*"))
+                       "*Completions*" "*Dired file preview*"
+                       "*Async-native-compile-log*" "*Native-compile-Log*"))
         (string-match-p "^*helpful " name)
         (string-match-p "^*magit-process:" name)
         (string-match-p "^*magit-refs:" name)
