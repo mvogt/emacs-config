@@ -146,7 +146,7 @@
  ;; Installed packages
  '(package-selected-packages
    '(ag async avy dired-efap exec-path-from-shell gnu-elpa-keyring-update go-mode
-     groovy-mode helm helm-org helpful htmlize hydra magit org org-contrib
-     powershell protobuf-mode rainbow-mode rg tree-mode turnip yaml-mode
-     yasnippet))
+     groovy-mode helm helm-org helpful htmlize hydra magit markdown-mode org
+     org-contrib powershell protobuf-mode rainbow-mode rg tree-mode turnip
+     yaml-mode yasnippet))
 )
