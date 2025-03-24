@@ -30,6 +30,7 @@
 (setq helm-recentf-fuzzy-match t)
 (setq helm-lisp-fuzzy-completion t)
 (setq helm-ff-file-name-history-use-recentf t)
+(setq helm-split-window-default-side 'right)
 
 ;; This function is hard to describe. It basically means do the intuitive
 ;; thing. For some reason, the default for this is C-z.
